@@ -16,3 +16,23 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/', function () {
+    return view('index');
+});
+
+Route::get('/index', function () {
+    return view('index');
+})->name('index');
+
+Route::get('/buttons', function () {
+    return view('buttons');
+})->name('buttons');
+
+Route::get('/404', function () {
+    return view('404');
+})->name('404');
+
+Route::get('/blank', function () {
+    return view('blank');
+})->name('blank');
