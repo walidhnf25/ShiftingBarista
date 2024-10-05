@@ -21,6 +21,10 @@ Route::get('/', function () {
     return view('index');
 });
 
+Route::get('/tipepekerjaan', function () {
+    return view('tipepekerjaan');
+})->name('tipepekerjaan');
+
 Route::get('/index', function () {
     return view('index');
 })->name('index');
