@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TipePekerjaanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,3 +41,9 @@ Route::get('/404', function () {
 Route::get('/blank', function () {
     return view('blank');
 })->name('blank');
+
+Route::get('/tipepekerjaan', [TipePekerjaanController::class, 'index'])->name('tipepekerjaan');
+Route::post('/tipepekerjaan', [TipePekerjaanController::class, 'store'])->name('tipe_pekerjaan.store');
+Route::get('/editTipePekerjaan', [TipePekerjaanController::class, 'editTipePekerjaan']);
+Route::post('/tipepekerjaan/update/{id}', [TipePekerjaanController::class, 'update'])->name('tipepekerjaan.update');
+Route::post('/tipepekerjaan/delete/{id}', [TipePekerjaanController::class, 'deleteTipePekerjaan'])->name('tipepekerjaan.deleteTipePekerjaan');
