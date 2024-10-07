@@ -225,13 +225,62 @@
                     </div>
 
                     @if (session('success'))
-                    <div class="alert alert-success">
+                    <div class="alert alert-success col-md-6 col-lg-3" role="alert" >
                         {{ session('success') }}
                     </div>
                     @endif
 
+        
+                    
+
+                    <!-- Content Row -->
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <form action="{{ route('addpegawai.store') }}" method="POST">
+                                @csrf
+                                <div class="form-row">
+                                    <!-- Name -->
+                                    <div class="form-group col-md-6">
+                                        <label for="name">Nama Pegawai</label>
+                                        <input type="text" class="form-control" id="name" name="name" placeholder="Masukkan nama pegawai">
+                                    </div>
+                    
+                                    <!-- Email -->
+                                    <div class="form-group col-md-6">
+                                        <label for="email">Email Pegawai</label>
+                                        <input type="email" class="form-control" id="email" name="email" placeholder="Masukkan email pegawai" required>
+                                    </div>
+                                </div>
+                    
+                                <div class="form-row">
+                                    <!-- Password -->
+                                    <div class="form-group col-md-6">
+                                        <label for="password">Password Pegawai</label>
+                                        <input type="password" class="form-control" id="password" name="password" placeholder="Masukkan password" required>
+                                    </div>
+                    
+                                    <!-- Role -->
+                                    <div class="form-group col-md-6">
+                                        <label for="id_role">Role Pegawai</label>
+                                        <select class="form-control" id="id_role" name="id_role" required>
+                                            <option value="" disabled selected>Pilih Role</option>
+                                            <option value="1">Manager</option>
+                                            <option value="2">Barista</option>
+                                            {{-- @foreach($roles as $role) --}}
+                                            {{-- <option value="{{ $role->id }}">{{ $role->nama }}</option> --}}
+                                            {{-- @endforeach --}}
+                                        </select>
+                                    </div>
+                                </div>
+                    
+                                <!-- Submit Button -->
+                                <button type="submit" class="btn btn-primary mt-3">Tambah Pegawai</button>
+                            </form>
+                        </div>
+                    </div>
+
                     @if ($errors->any())
-                    <div class="alert alert-danger">
+                    <div class="alert alert-danger mt-3" role="alert">
                         <ul>
                             @foreach ($errors->all() as $error)
                                 <li>{{ $error }}</li>
@@ -239,65 +288,134 @@
                         </ul>
                     </div>
                     @endif
-
-
                     
 
-                    <!-- Content Row -->
-                    <div class="row">
-                        <form action="{{ route('pegawai.store') }}" method="POST">
-                            @csrf
-                            <div class="form-group">
-                                <label for="email">Email Pegawai</label>
-                                <input type="email" class="form-control" id="email" name="email" placeholder="Masukkan email pegawai" required>
-                            </div>
-                        
-                            <div class="form-group">
-                                <label for="password">Password Pegawai</label>
-                                <input type="password" class="form-control" id="password" name="password" placeholder="Masukkan password" required>
-                            </div>
-                        
-                            <button type="submit" class="btn btn-primary">Tambah Pegawai</button>
-                        </form>                        
-                    </div>
 
                     <!-- Content Row -->
+                    
 
                     <h2 class="h4 mt-5">Data Pegawai</h2>
+                    
                     <table class="table table-striped">
                         <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Email</th>
-                            <th scope="col">Aksi</th>
-                        </tr>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Nama</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Role</th>
+                                <th scope="col">Aksi</th>
+                            </tr>
                         </thead>
                         <tbody>
-                            <td scope="col">#</td>
+                            {{-- <td scope="col">#</td>
+                            <td scope="col">Name</td>
                             <td scope="col">Email</td>
-                            <td scope="col">Aksi</td>
-                        {{-- @foreach($users as $user)
+                            <td scope="col">Role</td>
+                            <td scope="col">Aksi</td> --}}
+                        @foreach($users as $user)
                             <tr>
                                 <th scope="row">{{ $loop->iteration }}</th>
+                                <td>{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
-                                <td>Aksi</td>
+                                <td>role</td>
                                 <td>
                                     <!-- Tombol untuk Read, Update, Delete -->
-                                    <a href="{{ route('pegawai.show', $user->id) }}" class="btn btn-info btn-sm">Read</a>
-                                    <a href="{{ route('pegawai.edit', $user->id) }}" class="btn btn-warning btn-sm">Update</a>
-                                    <form action="{{ route('pegawai.destroy', $user->id) }}" method="POST" class="d-inline">
+                                    <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#ReadModal">
+                                        Read
+                                      </button>
+                                    <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#EditModal">
+                                        Edit
+                                    </button>
+                                    <form action="{{ route('addpegawai.destroy', $user->id) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus pegawai ini?')">Delete</button>
-                                    </form>
+                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus pengguna ini?')">Delete</button>
+                                    </form>                                    
                                 </td>
                             </tr>
-                        @endforeach --}}
+                        @endforeach
                         </tbody>
                     </table>
                 </div>
-                <!-- /.container-fluid -->
 
+                <!-- Read Modal -->
+                @foreach($users as $user)
+                <div class="modal fade" id="ReadModal" tabindex="-1" aria-labelledby="ReadModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Detail Pegawai <strong>{{$user->name}}</strong></h5>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <p><strong>Nama :</strong> {{$user->name}} </p>
+                                <p><strong>Email :</strong> {{$user->email}} </p>
+                                <p><strong>Role :</strong> Manager</span></p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+                
+                <!-- Edit Modal -->
+                @foreach($users as $user)
+                <div class="modal fade" id="EditModal" tabindex="-1" aria-labelledby="EditModal" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Edit Modal Detail</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                           <form action=" {{ route('addpegawai.update', $user->id) }}}}" method="POST">
+                            @csrf
+                            @method('PUT') 
+                            <div class="form-row">
+                                <!-- Name -->
+                                <div class="form-group col-md-6">
+                                    <label for="name">Nama Pegawai</label>
+                                    <input type="text" class="form-control" id="name" name="name" value="{{$user->name}}">
+                                </div>
+                
+                                <!-- Email -->
+                                <div class="form-group col-md-6">
+                                    <label for="email">Email Pegawai</label>
+                                    <input type="email" class="form-control" id="email" name="email" value="{{$user->email}}">
+                                </div>
+                            </div>
+                
+                            <div class="form-row">
+                               
+                
+                                <!-- Role -->
+                                <div class="form-group col-12">
+                                    <label for="id_role">Role Pegawai</label>
+                                    <select class="form-control" id="id_role" name="id_role" required>
+                                        <option value="" disabled selected>Pilih Role</option>
+                                        <option value="1">Manager</option>
+                                        <option value="2">Barista</option>
+                                        {{-- @foreach($roles as $role) --}}
+                                        {{-- <option value="{{ $role->id }}">{{ $role->nama }}</option> --}}
+                                        {{-- @endforeach --}}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save changes</button>
+                            </div>
+                           </form>
+                        </div>
+                       
+                        </div>
+                    </div>
+                    </div>
+                @endforeach
             </div>
             <!-- End of Main Content -->
 

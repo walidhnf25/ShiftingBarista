@@ -47,9 +47,14 @@ Route::get('/login', function () {
     return view('login');
 })->name('login');
 
+Route::get('/addpegawai', [UsersController::class,'index'])->name('addpegawai');
+Route::post('/addpegawai', [UsersController::class,'store'])->name('addpegawai.store');
+Route::delete('/addpegawai/{id}', [UsersController::class, 'destroy'])->name('addpegawai.destroy');
+Route::put('/addpegawai/{id}', [UsersController::class, 'update'])->name('addpegawai.update');
 
-Route::resource('pegawai', UsersController::class);
-Route::get('/addpegawai', [UsersController::class, 'index'])->name('addpegawai');
+
+
+
 
 
 

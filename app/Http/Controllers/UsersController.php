@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Role;
+
 
 class UsersController extends Controller
 {
@@ -15,11 +17,10 @@ class UsersController extends Controller
      */
     public function index()
     {
-        $users = User::all();
-        return view('addpegawai', compact('users'));
+        $users = User::all();  
+        return view('addpegawai', compact('users'));  
     }    
     
-
     /**
      * Show the form for creating a new resource.
      *
@@ -89,8 +90,39 @@ class UsersController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        // Validasi input
+        $request->validate([
+            'name' => 'nullable|max:50',
+            'id_role' => 'nullable|max:3',
+            'email' => 'required|email|unique:users,email,' . $id, // Pastikan email unik kecuali untuk pengguna ini
+            'password' => 'nullable|min:6', // Password tidak wajib, tetapi minimal 6 karakter
+        ]);
+    
+        // Cari user berdasarkan ID
+        $user = User::find($id);
+    
+        // Jika user tidak ditemukan, berikan response gagal
+        if (!$user) {
+            return redirect()->route('addpegawai')->with('error', 'Pengguna tidak ditemukan');
+        }
+    
+        // Update data pengguna
+        $user->name = $request->name;
+        $user->id_role = $request->id_role;
+        $user->email = $request->email;
+    
+        // Jika password diisi, maka update password
+        if ($request->filled('password')) {
+            $user->password = bcrypt($request->password);
+        }
+    
+        // Simpan perubahan
+        $user->save();
+    
+        // Redirect kembali dengan pesan sukses
+        return redirect()->route('addpegawai')->with('success', 'Pengguna berhasil diupdate');
     }
+    
 
     /**
      * Remove the specified resource from storage.
@@ -99,7 +131,20 @@ class UsersController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
-    {
-        //
+{
+    // Cari user berdasarkan ID
+    $user = User::find($id);
+
+    // Jika user tidak ditemukan, berikan response gagal
+    if (!$user) {
+        return redirect()->route('addpegawai')->with('error', 'Pengguna tidak ditemukan');
     }
+
+    // Hapus user
+    $user->delete();
+
+    // Redirect kembali dengan pesan sukses
+    return redirect()->route('addpegawai')->with('success', 'Pengguna berhasil dihapus');
+}
+
 }
