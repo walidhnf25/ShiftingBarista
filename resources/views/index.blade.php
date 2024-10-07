@@ -58,6 +58,12 @@
                     <span>Tipe Pekerjaan</span></a>
             </li>
 
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('addpegawai') }}">
+                    <i class="fas fa-fw fa-users"></i>
+                    <span>Tambah Pegawai</span></a>
+            </li>
+
             <!-- Divider -->
             <hr class="sidebar-divider">
 

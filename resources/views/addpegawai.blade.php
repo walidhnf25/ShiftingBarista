@@ -52,7 +52,7 @@
             <hr class="sidebar-divider">
 
             <!-- Nav Item - Tipe Pekerjaan -->
-            <li class="nav-item active">
+            <li class="nav-item">
                 <a class="nav-link" href="{{ route('tipepekerjaan') }}">
                     <i class="fas fa-fw fa-briefcase"></i>
                     <span>Tipe Pekerjaan</span></a>
@@ -221,26 +221,80 @@
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Tipe Pekerjaan</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Tambah Pegawai</h1>
                     </div>
+
+                    @if (session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                    @endif
+
+                    @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    @endif
+
+
+                    
 
                     <!-- Content Row -->
                     <div class="row">
-
-                    </div>
-
-                    <!-- Content Row -->
-
-                    <div class="row">
-
-                    </div>
-
-                    <!-- Content Row -->
-                    <div class="row">
-
+                        <form action="{{ route('pegawai.store') }}" method="POST">
+                            @csrf
+                            <div class="form-group">
+                                <label for="email">Email Pegawai</label>
+                                <input type="email" class="form-control" id="email" name="email" placeholder="Masukkan email pegawai" required>
+                            </div>
                         
+                            <div class="form-group">
+                                <label for="password">Password Pegawai</label>
+                                <input type="password" class="form-control" id="password" name="password" placeholder="Masukkan password" required>
+                            </div>
+                        
+                            <button type="submit" class="btn btn-primary">Tambah Pegawai</button>
+                        </form>                        
                     </div>
 
+                    <!-- Content Row -->
+
+                    <h2 class="h4 mt-5">Data Pegawai</h2>
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Aksi</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <td scope="col">#</td>
+                            <td scope="col">Email</td>
+                            <td scope="col">Aksi</td>
+                        {{-- @foreach($users as $user)
+                            <tr>
+                                <th scope="row">{{ $loop->iteration }}</th>
+                                <td>{{ $user->email }}</td>
+                                <td>Aksi</td>
+                                <td>
+                                    <!-- Tombol untuk Read, Update, Delete -->
+                                    <a href="{{ route('pegawai.show', $user->id) }}" class="btn btn-info btn-sm">Read</a>
+                                    <a href="{{ route('pegawai.edit', $user->id) }}" class="btn btn-warning btn-sm">Update</a>
+                                    <form action="{{ route('pegawai.destroy', $user->id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus pegawai ini?')">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach --}}
+                        </tbody>
+                    </table>
                 </div>
                 <!-- /.container-fluid -->
 

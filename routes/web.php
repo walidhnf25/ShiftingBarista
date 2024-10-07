@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UsersController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -40,3 +42,15 @@ Route::get('/404', function () {
 Route::get('/blank', function () {
     return view('blank');
 })->name('blank');
+
+Route::get('/login', function () {
+    return view('login');
+})->name('login');
+
+
+Route::resource('pegawai', UsersController::class);
+Route::get('/addpegawai', [UsersController::class, 'index'])->name('addpegawai');
+
+
+
+
