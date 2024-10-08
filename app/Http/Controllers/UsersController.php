@@ -17,9 +17,15 @@ class UsersController extends Controller
      */
     public function index()
     {
-        $users = User::all();  
-        return view('addpegawai', compact('users'));  
+        $users = User::with('role')->get();
+        $roles = Role::all();
+        return view('addpegawai', compact('users' , 'roles'));  
     }    
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class, 'id_role', 'id'); // 'id_role' adalah foreign key di tabel users, 'id' adalah primary key di tabel roles
+    }
     
     /**
      * Show the form for creating a new resource.

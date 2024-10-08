@@ -264,11 +264,9 @@
                                         <label for="id_role">Role Pegawai</label>
                                         <select class="form-control" id="id_role" name="id_role" required>
                                             <option value="" disabled selected>Pilih Role</option>
-                                            <option value="1">Manager</option>
-                                            <option value="2">Barista</option>
-                                            {{-- @foreach($roles as $role) --}}
-                                            {{-- <option value="{{ $role->id }}">{{ $role->nama }}</option> --}}
-                                            {{-- @endforeach --}}
+                                            @foreach($roles as $role)
+                                            <option value="{{ $role->id }}">{{ $role->nama }}</option>
+                                            @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -307,17 +305,12 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {{-- <td scope="col">#</td>
-                            <td scope="col">Name</td>
-                            <td scope="col">Email</td>
-                            <td scope="col">Role</td>
-                            <td scope="col">Aksi</td> --}}
                         @foreach($users as $user)
                             <tr>
                                 <th scope="row">{{ $loop->iteration }}</th>
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->email }}</td>
-                                <td>role</td>
+                                <td>{{ $user->role->nama}}</td>
                                 <td>
                                     <!-- Tombol untuk Read, Update, Delete -->
                                     <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#ReadModal">
@@ -397,11 +390,9 @@
                                     <label for="id_role">Role Pegawai</label>
                                     <select class="form-control" id="id_role" name="id_role" required>
                                         <option value="" disabled selected>Pilih Role</option>
-                                        <option value="1">Manager</option>
-                                        <option value="2">Barista</option>
-                                        {{-- @foreach($roles as $role) --}}
-                                        {{-- <option value="{{ $role->id }}">{{ $role->nama }}</option> --}}
-                                        {{-- @endforeach --}}
+                                        @foreach($roles as $role)
+                                        <option value="{{ $role->id }}">{{ $role->nama }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -416,6 +407,8 @@
                     </div>
                     </div>
                 @endforeach
+
+                
             </div>
             <!-- End of Main Content -->
 
