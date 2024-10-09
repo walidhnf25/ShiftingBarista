@@ -19,7 +19,6 @@
 
     <!-- Custom styles for this template-->
     <link href="{{ asset('css/sb-admin-2.min.css') }}" rel="stylesheet">
-    
 
 </head>
 
@@ -53,7 +52,7 @@
             <hr class="sidebar-divider">
 
             <!-- Nav Item - Tipe Pekerjaan -->
-            <li class="nav-item active">
+            <li class="nav-item">
                 <a class="nav-link" href="{{ route('tipepekerjaan') }}">
                     <i class="fas fa-fw fa-briefcase"></i>
                     <span>Tipe Pekerjaan</span></a>
@@ -222,78 +221,194 @@
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Tipe Pekerjaan</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Tambah Pegawai</h1>
                     </div>
 
+                    @if (session('success'))
+                    <div class="alert alert-success col-md-6 col-lg-3" role="alert" >
+                        {{ session('success') }}
+                    </div>
+                    @endif
+
+        
+                    
+
+                    <!-- Content Row -->
                     <div class="row">
-                        <div class="col-12">
-                            @if(session('success'))
-                                <div class="alert alert-success">
-                                    {{ session('success') }}
+                        <div class="col-lg-12">
+                            <form action="{{ route('addpegawai.store') }}" method="POST">
+                                @csrf
+                                <div class="form-row">
+                                    <!-- Name -->
+                                    <div class="form-group col-md-6">
+                                        <label for="name">Nama Pegawai</label>
+                                        <input type="text" class="form-control" id="name" name="name" placeholder="Masukkan nama pegawai">
+                                    </div>
+                    
+                                    <!-- Email -->
+                                    <div class="form-group col-md-6">
+                                        <label for="email">Email Pegawai</label>
+                                        <input type="email" class="form-control" id="email" name="email" placeholder="Masukkan email pegawai" required>
+                                    </div>
                                 </div>
-                            @endif
-
-                            @if(session('error'))
-                                <div class="alert alert-danger">
-                                    {{ session('error') }}
+                    
+                                <div class="form-row">
+                                    <!-- Password -->
+                                    <div class="form-group col-md-6">
+                                        <label for="password">Password Pegawai</label>
+                                        <input type="password" class="form-control" id="password" name="password" placeholder="Masukkan password" required>
+                                    </div>
+                    
+                                    <!-- Role -->
+                                    <div class="form-group col-md-6">
+                                        <label for="id_role">Role Pegawai</label>
+                                        <select class="form-control" id="id_role" name="id_role" required>
+                                            <option value="" disabled selected>Pilih Role</option>
+                                            @foreach($roles as $role)
+                                            <option value="{{ $role->id }}">{{ $role->nama }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
-                            @endif
+                    
+                                <!-- Submit Button -->
+                                <button type="submit" class="btn btn-primary mt-3">Tambah Pegawai</button>
+                            </form>
                         </div>
                     </div>
 
-                    <!-- Content Row -->
-                    <div class="row mb-3">
-                        <div class="col-md-3">
-                            <a href="#" class="btn btn-primary" id="btnTambahTipePekerjaan">
-                                <i class="fa fa-plus"></i> Tambah Tipe Pekerjaan
-                            </a>
-                        </div>
+                    @if ($errors->any())
+                    <div class="alert alert-danger mt-3" role="alert">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
                     </div>
+                    @endif
+                    
 
-                    <!-- Content Row -->
-
-                    <div class="row">
-                        <div class="col-12">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Nama Tipe Pekerjaan</th>
-                                        <th>Control</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($TipePekerjaan as $d)
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $d->tipe_pekerjaan }}</td>
-                                        <td>
-                                            <a href="#" class="edit btn btn-info btn-sm btn-circle" id="{{ $d->id }}">
-                                                <i class="fa fa-edit"></i>
-                                            </a>
-                                            <form action="{{ route('tipepekerjaan.deleteTipePekerjaan', $d->id) }}" method="POST" style="display: inline-block;">
-                                            @csrf
-                                                <button type="submit" class="btn btn-danger btn-circle btn-sm delete-confirm">
-                                                    <i class="fa fa-trash"></i>
-                                                </button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
 
                     <!-- Content Row -->
-                    <div class="row">
+                    
 
-                        
-                    </div>
-
+                    <h2 class="h4 mt-5">Data Pegawai</h2>
+                    
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Nama</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Role</th>
+                                <th scope="col">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($users as $user)
+                            <tr>
+                                <th scope="row">{{ $loop->iteration }}</th>
+                                <td>{{ $user->name }}</td>
+                                <td>{{ $user->email }}</td>
+                                <td>{{ $user->role->nama}}</td>
+                                <td>
+                                    <!-- Tombol untuk Read, Update, Delete -->
+                                    <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#ReadModal">
+                                        Read
+                                      </button>
+                                    <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#EditModal">
+                                        Edit
+                                    </button>
+                                    <form action="{{ route('addpegawai.destroy', $user->id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus pengguna ini?')">Delete</button>
+                                    </form>                                    
+                                </td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
                 </div>
-                <!-- /.container-fluid -->
 
+                <!-- Read Modal -->
+                @foreach($users as $user)
+                <div class="modal fade" id="ReadModal" tabindex="-1" aria-labelledby="ReadModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Detail Pegawai <strong>{{$user->name}}</strong></h5>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <p><strong>Nama :</strong> {{$user->name}} </p>
+                                <p><strong>Email :</strong> {{$user->email}} </p>
+                                <p><strong>Role :</strong> Manager</span></p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+                
+                <!-- Edit Modal -->
+                @foreach($users as $user)
+                <div class="modal fade" id="EditModal" tabindex="-1" aria-labelledby="EditModal" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Edit Modal Detail</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                           <form action=" {{ route('addpegawai.update', $user->id) }}}}" method="POST">
+                            @csrf
+                            @method('PUT') 
+                            <div class="form-row">
+                                <!-- Name -->
+                                <div class="form-group col-md-6">
+                                    <label for="name">Nama Pegawai</label>
+                                    <input type="text" class="form-control" id="name" name="name" value="{{$user->name}}">
+                                </div>
+                
+                                <!-- Email -->
+                                <div class="form-group col-md-6">
+                                    <label for="email">Email Pegawai</label>
+                                    <input type="email" class="form-control" id="email" name="email" value="{{$user->email}}">
+                                </div>
+                            </div>
+                
+                            <div class="form-row">
+                               
+                
+                                <!-- Role -->
+                                <div class="form-group col-12">
+                                    <label for="id_role">Role Pegawai</label>
+                                    <select class="form-control" id="id_role" name="id_role" required>
+                                        <option value="" disabled selected>Pilih Role</option>
+                                        @foreach($roles as $role)
+                                        <option value="{{ $role->id }}">{{ $role->nama }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Save changes</button>
+                            </div>
+                           </form>
+                        </div>
+                       
+                        </div>
+                    </div>
+                    </div>
+                @endforeach
+
+                
             </div>
             <!-- End of Main Content -->
 
@@ -338,54 +453,6 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modal-inputpekerjaan" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Tambah Tipe Pekerjaan</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form action="{{ route('tipe_pekerjaan.store') }}" method="post" enctype="multipart/form-data">
-                        @csrf
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="form-group mb-3"> <!-- Corrected class name -->
-                                    <input type="text" class="form-control" id="tipe_pekerjaan" name="tipe_pekerjaan" placeholder="Tipe Pekerjaan">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="form-group d-flex justify-content-center">
-                                    <button type="submit" class="btn btn-primary flex-grow-1">Simpan</button>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal modal-blur fade" id="modal-ubahpekerjaan" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Edit Tipe Pekerjaan</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" id="loadeditform">
-                    <!-- Form will be loaded here -->
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -402,75 +469,7 @@
     <!-- Page level custom scripts -->
     <script src="js/demo/chart-area-demo.js"></script>
     <script src="js/demo/chart-pie-demo.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <script>
-        $("#btnTambahTipePekerjaan").click(function() {
-            $('#modal-inputpekerjaan').modal('show');
-        });
-        $(".delete-confirm").click(function(e) {
-            var form = $(this).closest('form');
-            e.preventDefault();
-
-            Swal.fire({
-                title: '<span style="color:#f00">Apakah Anda Yakin?</span>',
-                html: "<strong>Data ini akan dihapus secara permanen!</strong><br>Anda tidak akan bisa mengembalikan data setelah penghapusan.",
-                icon: 'warning',
-                iconColor: '#ff6b6b',
-                showCancelButton: true,
-                background: '#f7f7f7',
-                backdrop: `
-                    rgba(0, 0, 0, 0.4)
-                    url("https://cdn.pixabay.com/photo/2016/11/18/15/07/red-alert-1837455_960_720.png")
-                    left top
-                    no-repeat
-                `,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ya, Hapus!',
-                cancelButtonText: 'Batalkan',
-                customClass: {
-                    popup: 'animated zoomIn faster',
-                    confirmButton: 'btn btn-success',
-                    cancelButton: 'btn btn-danger',
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    form.submit();
-
-                    Swal.fire({
-                        title: 'Info!',
-                        text: 'Data berhasil dihapus.',
-                        icon: 'success',
-                        background: '#f7f7f7',
-                        customClass: {
-                            popup: 'animated bounceIn faster',
-                        },
-                        showConfirmButton: false,
-                        timer: 1500,
-                    });
-                }
-            });
-        });
-        $(".edit").click(function() {
-            var id = $(this).attr('id');
-            $.ajax({
-                type: "GET",
-                url: "/editTipePekerjaan",
-                cache: false,
-                data: {
-                    id: id
-                },
-                success: function(respond) {
-                    $('#loadeditform').html(respond);
-                    $('#modal-ubahpekerjaan').modal('show');
-                }
-            });
-        });
-        setTimeout(function() {
-            $('.alert').fadeOut('slow');
-        }, 2000);
-    </script>
 
 </body>
+
 </html>
