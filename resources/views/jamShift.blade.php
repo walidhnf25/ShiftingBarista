@@ -18,8 +18,7 @@
         rel="stylesheet">
 
     <!-- Custom styles for this template-->
-    <link href="{{ asset('css/sb-admin-2.min.css') }}" rel="stylesheet">
-
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
 
 </head>
 
@@ -44,19 +43,9 @@
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('index') }}">
+                <a class="nav-link" href="http://127.0.0.1:8000/">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
-            </li>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-            <!-- Nav Item - Tipe Pekerjaan -->
-            <li class="nav-item active">
-                <a class="nav-link" href="{{ route('tipepekerjaan') }}">
-                    <i class="fas fa-fw fa-briefcase"></i>
-                    <span>Tipe Pekerjaan</span></a>
             </li>
 
             <!-- Divider -->
@@ -68,17 +57,18 @@
             </div>
 
             <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
+            <li class="nav-item active">
+                <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapseTwo"
                     aria-expanded="true" aria-controls="collapseTwo">
                     <i class="fas fa-fw fa-cog"></i>
-                    <span>Components</span>
+                    <span>Shifting</span>
                 </a>
-                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo"
+                    data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Custom Components:</h6>
-                        <a class="collapse-item" href="{{ route('buttons') }}">Buttons</a>
-                        <a class="collapse-item" href="cards.html">Cards</a>
+                        <h6 class="collapse-header">Atur Shift dan Jam:</h6>
+                        <a class="collapse-item" href="buttons.html">Shift</a>
+                        <a class="collapse-item active" href="{{ route('jamshift') }}">Waktu Shift</a>
                     </div>
                 </div>
             </li>
@@ -126,7 +116,7 @@
                         <div class="collapse-divider"></div>
                         <h6 class="collapse-header">Other Pages:</h6>
                         <a class="collapse-item" href="{{ route('404') }}">404 Page</a>
-                        <a class="collapse-item" href="{{ route('blank') }}">Blank Page</a>
+                        <a class="collapse-item" href="blank.html">Blank Page</a>
                     </div>
                 </div>
             </li>
@@ -180,8 +170,7 @@
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
-                                <img class="img-profile rounded-circle"
-                                    src="img/undraw_profile.svg">
+                                <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -199,7 +188,8 @@
                                     Activity Log
                                 </a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                <a class="dropdown-item" href="#" data-toggle="modal"
+                                    data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Logout
                                 </a>
@@ -216,18 +206,18 @@
 
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Tipe Pekerjaan</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Waktu Shift</h1>
                     </div>
 
                     <div class="row">
                         <div class="col-12">
-                            @if(session('success'))
+                            @if (session('success'))
                                 <div class="alert alert-success">
                                     {{ session('success') }}
                                 </div>
                             @endif
 
-                            @if(session('error'))
+                            @if (session('error'))
                                 <div class="alert alert-danger">
                                     {{ session('error') }}
                                 </div>
@@ -238,8 +228,8 @@
                     <!-- Content Row -->
                     <div class="row mb-3">
                         <div class="col-md-3">
-                            <a href="#" class="btn btn-primary" id="btnTambahTipePekerjaan">
-                                <i class="fa fa-plus"></i> Tambah Tipe Pekerjaan
+                            <a href="#" class="btn btn-primary" id="btnTambahJamShift">
+                                <i class="fa fa-plus"></i> Tambah Jam Shift
                             </a>
                         </div>
                     </div>
@@ -252,27 +242,32 @@
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Nama Tipe Pekerjaan</th>
+                                        <th>Waktu Shift</th>
                                         <th>Control</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($TipePekerjaan as $d)
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $d->tipe_pekerjaan }}</td>
-                                        <td>
-                                            <a href="#" class="edit btn btn-info btn-sm btn-circle" id="{{ $d->id }}">
-                                                <i class="fa fa-edit"></i>
-                                            </a>
-                                            <form action="{{ route('tipepekerjaan.deleteTipePekerjaan', $d->id) }}" method="POST" style="display: inline-block;">
-                                            @csrf
-                                                <button type="submit" class="btn btn-danger btn-circle btn-sm delete-confirm">
+                                    @foreach ($jamShifts as $d)
+                                        <tr>
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ $d->jam }}</td>
+                                            <!-- Tombol delete -->
+                                            <td>
+                                                <a href="#" class="edit btn btn-info btn-sm btn-circle"
+                                                    id="{{ $d->id }}">
+                                                    <i class="fa fa-edit"></i>
+                                                </a>
+                                                <button type="button"
+                                                    class="btn btn-danger btn-circle btn-sm delete-confirm"
+                                                    data-id="{{ $d->id }}">
                                                     <i class="fa fa-trash"></i>
                                                 </button>
-                                            </form>
-                                        </td>
-                                    </tr>
+                                                <form action="{{ route('jamshift.deleteJamShift', $d->id) }}"
+                                                    method="POST" style="display: none;">
+                                                    @csrf
+                                                </form>
+                                            </td>
+                                        </tr>
                                     @endforeach
                                 </tbody>
                             </table>
@@ -295,7 +290,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website 2021</span>
+                        <span>CAATIS &copy; 2024</span>
                     </div>
                 </div>
             </footer>
@@ -312,42 +307,24 @@
         <i class="fas fa-angle-up"></i>
     </a>
 
-    <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="modal-inputpekerjaan" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Modal-inputjamshift -->
+    <div class="modal fade" id="modal-inputjamshift" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Tambah Tipe Pekerjaan</h5>
+                    <h5 class="modal-title">Tambah Jam Shift</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('tipe_pekerjaan.store') }}" method="post" enctype="multipart/form-data">
+                    <form action="{{ route('jam_shift.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="row">
                             <div class="col-12">
-                                <div class="form-group mb-3"> <!-- Corrected class name -->
-                                    <input type="text" class="form-control" id="tipe_pekerjaan" name="tipe_pekerjaan" placeholder="Tipe Pekerjaan">
+                                <div class="form-group mb-3">
+                                    <input type="text" class="form-control" id="jam_shift" name="jam_shift"
+                                        placeholder="Jam Shift">
                                 </div>
                             </div>
                         </div>
@@ -364,11 +341,12 @@
         </div>
     </div>
 
-    <div class="modal modal-blur fade" id="modal-ubahpekerjaan" tabindex="-1" role="dialog" aria-hidden="true">
+    <!-- Modal-ubahjamshift -->
+    <div class="modal modal-blur fade" id="modal-ubahjamshift" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Edit Tipe Pekerjaan</h5>
+                    <h5 class="modal-title">Edit Jam Shift</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -379,7 +357,6 @@
             </div>
         </div>
     </div>
-
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -390,17 +367,20 @@
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
 
-    <!-- Page level plugins -->
-    <script src="vendor/chart.js/Chart.min.js"></script>
-
-    <!-- Page level custom scripts -->
-    <script src="js/demo/chart-area-demo.js"></script>
-    <script src="js/demo/chart-pie-demo.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
     <script>
-        $("#btnTambahTipePekerjaan").click(function() {
-            $('#modal-inputpekerjaan').modal('show');
+        $(document).on('click', '.edit', function(event) {
+            event.preventDefault(); // Prevent the default action if necessary
+            var id = $(this).attr('id'); // Get the 'id' attribute of the clicked element
+            console.log('Edit button clicked. ID:', id); // Print the ID to the console
+        });
+
+        // For the delete button
+        $(document).on('click', '.delete-confirm', function() {
+            var id = $(this).data('id'); // Get the 'data-id' attribute
+            console.log('Delete button clicked. ID:', id); // Print the ID to the console
+        });
+        $("#btnTambahJamShift").click(function() {
+            $('#modal-inputjamshift').modal('show');
         });
         $(".delete-confirm").click(function(e) {
             var form = $(this).closest('form');
@@ -450,14 +430,14 @@
             var id = $(this).attr('id');
             $.ajax({
                 type: "GET",
-                url: "/editTipePekerjaan",
+                url: "/editjamshift",
                 cache: false,
                 data: {
                     id: id
                 },
                 success: function(respond) {
                     $('#loadeditform').html(respond);
-                    $('#modal-ubahpekerjaan').modal('show');
+                    $('#modal-ubahjamshift').modal('show');
                 }
             });
         });
@@ -467,4 +447,5 @@
     </script>
 
 </body>
+
 </html>
