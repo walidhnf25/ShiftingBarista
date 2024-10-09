@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsersController;
 use App\Models\Role;
 use App\Models\User;
+use App\Http\Controllers\TipePekerjaanController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -44,6 +46,7 @@ Route::get('/blank', function () {
     return view('blank');
 })->name('blank');
 
+
 Route::get('/login', function () {
     return view('login');
 })->name('login');
@@ -54,9 +57,9 @@ Route::delete('/addpegawai/{id}', [UsersController::class, 'destroy'])->name('ad
 Route::put('/addpegawai/{id}', [UsersController::class, 'update'])->name('addpegawai.update');
 
 
-
-
-
-
-
+Route::get('/tipepekerjaan', [TipePekerjaanController::class, 'index'])->name('tipepekerjaan');
+Route::post('/tipepekerjaan', [TipePekerjaanController::class, 'store'])->name('tipe_pekerjaan.store');
+Route::get('/editTipePekerjaan', [TipePekerjaanController::class, 'editTipePekerjaan']);
+Route::post('/tipepekerjaan/update/{id}', [TipePekerjaanController::class, 'update'])->name('tipepekerjaan.update');
+Route::post('/tipepekerjaan/delete/{id}', [TipePekerjaanController::class, 'deleteTipePekerjaan'])->name('tipepekerjaan.deleteTipePekerjaan');
 
