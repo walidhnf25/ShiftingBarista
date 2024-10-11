@@ -2,7 +2,12 @@
 
 use App\Http\Controllers\jamShiftController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UsersController;
+use App\Models\Role;
+use App\Models\User;
 use App\Http\Controllers\TipePekerjaanController;
+use App\Http\Controllers\AuthController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -27,9 +32,7 @@ Route::get('/tipepekerjaan', function () {
     return view('tipepekerjaan');
 })->name('tipepekerjaan');
 
-Route::get('/index', function () {
-    return view('index');
-})->name('index');
+
 
 Route::get('/buttons', function () {
     return view('buttons');
@@ -43,7 +46,27 @@ Route::get('/blank', function () {
     return view('blank');
 })->name('blank');
 
-Route::get('/tipepekerjaan', [TipePekerjaanController::class, 'index'])->name('tipepekerjaan');
+route::middleware(['guest:user'])->group(function () {
+    Route::get('/', function () {
+        return view('login');
+    })->name('login');
+     Route::post('/proseslogin', [AuthController::class, 'proseslogin'])->name('proseslogin');
+});
+
+route::middleware(['auth:user'])->group(function () {
+    Route::get('/index', function () {
+        return view('index');
+    })->name('index');
+
+    Route::get('/addpegawai', [UsersController::class,'index'])->name('addpegawai');
+    Route::get('/tipepekerjaan', [TipePekerjaanController::class, 'index'])->name('tipepekerjaan');
+});
+
+Route::get('/proseslogout', [AuthController::class, 'proseslogout'])->name('proseslogout');
+Route::post('/addpegawai', [UsersController::class,'store'])->name('addpegawai.store');
+Route::delete('/addpegawai/{id}', [UsersController::class, 'destroy'])->name('addpegawai.destroy');
+Route::put('/addpegawai/{id}', [UsersController::class, 'update'])->name('addpegawai.update');
+
 Route::post('/tipepekerjaan', [TipePekerjaanController::class, 'store'])->name('tipe_pekerjaan.store');
 Route::get('/editTipePekerjaan', [TipePekerjaanController::class, 'editTipePekerjaan']);
 Route::post('/tipepekerjaan/update/{id}', [TipePekerjaanController::class, 'update'])->name('tipepekerjaan.update');
@@ -55,4 +78,3 @@ Route::post('/jamshift', [jamShiftController::class, 'store'])->name('jam_shift.
 Route::get('/editjamshift', [jamShiftController::class, 'editJamShift']);
 Route::post('/jamshift/update/{id}', [jamShiftController::class, 'update'])->name('jamShift.update');
 Route::post('/jamshift/delete/{id}', [jamShiftController::class, 'deleteJamShift'])->name('jamshift.deleteJamShift');
-

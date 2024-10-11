@@ -18,9 +18,10 @@ class CreateJadwalShift extends Migration
             $table->string('id_jadwal', 3)->nullable();
             $table->string('id_outlet', 3)->nullable();
             $table->string('id_user', 3)->nullable();
-            $table->boolean('acc_manager')->nullable();
+            $table->string('id_tipe_pekerjaan', 3)->nullable();
             $table->string('status', 20)->nullable();
             $table->date('hari/tanggal')->nullable();
+            $table->boolean('acc_manager')->nullable();
             $table->timestamps();
         });
     }
