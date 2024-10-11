@@ -13,23 +13,18 @@ class jamShiftController extends Controller
     public function index()
     {
         // Mengambil semua data dari TipePekerjaan
-        $jamShifts = JamShift::all();
+        $jamShift = JamShift::all();
 
         // Meneruskan data ke tampilan
-        return view('jamShift', compact('jamShifts'));
+        return view('jamShift', compact('jamShift'));
     }
 
     public function store(Request $request)
     {
-        //d($request->all());
-          // Melakukan validasi
-        $request->validate([
-            'jam_shift' => 'required|string|max:25',
-        ]);
-
         try {
             // Mengecek apakah data sudah ada di database
-            $existingJamShift = JamShift::where('jam', $request->jam_shift)->first();
+            $existingJamShift = JamShift::where('jam_mulai', $request->jam_mulai)->first();
+            $existingJamShift = JamShift::where('jam_selesai', $request->jam_selesai)->first();
 
             if ($existingJamShift) {
                 // Jika sudah ada munculkan pesan ini
@@ -38,45 +33,34 @@ class jamShiftController extends Controller
 
             // Buat instance baru dari model dan simpan ke database
             JamShift::create([
-                'jam' => $request->jam_shift,
+                'jam_mulai' => $request->jam_mulai,
+                'jam_selesai' => $request->jam_selesai,
             ]);
 
             // Mengembalikan respon sukses
             return redirect()->back()->with('success', 'Jam Shift berhasil ditambahkan!');
         } catch (\Exception $e) {
             // Mengembalikan kesalahan apapun
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data. Silakan coba lagi.'. $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data. Silakan coba lagi.');
         }
-
     }
 
     public function editJamShift(Request $request)
     {
         $jamShift = JamShift::findOrFail($request->id);
-        return view('editjamshift', compact('jamShifts'));
+        return view('editJamShifts', compact('jamShift'));
     }
+
 
     public function update(Request $request, $id)
     {
-        // Melakukan validasi
-        $request->validate([
-            'jam_shift' => 'required|string|max:25',
-        ]);
-
         try {
             // Mencari jam shift berdasarkan id
             $jamShift = JamShift::findOrFail($id);
 
-            // Mengecek apakah data sudah ada di database
-            $existingJamShift = JamShift::where('jam', $request->jam_shift)->first();
-
-            if ($existingJamShift) {
-                // Jika sudah ada munculkan pesan ini
-                return redirect()->back()->with('error', 'Jam Shift sudah ada!');
-            }
-
             // Update kolom jam shift dengan nilai baru
-            $jamShift->jam_shift = $request->input('jam');
+            $jamShift->jam_mulai = $request->input('jam_mulai');
+            $jamShift->jam_selesai = $request->input('jam_selesai');
 
             // Simpan perubahan
             $jamShift->save();

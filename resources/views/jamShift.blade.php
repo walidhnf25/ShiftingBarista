@@ -242,29 +242,28 @@
                                 <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>Waktu Shift</th>
+                                        <th>Jam mulai</th>
+                                        <th>Jam selesai</th>
                                         <th>Control</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($jamShifts as $d)
+                                    @foreach ($jamShift as $d)
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $d->jam }}</td>
-                                            <!-- Tombol delete -->
+                                            <td>{{ $d->jam_mulai }}</td>
+                                            <td>{{ $d->jam_selesai }}</td>
+                                            <!-- Tombol edit dan delete -->
                                             <td>
                                                 <a href="#" class="edit btn btn-info btn-sm btn-circle"
                                                     id="{{ $d->id }}">
                                                     <i class="fa fa-edit"></i>
                                                 </a>
-                                                <button type="button"
-                                                    class="btn btn-danger btn-circle btn-sm delete-confirm"
-                                                    data-id="{{ $d->id }}">
-                                                    <i class="fa fa-trash"></i>
-                                                </button>
-                                                <form action="{{ route('jamshift.deleteJamShift', $d->id) }}"
-                                                    method="POST" style="display: none;">
+                                                <form action="{{ route('jamshift.deleteJamShift', $d->id) }}" method="POST" style="display: inline-block;">
                                                     @csrf
+                                                    <button type="button" class="btn btn-danger btn-circle btn-sm delete-confirm">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
                                                 </form>
                                             </td>
                                         </tr>
@@ -323,8 +322,18 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group mb-3">
-                                    <input type="text" class="form-control" id="jam_shift" name="jam_shift"
-                                        placeholder="Jam Shift">
+                                    <label for="jam_mulai">Jam Mulai</label>
+                                    <input type="time" class="form-control" id="jamMulai" name="jam_mulai"
+                                        placeholder="Jam Mulai">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group mb-3">
+                                    <label for="jam_selesai">Jam Selesai</label>
+                                    <input type="time" class="form-control" id="jamSelesai" name="jam_selesai"
+                                        placeholder="Jam Selesai">
                                 </div>
                             </div>
                         </div>
@@ -341,7 +350,7 @@
         </div>
     </div>
 
-    <!-- Modal-ubahjamshift -->
+    <!-- Modal-editjamshift -->
     <div class="modal modal-blur fade" id="modal-ubahjamshift" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -352,11 +361,11 @@
                     </button>
                 </div>
                 <div class="modal-body" id="loadeditform">
-                    <!-- Form will be loaded here -->
                 </div>
             </div>
         </div>
     </div>
+
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -366,19 +375,14 @@
 
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-        $(document).on('click', '.edit', function(event) {
-            event.preventDefault(); // Prevent the default action if necessary
-            var id = $(this).attr('id'); // Get the 'id' attribute of the clicked element
-            console.log('Edit button clicked. ID:', id); // Print the ID to the console
-        });
-
-        // For the delete button
-        $(document).on('click', '.delete-confirm', function() {
-            var id = $(this).data('id'); // Get the 'data-id' attribute
-            console.log('Delete button clicked. ID:', id); // Print the ID to the console
-        });
+        // // For the delete button
+        // $(document).on('click', '.delete-confirm', function() {
+        //     var id = $(this).data('id'); // Get the 'data-id' attribute
+        //     console.log('Delete button clicked. ID:', id); // Print the ID to the console
+        // });
         $("#btnTambahJamShift").click(function() {
             $('#modal-inputjamshift').modal('show');
         });

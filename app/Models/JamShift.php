@@ -10,6 +10,7 @@ class JamShift extends Model
     use HasFactory;
     protected $table = 'jadwal';
     protected $fillable = [
-        'jam', // Ensure this is here
+        'jam_mulai',
+        'jam_selesai', // Ensure this is here
     ];
 }
