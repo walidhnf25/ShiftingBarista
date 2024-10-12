@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\jamShiftController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsersController;
 use App\Models\Role;
@@ -71,3 +72,9 @@ Route::get('/editTipePekerjaan', [TipePekerjaanController::class, 'editTipePeker
 Route::post('/tipepekerjaan/update/{id}', [TipePekerjaanController::class, 'update'])->name('tipepekerjaan.update');
 Route::post('/tipepekerjaan/delete/{id}', [TipePekerjaanController::class, 'deleteTipePekerjaan'])->name('tipepekerjaan.deleteTipePekerjaan');
 
+//JamShift
+Route::get('/jamshift', [jamShiftController::class, 'index'])->name('jamshift');
+Route::post('/jamshift', [jamShiftController::class, 'store'])->name('jam_shift.store');
+Route::get('/editjamshift', [jamShiftController::class, 'editJamShift']);
+Route::post('/jamshift/update/{id}', [jamShiftController::class, 'update'])->name('jamShift.update');
+Route::post('/jamshift/delete/{id}', [jamShiftController::class, 'deleteJamShift'])->name('jamshift.deleteJamShift');
