@@ -40,6 +40,15 @@
         </a>
     </li>
 
+    <hr class="sidebar-divider">
+
+    <li class="nav-item {{ Request::is('jamshift') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('jamshift') }}">
+            <i class="fas fa-fw fa-clock"></i>
+            <span>Waktu Shift</span>
+        </a>
+    </li>
+
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
 
