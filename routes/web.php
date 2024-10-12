@@ -54,27 +54,31 @@ route::middleware(['guest:user'])->group(function () {
 });
 
 route::middleware(['auth:user'])->group(function () {
+
+    //index
     Route::get('/index', function () {
         return view('index');
     })->name('index');
 
-    Route::get('/addpegawai', [UsersController::class,'index'])->name('addpegawai');
+    // tipe pekerjaan
     Route::get('/tipepekerjaan', [TipePekerjaanController::class, 'index'])->name('tipepekerjaan');
+    Route::post('/tipepekerjaan', [TipePekerjaanController::class, 'store'])->name('tipe_pekerjaan.store');
+    Route::get('/editTipePekerjaan', [TipePekerjaanController::class, 'editTipePekerjaan']);
+    Route::post('/tipepekerjaan/update/{id}', [TipePekerjaanController::class, 'update'])->name('tipepekerjaan.update');
+    Route::post('/tipepekerjaan/delete/{id}', [TipePekerjaanController::class, 'deleteTipePekerjaan'])->name('tipepekerjaan.deleteTipePekerjaan');
+
+    // add pegawai
+    Route::get('/addpegawai', [UsersController::class,'index'])->name('addpegawai');
+    Route::get('/proseslogout', [AuthController::class, 'proseslogout'])->name('proseslogout');
+    Route::post('/addpegawai', [UsersController::class,'store'])->name('addpegawai.store');
+    Route::delete('/addpegawai/{id}', [UsersController::class, 'destroy'])->name('addpegawai.destroy');
+    Route::put('/addpegawai/{id}', [UsersController::class, 'update'])->name('addpegawai.update');
+
+    // jam shift
+    Route::get('/jamshift', [jamShiftController::class, 'index'])->name('jamshift');
+    Route::get('/jamshift', [jamShiftController::class, 'index'])->name('jamshift');
+    Route::post('/jamshift', [jamShiftController::class, 'store'])->name('jam_shift.store');
+    Route::get('/editjamshift', [jamShiftController::class, 'editJamShift']);
+    Route::post('/jamshift/update/{id}', [jamShiftController::class, 'update'])->name('jamShift.update');
+    Route::post('/jamshift/delete/{id}', [jamShiftController::class, 'deleteJamShift'])->name('jamshift.deleteJamShift');
 });
-
-Route::get('/proseslogout', [AuthController::class, 'proseslogout'])->name('proseslogout');
-Route::post('/addpegawai', [UsersController::class,'store'])->name('addpegawai.store');
-Route::delete('/addpegawai/{id}', [UsersController::class, 'destroy'])->name('addpegawai.destroy');
-Route::put('/addpegawai/{id}', [UsersController::class, 'update'])->name('addpegawai.update');
-
-Route::post('/tipepekerjaan', [TipePekerjaanController::class, 'store'])->name('tipe_pekerjaan.store');
-Route::get('/editTipePekerjaan', [TipePekerjaanController::class, 'editTipePekerjaan']);
-Route::post('/tipepekerjaan/update/{id}', [TipePekerjaanController::class, 'update'])->name('tipepekerjaan.update');
-Route::post('/tipepekerjaan/delete/{id}', [TipePekerjaanController::class, 'deleteTipePekerjaan'])->name('tipepekerjaan.deleteTipePekerjaan');
-
-//JamShift
-Route::get('/jamshift', [jamShiftController::class, 'index'])->name('jamshift');
-Route::post('/jamshift', [jamShiftController::class, 'store'])->name('jam_shift.store');
-Route::get('/editjamshift', [jamShiftController::class, 'editJamShift']);
-Route::post('/jamshift/update/{id}', [jamShiftController::class, 'update'])->name('jamShift.update');
-Route::post('/jamshift/delete/{id}', [jamShiftController::class, 'deleteJamShift'])->name('jamshift.deleteJamShift');
