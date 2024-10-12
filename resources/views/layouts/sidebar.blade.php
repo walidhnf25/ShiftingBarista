@@ -20,17 +20,21 @@
         </a>
     </li>
 
+    @role('manager', 'user')
     <!-- Divider -->
     <hr class="sidebar-divider">
 
     <!-- Nav Item - Tipe Pekerjaan -->
+    
     <li class="nav-item {{ Request::is('tipepekerjaan') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('tipepekerjaan') }}">
             <i class="fas fa-fw fa-briefcase"></i>
             <span>Tipe Pekerjaan</span>
         </a>
     </li>
+    @endrole
 
+    @role('manager', 'user')
     <hr class="sidebar-divider">
 
     <li class="nav-item {{ Request::is('addpegawai') ? 'active' : '' }}">
@@ -39,7 +43,9 @@
             <span>Tambah Pegawai</span>
         </a>
     </li>
+    @endrole
 
+    @role('manager', 'user')
     <hr class="sidebar-divider">
 
     <li class="nav-item {{ Request::is('jamshift') ? 'active' : '' }}">
@@ -48,6 +54,7 @@
             <span>Waktu Shift</span>
         </a>
     </li>
+    @endrole
 
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">

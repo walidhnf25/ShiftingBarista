@@ -17,14 +17,16 @@ class UsersController extends Controller
      */
     public function index()
     {
-        $users = User::with('role')->get();
-        $roles = Role::all();
-        return view('addpegawai', compact('users' , 'roles'));  
-    }    
-
-    public function role()
+        $users = User::with('roles')->get();
+        $users = User::all();
+        
+        return view('addpegawai', compact('users'));  
+    }
+    
+    public function roles(): BelongsToMany
     {
-        return $this->belongsTo(Role::class, 'id_role', 'id'); // 'id_role' adalah foreign key di tabel users, 'id' adalah primary key di tabel roles
+        return $this->belongsToMany(Role::class, 'model_has_roles', 'model_id', 'role_id')
+                    ->withPivot('model_type'); // Adjust if you have additional fields in the pivot table
     }
     
     /**
@@ -48,7 +50,7 @@ class UsersController extends Controller
         // Validasi input
         $request->validate([
             'name' => 'nullable|max:50',
-            'id_role' => 'nullable|max:3',
+            'role' => 'nullable|max:50',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6',
         ]);
@@ -56,8 +58,8 @@ class UsersController extends Controller
         // Simpan pengguna baru ke database
         User::create([
             'name' => $request->name,
-            'id_role' => $request->id_role,
             'email' => $request->email,
+            'role' => $request->role,
             'password' => bcrypt($request->password), // Hash password sebelum disimpan
         ]);
     
@@ -99,7 +101,7 @@ class UsersController extends Controller
         // Validasi input
         $request->validate([
             'name' => 'nullable|max:50',
-            'id_role' => 'nullable|max:3',
+            'role' => 'nullable|max:50',
             'email' => 'required|email|unique:users,email,' . $id, // Pastikan email unik kecuali untuk pengguna ini
             'password' => 'nullable|min:6', // Password tidak wajib, tetapi minimal 6 karakter
         ]);
@@ -114,7 +116,7 @@ class UsersController extends Controller
     
         // Update data pengguna
         $user->name = $request->name;
-        $user->id_role = $request->id_role;
+        $user->role = $request->role;
         $user->email = $request->email;
     
         // Jika password diisi, maka update password

@@ -5,13 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\JamShift;
-use Illuminate\Support\Facades\Log;
-
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class jamShiftController extends Controller
 {
     public function index()
     {
+        $user = Auth::guard('user')->user();
         // Mengambil semua data dari TipePekerjaan
         $jamShift = JamShift::all();
 
