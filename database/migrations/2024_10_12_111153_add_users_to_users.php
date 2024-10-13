@@ -18,7 +18,6 @@ class AddUsersToUsers extends Migration
             [
                 'name' => 'Manager',
                 'email' => 'manager@gmail.com',
-                'role' => 'Manager',
                 'email_verified_at' => null,
                 'password' => Hash::make('123456'), // Hash the password
                 'remember_token' => null,
@@ -28,7 +27,6 @@ class AddUsersToUsers extends Migration
             [
                 'name' => 'Staff',
                 'email' => 'staff@gmail.com',
-                'role' => 'Staff',
                 'email_verified_at' => null,
                 'password' => Hash::make('123456'), // Hash the password
                 'remember_token' => null,
