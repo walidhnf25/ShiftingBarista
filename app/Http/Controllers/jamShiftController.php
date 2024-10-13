@@ -12,10 +12,36 @@ class jamShiftController extends Controller
 {
     public function index()
     {
-        // Mengambil semua data dari TipePekerjaan
-        $jamShift = JamShift::all();
+        $jamShift = JamShift::all()->map(function ($shift) {
+            // Mengubah jam_mulai dan jam_selesai menjadi timestamp
+            $mulai = strtotime($shift->jam_mulai);
+            $selesai = strtotime($shift->jam_selesai);
 
-        // Meneruskan data ke tampilan
+            // Jika jam_selesai lebih kecil dari jam_mulai, tambahkan 1 hari (86400 detik)
+            if ($selesai < $mulai) {
+                $selesai += 86400; // 86400 detik = 24 jam
+            }
+
+            // Hitung selisih waktu dalam detik
+            $selisihDetik = $selesai - $mulai;
+
+            // Konversi selisih ke jam dan menit
+            $jam = floor($selisihDetik / 3600);
+            $menit = floor(($selisihDetik % 3600) / 60);
+
+            // Format durasi dalam bentuk "X jam Y menit"
+            if ($jam > 0 && $menit > 0) {
+                $shift->durasi = "$jam jam $menit menit";
+            } elseif ($jam > 0) {
+                $shift->durasi = "$jam jam";
+            } else {
+                $shift->durasi = "$menit menit";
+            }
+
+            return $shift;
+        });
+
+        // Kirim data ke view
         return view('jamShift', compact('jamShift'));
     }
 
