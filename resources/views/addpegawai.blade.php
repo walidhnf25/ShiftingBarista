@@ -40,12 +40,11 @@
 
                 <!-- Role -->
                 <div class="form-group col-md-6">
-                    <label for="id_role">Role Pegawai</label>
-                    <select class="form-control" id="id_role" name="id_role" required>
+                    <label for="id">Role Pegawai</label>
+                    <select class="form-control" id="id" name="id" required>
                         <option value="" disabled selected>Pilih Role</option>
-                        @foreach($roles as $role)
-                        <option value="{{ $role->id }}">{{ $role->nama }}</option>
-                        @endforeach
+                        <option value="1">Manajer</option>
+                        <option value="2">Staff</option>
                     </select>
                 </div>
             </div>
@@ -84,7 +83,7 @@
             <th scope="row">{{ $loop->iteration }}</th>
             <td>{{ $user->name }}</td>
             <td>{{ $user->email }}</td>
-            <td>{{ $user->role->nama }}</td>
+            <td></td>
             <td>
                 <!-- Tombol untuk Read, Update, Delete -->
                 <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#ReadModal{{ $user->id }}">
@@ -93,7 +92,7 @@
                 <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#EditModal{{ $user->id }}">
                     Edit
                 </button>
-                <form action="{{ route('addpegawai.destroy', $user->id) }}" method="POST" class="d-inline">
+                <form action="{{ route('addpegawai.destroy', $user->email) }}" method="POST" class="d-inline">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus pengguna ini?')">Delete</button>
@@ -112,7 +111,7 @@
                     <div class="modal-body">
                         <p><strong>Nama :</strong> {{$user->name}} </p>
                         <p><strong>Email :</strong> {{$user->email}} </p>
-                        <p><strong>Role :</strong> {{$user->role->nama}}</p>
+                        <p><strong>Role :</strong> </p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -149,18 +148,7 @@
                                 </div>
                             </div>
 
-                            <div class="form-row">
-                                <!-- Role -->
-                                <div class="form-group col-12">
-                                    <label for="id_role">Role Pegawai</label>
-                                    <select class="form-control" id="id_role" name="id_role" required>
-                                        <option value="" disabled>Pilih Role</option>
-                                        @foreach($roles as $role)
-                                        <option value="{{ $role->id }}" {{ $role->id == $user->id_role ? 'selected' : '' }}>{{ $role->nama }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
+                            
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                 <button type="submit" class="btn btn-primary">Save changes</button>

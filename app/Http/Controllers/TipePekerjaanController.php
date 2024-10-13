@@ -4,16 +4,19 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\TipePekerjaan;
+use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class TipePekerjaanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $user = Auth::guard('user')->user();
         // Mengambil semua data dari TipePekerjaan
         $TipePekerjaan = TipePekerjaan::all();
 
         // Meneruskan data ke tampilan
-        return view('tipepekerjaan', compact('TipePekerjaan'));
+        return view('tipepekerjaan', compact('TipePekerjaan', 'user'));
     }
 
     public function store(Request $request)

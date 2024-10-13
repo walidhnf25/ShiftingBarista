@@ -14,7 +14,6 @@
                 <img class="img-profile rounded-circle mr-3" src="img/undraw_profile.svg">
                 <div class="small text-muted">
                     {{ Auth::guard('user')->user()->name }}<br>
-                    {{ Auth::guard('user')->user()->role->nama }}
                 </div>
             </a>
             <!-- Dropdown - User Information -->

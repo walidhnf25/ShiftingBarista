@@ -17,14 +17,16 @@ class UsersController extends Controller
      */
     public function index()
     {
-        $users = User::with('role')->get();
-        $roles = Role::all();
-        return view('addpegawai', compact('users' , 'roles'));  
-    }    
-
-    public function role()
+        $users = User::with('roles')->get();
+        $users = User::all();
+        
+        return view('addpegawai', compact('users'));  
+    }
+    
+    public function roles(): BelongsToMany
     {
-        return $this->belongsTo(Role::class, 'id_role', 'id'); // 'id_role' adalah foreign key di tabel users, 'id' adalah primary key di tabel roles
+        return $this->belongsToMany(Role::class, 'model_has_roles', 'model_id', 'role_id')
+                    ->withPivot('model_type'); // Adjust if you have additional fields in the pivot table
     }
     
     /**
@@ -45,18 +47,19 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
+        
         // Validasi input
         $request->validate([
+            'id' => 'nullable|integer|min:1',
             'name' => 'nullable|max:50',
-            'id_role' => 'nullable|max:3',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6',
         ]);
     
         // Simpan pengguna baru ke database
         User::create([
+            'id' => $request->id,
             'name' => $request->name,
-            'id_role' => $request->id_role,
             'email' => $request->email,
             'password' => bcrypt($request->password), // Hash password sebelum disimpan
         ]);
@@ -98,8 +101,8 @@ class UsersController extends Controller
     {
         // Validasi input
         $request->validate([
+            'id' => 'nullable|integer|min:1',
             'name' => 'nullable|max:50',
-            'id_role' => 'nullable|max:3',
             'email' => 'required|email|unique:users,email,' . $id, // Pastikan email unik kecuali untuk pengguna ini
             'password' => 'nullable|min:6', // Password tidak wajib, tetapi minimal 6 karakter
         ]);
@@ -113,8 +116,8 @@ class UsersController extends Controller
         }
     
         // Update data pengguna
+        $user->id = $request->id;
         $user->name = $request->name;
-        $user->id_role = $request->id_role;
         $user->email = $request->email;
     
         // Jika password diisi, maka update password
@@ -136,21 +139,21 @@ class UsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-{
-    // Cari user berdasarkan ID
-    $user = User::find($id);
+    public function destroy($email)
+    {
+        // Cari user berdasarkan ID
+        $user = User::where('email', $email);
 
-    // Jika user tidak ditemukan, berikan response gagal
-    if (!$user) {
-        return redirect()->route('addpegawai')->with('error', 'Pengguna tidak ditemukan');
+        // Jika user tidak ditemukan, berikan response gagal
+        if (!$user) {
+            return redirect()->route('addpegawai')->with('error', 'Pengguna tidak ditemukan');
+        }
+
+        // Hapus user
+        $user->delete();
+
+        // Redirect kembali dengan pesan sukses
+        return redirect()->route('addpegawai')->with('success', 'Pengguna berhasil dihapus');
     }
-
-    // Hapus user
-    $user->delete();
-
-    // Redirect kembali dengan pesan sukses
-    return redirect()->route('addpegawai')->with('success', 'Pengguna berhasil dihapus');
-}
 
 }
