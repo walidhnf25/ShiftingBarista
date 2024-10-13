@@ -45,7 +45,7 @@
     </li>
     @endrole
 
-    @role('manager', 'user')
+    @role('staff', 'user')
     <hr class="sidebar-divider">
 
     <li class="nav-item {{ Request::is('jamshift') ? 'active' : '' }}">

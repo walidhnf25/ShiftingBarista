@@ -53,7 +53,7 @@ route::middleware(['guest:user'])->group(function () {
 });
 
 Route::group(['middleware' => ['role:staff,user']], function () {
-    
+    Route::get('/jamshift', [jamShiftController::class, 'index'])->name('jamshift');
 });
 
 Route::group(['middleware' => ['role:manager,user']], function () {
@@ -67,11 +67,11 @@ Route::group(['middleware' => ['role:manager,user']], function () {
     // add pegawai
     Route::get('/addpegawai', [UsersController::class,'index'])->name('addpegawai');
     Route::post('/addpegawai', [UsersController::class,'store'])->name('addpegawai.store');
-    Route::delete('/addpegawai/{id}', [UsersController::class, 'destroy'])->name('addpegawai.destroy');
+    Route::delete('/addpegawai/email/{email}', [UsersController::class, 'destroy'])->name('addpegawai.destroy');
     Route::put('/addpegawai/{id}', [UsersController::class, 'update'])->name('addpegawai.update');
 
     // jam shift
-    Route::get('/jamshift', [jamShiftController::class, 'index'])->name('jamshift');
+    
     Route::post('/jamshift', [jamShiftController::class, 'store'])->name('jam_shift.store');
     Route::get('/editjamshift', [jamShiftController::class, 'editJamShift']);
     Route::post('/jamshift/update/{id}', [jamShiftController::class, 'update'])->name('jamShift.update');
