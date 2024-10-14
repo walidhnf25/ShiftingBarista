@@ -16,6 +16,7 @@ class AddUsersToUsers extends Migration
         // Data to be inserted
         $users = [
             [
+                'id' => 1,
                 'name' => 'Manager',
                 'email' => 'manager@gmail.com',
                 'email_verified_at' => null,
@@ -25,6 +26,7 @@ class AddUsersToUsers extends Migration
                 'updated_at' => now(),
             ],
             [
+                'id' => 2,
                 'name' => 'Staff',
                 'email' => 'staff@gmail.com',
                 'email_verified_at' => null,
