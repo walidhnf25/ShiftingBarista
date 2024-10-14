@@ -38,30 +38,33 @@
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Jam Mulai</th>
-                        <th>Jam Selesai</th>
+                        <th>Jam mulai</th>
+                        <th>Jam selesai</th>
+                        <th>Durasi</th>
                         <th>Control</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($jamShift as $d)
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{ $d->jam_mulai }}</td>
-                            <td>{{ $d->jam_selesai }}</td>
-                            <td>
-                                <!-- Edit and Delete Buttons -->
-                                <a href="#" class="edit btn btn-info btn-sm btn-circle" id="{{ $d->id }}">
-                                    <i class="fa fa-edit"></i>
-                                </a>
-                                <form action="{{ route('jamshift.deleteJamShift', $d->id) }}" method="POST" style="display: inline-block;">
-                                    @csrf
-                                    <button type="button" class="btn btn-danger btn-circle btn-sm delete-confirm">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ $d->jam_mulai }}</td>
+                        <td>{{ $d->jam_selesai }}</td>
+                        <td>{{ $d->durasi }}</td>
+                        <!-- Tombol edit dan delete -->
+                        <td>
+                            <a href="#" class="edit btn btn-info btn-sm btn-circle"
+                                id="{{ $d->id }}">
+                                <i class="fa fa-edit"></i>
+                            </a>
+                            <form action="{{ route('jamshift.deleteJamShift', $d->id) }}" method="POST" style="display: inline-block;">
+                                @csrf
+                                <button type="button" class="btn btn-danger btn-circle btn-sm delete-confirm">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
                     @endforeach
                 </tbody>
             </table>
@@ -91,40 +94,6 @@
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Jam mulai</th>
-                                        <th>Jam selesai</th>
-                                        <th>Durasi</th>
-                                        <th>Control</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($jamShift as $d)
-                                        <tr>
-                                            <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $d->jam_mulai }}</td>
-                                            <td>{{ $d->jam_selesai }}</td>
-                                            <td>{{ $d->durasi }}</td>
-                                            <!-- Tombol edit dan delete -->
-                                            <td>
-                                                <a href="#" class="edit btn btn-info btn-sm btn-circle"
-                                                    id="{{ $d->id }}">
-                                                    <i class="fa fa-edit"></i>
-                                                </a>
-                                                <form action="{{ route('jamshift.deleteJamShift', $d->id) }}" method="POST" style="display: inline-block;">
-                                                    @csrf
-                                                    <button type="button" class="btn btn-danger btn-circle btn-sm delete-confirm">
-                                                        <i class="fa fa-trash"></i>
-                                                    </button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
                             <div class="form-group mb-3">
                                 <label for="jam_selesai">Jam Selesai</label>
                                 <input type="time" class="form-control" id="jamSelesai" name="jam_selesai" placeholder="Jam Selesai">
