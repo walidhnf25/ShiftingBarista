@@ -3,11 +3,11 @@
         'name' => 'laravel/laravel',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-<<<<<<< Updated upstream
-        'reference' => '903832d669814137df25257b75425843344443ad',
-=======
+
         'reference' => '22fa060e8241ca3c01bbf61d4e605ace656763be',
->>>>>>> Stashed changes
+
+        'reference' => '0f0fe6fcf19cd194943c3a6e95ae4fe40b8a761b',
+
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -419,11 +419,9 @@
         'laravel/laravel' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-<<<<<<< Updated upstream
-            'reference' => '903832d669814137df25257b75425843344443ad',
-=======
+
             'reference' => '22fa060e8241ca3c01bbf61d4e605ace656763be',
->>>>>>> Stashed changes
+            'reference' => '0f0fe6fcf19cd194943c3a6e95ae4fe40b8a761b',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -958,18 +956,20 @@
             'aliases' => array(),
             'dev_requirement' => true,
         ),
-<<<<<<< Updated upstream
-=======
+
         'spatie/laravel-permission' => array(
             'pretty_version' => '4.4.3',
             'version' => '4.4.3.0',
             'reference' => '779797a47689d0bc1666e26f566cca44603e56fa',
+        'spatie/laravel-permission' => array(
+            'pretty_version' => '5.11.1',
+            'version' => '5.11.1.0',
+            'reference' => '7090824cca57e693b880ce3aaf7ef78362e28bbd',
             'type' => 'library',
             'install_path' => __DIR__ . '/../spatie/laravel-permission',
             'aliases' => array(),
             'dev_requirement' => false,
         ),
->>>>>>> Stashed changes
         'swiftmailer/swiftmailer' => array(
             'pretty_version' => 'v6.3.0',
             'version' => '6.3.0.0',
