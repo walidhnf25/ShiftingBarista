@@ -3,7 +3,11 @@
         'name' => 'laravel/laravel',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
+<<<<<<< Updated upstream
         'reference' => '903832d669814137df25257b75425843344443ad',
+=======
+        'reference' => '22fa060e8241ca3c01bbf61d4e605ace656763be',
+>>>>>>> Stashed changes
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -86,9 +90,9 @@
             'dev_requirement' => false,
         ),
         'dragonmantank/cron-expression' => array(
-            'pretty_version' => 'v3.3.3',
-            'version' => '3.3.3.0',
-            'reference' => 'adfb1f505deb6384dc8b39804c5065dd3c8c8c0a',
+            'pretty_version' => 'v3.4.0',
+            'version' => '3.4.0.0',
+            'reference' => '8c784d071debd117328803d86b2097615b457500',
             'type' => 'library',
             'install_path' => __DIR__ . '/../dragonmantank/cron-expression',
             'aliases' => array(),
@@ -415,7 +419,11 @@
         'laravel/laravel' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
+<<<<<<< Updated upstream
             'reference' => '903832d669814137df25257b75425843344443ad',
+=======
+            'reference' => '22fa060e8241ca3c01bbf61d4e605ace656763be',
+>>>>>>> Stashed changes
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -536,9 +544,9 @@
             'dev_requirement' => false,
         ),
         'nikic/php-parser' => array(
-            'pretty_version' => 'v5.3.0',
-            'version' => '5.3.0.0',
-            'reference' => '3abf7425cd284141dc5d8d14a9ee444de3345d1a',
+            'pretty_version' => 'v5.3.1',
+            'version' => '5.3.1.0',
+            'reference' => '8eea230464783aa9671db8eea6f8c6ac5285794b',
             'type' => 'library',
             'install_path' => __DIR__ . '/../nikic/php-parser',
             'aliases' => array(),
@@ -950,6 +958,18 @@
             'aliases' => array(),
             'dev_requirement' => true,
         ),
+<<<<<<< Updated upstream
+=======
+        'spatie/laravel-permission' => array(
+            'pretty_version' => '4.4.3',
+            'version' => '4.4.3.0',
+            'reference' => '779797a47689d0bc1666e26f566cca44603e56fa',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../spatie/laravel-permission',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+>>>>>>> Stashed changes
         'swiftmailer/swiftmailer' => array(
             'pretty_version' => 'v6.3.0',
             'version' => '6.3.0.0',
