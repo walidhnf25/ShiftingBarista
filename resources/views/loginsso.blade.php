@@ -30,13 +30,13 @@
     <!-- Outer Row -->
     <div class="col-md-9 col-lg-6">
 
-        <div class="card o-hidden border-0 shadow shadow-blue my-5">
+        <div class="card o-hidden border-0 shadow shadow-red my-5">
 
             <!-- Nested Row within Card Body -->
             <div class="col-lg-12">
                 <div class="py-5 px-4">
                     <div class="text-center">
-                        <h1 class="h4 text-gray-900 mb-4" id="typing-text"></h1>
+                        <h1 class="h4 text-gray-900 mb-4" id="typing-text">Login SSO</h1>
                     </div>
                     <div class="text-center">
                         @php
@@ -51,13 +51,13 @@
                             </div>
                         @endif
                     </div>
-                    <form class="user" action="{{ route('proseslogin') }}" method="POST">
+                    <form class="user" action="{{ route('authSSO') }}" method="POST">
                         @csrf <!-- Token CSRF untuk keamanan -->
                         <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="email" name="email" id="email" class="form-control"
-                                id="exampleInputEmail" aria-describedby="emailHelp"
-                                placeholder="Enter Email Address" required>
+                            <label for="username">Username SSO Anda</label>
+                            <input type="text" name="username" id="username" class="form-control"
+                                 aria-describedby="emailHelp"
+                                placeholder="Masukan Username Anda" required>
                         </div>
                         <div class="form-group">
                             <label for="password">Password</label>
@@ -73,16 +73,12 @@
                                 <label class="custom-control-label" for="customCheck">Remember Me</label>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary btn-block">Login</button>
-                        <hr>
-                        <a href={{ route('loginsso')}} class="btn btn-google btn-block">
-                            <i class="fab fa-google fa-fw"></i> Login with SSO
-                        </a>
+                        <button type="submit" class="btn btn-google btn-block">Login with SSO</button>
                     </form>
 
                     <hr>
                     <div class="text-center">
-                        <a class="small" href="register.html">Create an Account!</a>
+                        <a href={{ route('login')}} class="small" >Login dengan akun normal</a>
                     </div>
                 </div>
             </div>
@@ -101,23 +97,6 @@
 
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
-
-    <script>
-        const text = "Welcome to Shifting Barista!";
-        let index = 0;
-        const speed = 100;
-
-        function typeEffect() {
-            if (index < text.length) {
-                document.getElementById("typing-text").innerHTML += text.charAt(index);
-                index++;
-                setTimeout(typeEffect, speed);
-            }
-        }
-
-        // Memulai efek mengetik saat halaman dimuat
-        window.onload = typeEffect;
-</script>
 
 </body>
 
