@@ -52,7 +52,7 @@ route::middleware(['guest:user'])->group(function () {
      Route::post('/proseslogin', [AuthController::class, 'proseslogin'])->name('proseslogin');
 });
 
-Route::group(['middleware' => ['role:staff,user']], function () {
+Route::group(['middleware' => ['role:Staff,user']], function () {
     // jam shift
     Route::get('/jamshift', [jamShiftController::class, 'index'])->name('jamshift');
     Route::post('/jamshift', [jamShiftController::class, 'store'])->name('jam_shift.store');
@@ -61,7 +61,7 @@ Route::group(['middleware' => ['role:staff,user']], function () {
     Route::post('/jamshift/delete/{id}', [jamShiftController::class, 'deleteJamShift'])->name('jamshift.deleteJamShift');
 });
 
-Route::group(['middleware' => ['role:manager,user']], function () {
+Route::group(['middleware' => ['role:Manager,user']], function () {
     // tipe pekerjaan
     Route::get('/tipepekerjaan', [TipePekerjaanController::class, 'index'])->name('tipepekerjaan');
     Route::post('/tipepekerjaan', [TipePekerjaanController::class, 'store'])->name('tipe_pekerjaan.store');
