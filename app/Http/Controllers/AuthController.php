@@ -19,7 +19,6 @@ class AuthController extends Controller
             return redirect('/')->with(['warning' => 'Email atau Password salah']);
         }
     }
-
   
     public function authSSO(Request $request)
     {

@@ -17,7 +17,9 @@ class AddUsersToUsers extends Migration
         $users = [
             [
                 'id' => 1,
+                'role' => 'Manager',
                 'name' => 'Manager',
+                'username' => 'manager123',
                 'email' => 'manager@gmail.com',
                 'email_verified_at' => null,
                 'password' => Hash::make('123456'), // Hash the password
@@ -28,6 +30,8 @@ class AddUsersToUsers extends Migration
             [
                 'id' => 2,
                 'name' => 'Staff',
+                'role' => 'Staff',
+                'username' => 'staff123',
                 'email' => 'staff@gmail.com',
                 'email_verified_at' => null,
                 'password' => Hash::make('123456'), // Hash the password
