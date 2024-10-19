@@ -20,7 +20,7 @@
         </a>
     </li>
 
-    @role('manager', 'user')
+    @role('Manager', 'user')
     <!-- Divider -->
     <hr class="sidebar-divider">
 
@@ -34,7 +34,7 @@
     </li>
     @endrole
 
-    @role('manager', 'user')
+    @role('Manager', 'user')
     <hr class="sidebar-divider">
 
     <li class="nav-item {{ Request::is('addpegawai') ? 'active' : '' }}">
@@ -45,7 +45,7 @@
     </li>
     @endrole
 
-    @role('staff', 'user')
+    @role('Staff', 'user')
     <hr class="sidebar-divider">
 
     <li class="nav-item {{ Request::is('jamshift') ? 'active' : '' }}">

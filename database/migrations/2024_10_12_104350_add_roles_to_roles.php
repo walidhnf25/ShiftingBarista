@@ -15,8 +15,8 @@ class AddRolesToRoles extends Migration
     {
         // Menambahkan data baru ke tabel yang sudah ada
         DB::table('roles')->insert([
-            ['name' => 'manager', 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()],
-            ['name' => 'staff', 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Manager', 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()],
+            ['name' => 'Staff', 'guard_name' => 'web', 'created_at' => now(), 'updated_at' => now()],
         ]);
     }
 

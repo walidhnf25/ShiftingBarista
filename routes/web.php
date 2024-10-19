@@ -59,6 +59,7 @@ route::middleware(['guest:user'])->group(function () {
 
 });
 
+Route::group(['middleware' => ['role:Staff,user']], function () {
 
 
 Route::group(['middleware' => ['role:staff,user']], function () {
@@ -70,7 +71,7 @@ Route::group(['middleware' => ['role:staff,user']], function () {
     Route::post('/jamshift/delete/{id}', [jamShiftController::class, 'deleteJamShift'])->name('jamshift.deleteJamShift');
 });
 
-Route::group(['middleware' => ['role:manager,user']], function () {
+Route::group(['middleware' => ['role:Manager,user']], function () {
     // tipe pekerjaan
     Route::get('/tipepekerjaan', [TipePekerjaanController::class, 'index'])->name('tipepekerjaan');
     Route::post('/tipepekerjaan', [TipePekerjaanController::class, 'store'])->name('tipe_pekerjaan.store');
