@@ -21,6 +21,7 @@
                         Guest
                     @endif
                 </div>
+                
             </a>
             <!-- Dropdown - User Information -->
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"

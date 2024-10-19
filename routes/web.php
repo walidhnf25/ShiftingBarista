@@ -60,6 +60,9 @@ route::middleware(['guest:user'])->group(function () {
 });
 
 Route::group(['middleware' => ['role:Staff,user']], function () {
+
+
+Route::group(['middleware' => ['role:staff,user']], function () {
     // jam shift
     Route::get('/jamshift', [jamShiftController::class, 'index'])->name('jamshift');
     Route::post('/jamshift', [jamShiftController::class, 'store'])->name('jam_shift.store');
