@@ -55,8 +55,7 @@ route::middleware(['guest:user'])->group(function () {
         return view('login');
     })->name('login');
      Route::post('/proseslogin', [AuthController::class, 'proseslogin'])->name('proseslogin'); 
-
-
+     Route::post('/authSSO' , [AuthController::class, 'authSSO'])->name('authSSO');
 });
 
 
@@ -93,7 +92,6 @@ Route::middleware(['auth:user'])->group(function () {
     Route::get('/index', function () {
         return view('index');
     })->name('index');
-    Route::post('/authSSO' , [AuthController::class, 'authSSO'])->name('authSSO');
     Route::get('/proseslogout', [AuthController::class, 'proseslogout'])->name('proseslogout'); 
 });
 

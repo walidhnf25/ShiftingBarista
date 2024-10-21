@@ -24,6 +24,7 @@ class AuthController extends Controller
     public function authSSO(Request $request)
     {
     
+        // dd($request->all());
         $request->validate([
             'username' => 'required',
             'password' => 'required'
@@ -69,7 +70,7 @@ class AuthController extends Controller
         // User Login
         Auth::login($user);
 
-        return redirect('/index');
+        return redirect()->route('index');
     }
 
     public function proseslogout()
