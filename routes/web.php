@@ -45,9 +45,9 @@ Route::get('/blank', function () {
     return view('blank');
 })->name('blank');
 
-Route::get('/loginsso', function () {
-    return view('loginsso');
-})->name('loginsso');
+Route::get('/registersso', function () {
+    return view('registersso');
+})->name('registersso');
 
 // Code Walid
 route::middleware(['guest:user'])->group(function () {
@@ -87,7 +87,8 @@ Route::middleware(['auth:user'])->group(function () {
     Route::get('/index', function () {
         return view('index');
     })->name('index');
-    Route::post('/authSSO' , [AuthController::class, 'authSSO'])->name('authSSO');
+    // ngecegah register ini cok
+    // Route::post('/authSSO' , [AuthController::class, 'authSSO'])->name('authSSO');
     Route::get('/proseslogout', [AuthController::class, 'proseslogout'])->name('proseslogout'); 
 });
 

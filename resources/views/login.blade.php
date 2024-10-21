@@ -41,6 +41,7 @@
                     <div class="text-center">
                         @php
                             $messagewarning = Session::get('warning');
+                            $successwarning = Session::get('success');
                         @endphp
                         @if ($messagewarning)
                             <div class="alert alert-warning">
@@ -50,40 +51,38 @@
                                 </button>
                             </div>
                         @endif
+
+                        @if ($successwarning)
+                        <div class="alert alert-warning">
+                            {{ $successwarning }}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    @endif
+
+                        
                     </div>
                     <form class="user" action="{{ route('proseslogin') }}" method="POST">
                         @csrf <!-- Token CSRF untuk keamanan -->
                         <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="email" name="email" id="email" class="form-control"
-                                id="exampleInputEmail" aria-describedby="emailHelp"
-                                placeholder="Enter Email Address" required>
+                            <label for="username">Username</label>
+                            <input type="username" name="username" id="username" class="form-control"
+                                id="exampleInputusername" aria-describedby="emailHelp"
+                                placeholder="Masukan Username" required>
                         </div>
                         <div class="form-group">
                             <label for="password">Password</label>
                             <input type="password" name="password" id="password" class="form-control"
                                 id="exampleInputPassword" placeholder="Password" required>
                         </div>
-                        <div class="text-right">
-                            <a class="small" href="forgot-password.html">Forgot Password?</a>
-                        </div>
-                        <div class="form-group">
-                            <div class="custom-control custom-checkbox small">
-                                <input type="checkbox" class="custom-control-input" id="customCheck">
-                                <label class="custom-control-label" for="customCheck">Remember Me</label>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn btn-primary btn-block">Login</button>
+                        <button type="submit" class="btn btn-primary btn-block mt-4">Masuk</button>
                         <hr>
-                        <a href={{ route('loginsso')}} class="btn btn-google btn-block">
-                            <i class="fab fa-google fa-fw"></i> Login with SSO
+                        <a href={{ route('registersso')}} class="btn btn-google btn-block ">
+                            Daftar melalui SSO
                         </a>
                     </form>
-
-                    <hr>
-                    <div class="text-center">
-                        <a class="small" href="register.html">Create an Account!</a>
-                    </div>
+                    
                 </div>
             </div>
 

@@ -24,29 +24,40 @@
                     <input type="text" class="form-control" id="name" name="name" placeholder="Masukkan nama pegawai">
                 </div>
 
-                <!-- Email -->
+
+                <!-- Username -->
                 <div class="form-group col-md-6">
-                    <label for="email">Email Pegawai</label>
-                    <input type="email" class="form-control" id="email" name="email" placeholder="Masukkan email pegawai" required>
+                    <label for="username">Username Pegawai</label>
+                    <input type="username" class="form-control" id="username" name="username" placeholder="Masukkan username pegawai" required>
                 </div>
             </div>
 
             <div class="form-row">
+
+                <!-- Email -->
+                <div class="form-group col-md-6 ">
+                    <label for="email">Email Pegawai</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Masukkan email pegawai" required>
+                </div>
+
                 <!-- Password -->
                 <div class="form-group col-md-6">
                     <label for="password">Password Pegawai</label>
                     <input type="password" class="form-control" id="password" name="password" placeholder="Masukkan password" required>
                 </div>
 
+            </div>
+
+            <div class="form-row">
                 <!-- Role -->
-                <div class="form-group col-md-6">
-                    <label for="id">Role Pegawai</label>
-                    <select class="form-control" id="id" name="id" required>
+                <div class="form-group col-12">
+                    <label for="role">Role Pegawai</label>
+                    <select class="form-control" id="role" name="role" required>
                         <option value="" disabled selected>Pilih Role</option>
                         <option value="Manager">Manager</option>
                         <option value="Staff">Staff</option>
                     </select>
-                </div>
+                </div>                
             </div>
 
             <!-- Submit Button -->
@@ -83,7 +94,7 @@
             <th scope="row">{{ $loop->iteration }}</th>
             <td>{{ $user->name }}</td>
             <td>{{ $user->email }}</td>
-            <td></td>
+            <td>{{ $user->role}}</td>
             <td>
                 <!-- Tombol untuk Read, Update, Delete -->
                 <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#ReadModal{{ $user->id }}">
@@ -111,7 +122,8 @@
                     <div class="modal-body">
                         <p><strong>Nama :</strong> {{$user->name}} </p>
                         <p><strong>Email :</strong> {{$user->email}} </p>
-                        <p><strong>Role :</strong> </p>
+                        <p><strong>username :</strong> {{$user->username}} </p>
+                        <p><strong>Role :</strong> {{$user->role}} </p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -141,10 +153,26 @@
                                     <input type="text" class="form-control" id="name" name="name" value="{{$user->name}}">
                                 </div>
 
+                                {{-- Username --}}
+                                <div class="form-group col-md-6">
+                                     <label for="username">Username Pegawai</label>
+                                    <input type="text" class="form-control" id="username" name="username" value="{{$user->username}}">
+                                </div>
+
                                 <!-- Email -->
                                 <div class="form-group col-md-6">
                                     <label for="email">Email Pegawai</label>
                                     <input type="email" class="form-control" id="email" name="email" value="{{$user->email}}">
+                                </div>
+
+                                {{-- Role --}}
+                                <div class="form-group col-md-6">
+                                    <label for="role">Role Pegawai</label>
+                                    <select class="form-control" id="role" name="role">
+                                        <option value="" disabled selected>Pilih Role</option>
+                                        <option value="Manager" {{ $user->role == 'Manager' ? 'selected' : '' }}>Manager</option>
+                                        <option value="Staff" {{ $user->role == 'Staff' ? 'selected' : '' }}>Staff</option>
+                                    </select>
                                 </div>
                             </div>
 

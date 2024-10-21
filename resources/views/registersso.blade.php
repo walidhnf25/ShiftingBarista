@@ -36,7 +36,8 @@
             <div class="col-lg-12">
                 <div class="py-5 px-4">
                     <div class="text-center">
-                        <h1 class="h4 text-gray-900 mb-4" id="typing-text">Login SSO</h1>
+                        <h1 class="h4 text-gray-900">Daftar Melalui SSO</h1>
+                        <p class="mb-4">Daftarkan diri anda melalui SSO Telkom di halaman ini</p>
                     </div>
                     <div class="text-center">
                         @php
@@ -50,6 +51,8 @@
                                 </button>
                             </div>
                         @endif
+
+
                     </div>
                     <form class="user" action="{{ route('authSSO') }}" method="POST">
                         @csrf <!-- Token CSRF untuk keamanan -->
@@ -64,21 +67,14 @@
                             <input type="password" name="password" id="password" class="form-control"
                                 id="exampleInputPassword" placeholder="Password" required>
                         </div>
-                        <div class="text-right">
-                            <a class="small" href="forgot-password.html">Forgot Password?</a>
-                        </div>
-                        <div class="form-group">
-                            <div class="custom-control custom-checkbox small">
-                                <input type="checkbox" class="custom-control-input" id="customCheck">
-                                <label class="custom-control-label" for="customCheck">Remember Me</label>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn btn-google btn-block">Login with SSO</button>
+
+                        <button type="submit" class="btn btn-google btn-block">Daftar</button>
                     </form>
 
                     <hr>
                     <div class="text-center">
-                        <a href={{ route('login')}} class="small" >Login dengan akun normal</a>
+                        <span class="medium" >Kembali halaman <a href={{ route('login')}} >Login</a> </span>
+                     
                     </div>
                 </div>
             </div>

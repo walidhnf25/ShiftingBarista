@@ -13,7 +13,7 @@ class AuthController extends Controller
 {
     public function proseslogin(Request $request) 
     {
-        if (Auth::guard('user')->attempt(['email' => $request->email, 'password' => $request->password])) {
+        if (Auth::guard('user')->attempt(['username' => $request->username, 'password' => $request->password])) {
             return redirect('/index'); 
         } else {
             return redirect('/')->with(['warning' => 'Email atau Password salah']);
@@ -36,7 +36,7 @@ class AuthController extends Controller
         ]);
 
         if ($response->failed()) {
-            return back()->with(['warning' => 'Login failed. Please check your credentials and try again.']);
+            return back()->with(['warning' => 'Pendaftaran Gagal. Kredensial yang anda masukan salah']);
         }
 
         // Ekstrak token dari respons
@@ -54,22 +54,25 @@ class AuthController extends Controller
 
         // get in JSON
         $profile = $profileResponse->json();
-
+      
         $user = User::where('email', $profile['email'])->first();
 
         if(!$user){
             $user = new User();
-            $user->username = $profile['fullname'];
+            $user->username = $profile['user'];
+            $user->name = $profile['fullname'];
             $user->email = $profile['email'];
             $user->password = Hash::make($request->password);
-
+            $user->role = "Staff";
             $user->save();
+
+            Auth::login($user);
+
+            return redirect('index')->with(['success' => 'Akun SSO anda berhasil didaftarkan']);;
         }
 
-        // User Login
-        Auth::login($user);
+        return redirect('/registersso')->with(['warning' => 'Akun SSO Anda Telah Terdaftar.']);
 
-        return redirect()->route('index');
     }
 
     public function proseslogout()
