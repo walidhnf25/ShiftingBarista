@@ -20,7 +20,7 @@
         </a>
     </li>
 
-    @role('manager', 'user')
+    @if (auth()->check() && auth()->user()->role === 'Manager')
     <!-- Divider -->
     <hr class="sidebar-divider">
 
@@ -32,9 +32,9 @@
             <span>Tipe Pekerjaan</span>
         </a>
     </li>
-    @endrole
+    @endif
 
-    @role('manager', 'user')
+    @if (auth()->check() && auth()->user()->role === 'Manager')
     <hr class="sidebar-divider">
 
     <li class="nav-item {{ Request::is('addpegawai') ? 'active' : '' }}">
@@ -43,9 +43,9 @@
             <span>Tambah Pegawai</span>
         </a>
     </li>
-    @endrole
-
-    @role('staff', 'user')
+    @endif
+    
+    @if (auth()->check() && auth()->user()->role === 'Staff')
     <hr class="sidebar-divider">
 
     <li class="nav-item {{ Request::is('jamshift') ? 'active' : '' }}">
@@ -54,7 +54,7 @@
             <span>Waktu Shift</span>
         </a>
     </li>
-    @endrole
+    @endif
 
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">

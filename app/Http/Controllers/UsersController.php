@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Role;
+use Illuminate\Support\Facades\Auth;
 
 
 class UsersController extends Controller
@@ -17,7 +18,6 @@ class UsersController extends Controller
      */
     public function index()
     {
-        $users = User::with('roles')->get();
         $users = User::all();
         
         return view('addpegawai', compact('users'));  
@@ -51,6 +51,7 @@ class UsersController extends Controller
         // Validasi input
         $request->validate([
             'id' => 'nullable|integer|min:1',
+            'role' => 'nullable|max:50',
             'name' => 'nullable|max:50',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6',
@@ -59,6 +60,7 @@ class UsersController extends Controller
         // Simpan pengguna baru ke database
         User::create([
             'id' => $request->id,
+            'role' => $request->role,
             'name' => $request->name,
             'email' => $request->email,
             'password' => bcrypt($request->password), // Hash password sebelum disimpan

@@ -13,11 +13,8 @@
                 <div class="topbar-divider d-none d-sm-block"></div>
                 <img class="img-profile rounded-circle mr-3" src="img/undraw_profile.svg">
                 <div class="small text-muted">
-                    @if(Auth::guard('user')->check())
-                        {{ Auth::guard('user')->user()->username }}<br>
-                    @else
-                        Guest
-                    @endif
+                    {{ Auth::guard('user')->user()->name }}<br>
+                    {{ Auth::guard('user')->user()->role }}<br>
                 </div>
                 
             </a>
