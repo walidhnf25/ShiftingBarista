@@ -14,7 +14,7 @@
                 <img class="img-profile rounded-circle mr-3" src="img/undraw_profile.svg">
                 <div class="small text-muted">
                     {{ Auth::guard('user')->user()->name }}<br>
-                    {{ Auth::guard('user')->user()->role }}<br>
+                    {{-- {{ Auth::guard('user')->user()->role }}<br> --}}
                 </div>
                 
             </a>
