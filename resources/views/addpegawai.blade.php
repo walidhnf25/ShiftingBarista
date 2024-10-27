@@ -78,7 +78,7 @@
 
 <h2 class="h4 mt-5">Data Pegawai</h2>
 
-<table class="table table-striped">
+<table class="table table-bordered table-striped">
     <thead>
         <tr>
             <th scope="col">#</th>
@@ -106,10 +106,13 @@
                 <form action="{{ route('addpegawai.destroy', $user->email) }}" method="POST" class="d-inline">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus pengguna ini?')">Delete</button>
+                    <button type="submit" class="btn btn-danger btn-sm delete-confirm" id="btnDelete" >Delete</button>
                 </form>
             </td>
         </tr>
+        @endforeach
+    </tbody>
+</table>
 
         <!-- Read Modal -->
         <div class="modal fade" id="ReadModal{{ $user->id }}" tabindex="-1" aria-labelledby="ReadModalLabel" aria-hidden="true">
@@ -186,7 +189,54 @@
                 </div>
             </div>
         </div>
-        @endforeach
-    </tbody>
-</table>
 @endsection
+
+@push('myscript')
+<script>
+    // Delete confirmation
+    $(".delete-confirm").click(function(e) {
+        var form = $(this).closest('form');
+        e.preventDefault();
+
+        Swal.fire({
+            title: '<span style="color:#f00">Apakah Anda Yakin?</span>',
+            html: "<strong>Data Pegawai ini akan dihapus secara permanen!</strong><br>Anda tidak akan bisa mengembalikan data setelah penghapusan.",
+            icon: 'warning',
+            iconColor: '#ff6b6b',
+            showCancelButton: true,
+            background: '#f7f7f7',
+            backdrop: `
+                rgba(0, 0, 0, 0.4)
+                url("https://cdn.pixabay.com/photo/2016/11/18/15/07/red-alert-1837455_960_720.png")
+                left top
+                no-repeat
+            `,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, Hapus!',
+            cancelButtonText: 'Batalkan',
+            customClass: {
+                popup: 'animated zoomIn faster',
+                confirmButton: 'btn btn-primary',
+                cancelButton: 'btn btn-danger',
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+
+                Swal.fire({
+                    title: 'Info!',
+                    text: 'Data berhasil dihapus.',
+                    icon: 'success',
+                    background: '#f7f7f7',
+                    customClass: {
+                        popup: 'animated bounceIn faster',
+                    },
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
+            }
+        });
+    });
+</script>
+@endpush

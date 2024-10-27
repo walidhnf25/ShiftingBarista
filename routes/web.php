@@ -49,6 +49,8 @@ Route::get('/registersso', function () {
     return view('registersso');
 })->name('registersso');
 
+
+
 // Code Walid
 route::middleware(['guest:user'])->group(function () {
     Route::get('/', function () {
@@ -80,6 +82,12 @@ Route::middleware(['auth:user', 'checkRole:Manager'])->group(function () {
     Route::post('/addpegawai', [UsersController::class,'store'])->name('addpegawai.store');
     Route::delete('/addpegawai/email/{email}', [UsersController::class, 'destroy'])->name('addpegawai.destroy');
     Route::put('/addpegawai/{id}', [UsersController::class, 'update'])->name('addpegawai.update');
+
+    Route::get('/jadwalshift', function () {
+        return view('jadwalshift');
+    })->name('jadwalshift');
+    
+
 });
 
 Route::middleware(['auth:user'])->group(function () {
