@@ -950,6 +950,11 @@
             'aliases' => array(),
             'dev_requirement' => true,
         ),
+
+        'spatie/laravel-permission' => array(
+            'pretty_version' => '4.4.3',
+            'version' => '4.4.3.0',
+            'reference' => '779797a47689d0bc1666e26f566cca44603e56fa',
         'spatie/laravel-permission' => array(
             'pretty_version' => '5.11.1',
             'version' => '5.11.1.0',
@@ -1260,4 +1265,5 @@
             'dev_requirement' => false,
         ),
     ),
+);
 );
