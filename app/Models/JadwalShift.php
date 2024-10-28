@@ -10,8 +10,7 @@ class JadwalShift extends Model
     use HasFactory;
     protected $table = 'jadwal_shift';
     protected $fillable = [
-        'jam_mulai',
-        'jam_selesai',
+        'jam_kerja',
         'outlet',
         'tanggal',
     ];

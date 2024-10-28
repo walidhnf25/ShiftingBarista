@@ -61,7 +61,7 @@
                         </div>
                     @endif
 
-                        
+
                     </div>
                     <form class="user" action="{{ route('proseslogin') }}" method="POST">
                         @csrf <!-- Token CSRF untuk keamanan -->
@@ -82,7 +82,7 @@
                             Daftar melalui SSO
                         </a>
                     </form>
-                    
+
                 </div>
             </div>
 

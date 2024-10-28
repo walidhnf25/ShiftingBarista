@@ -11,18 +11,18 @@ use App\Models\User;
 
 class AuthController extends Controller
 {
-    public function proseslogin(Request $request) 
+    public function proseslogin(Request $request)
     {
         if (Auth::guard('user')->attempt(['username' => $request->username, 'password' => $request->password])) {
-            return redirect('/index'); 
+            return redirect('/index');
         } else {
             return redirect('/')->with(['warning' => 'Email atau Password salah']);
         }
     }
-  
+
     public function authSSO(Request $request)
     {
-    
+
         // dd($request->all());
         $request->validate([
             'username' => 'required',
@@ -54,7 +54,7 @@ class AuthController extends Controller
 
         // get in JSON
         $profile = $profileResponse->json();
-      
+
         $user = User::where('email', $profile['email'])->first();
 
         if(!$user){
@@ -69,6 +69,7 @@ class AuthController extends Controller
             Auth::login($user);
 
             return redirect('/')->with(['success' => 'Akun SSO anda berhasil didaftarkan']);
+            return redirect('/')->with(['success' => 'Akun SSO anda berhasil didaftarkan']);;
         }
 
         return redirect('/registersso')->with(['warning' => 'Akun SSO Anda Telah Terdaftar.']);
