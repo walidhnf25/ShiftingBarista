@@ -1,6 +1,40 @@
 @extends('layouts.tabler')
 
 @section('content')
+
+<!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Tambah Pegawai</h1>
+</div>
+
+<div class="row">
+        <div class="col-12">
+            @if(session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if(session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
+        </div>
+    </div>
+
+<!-- Content Row -->
+<div class="row">
+    <div class="col-lg-12">
+        <form action="{{ route('addpegawai.store') }}" method="POST">
+            @csrf
+            <div class="form-row">
+                <!-- Name -->
+                <div class="form-group col-md-6">
+                    <label for="name">Nama Pegawai</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="Masukkan nama pegawai">
+                </div>
+
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">Tambah Pegawai</h1>
