@@ -68,7 +68,7 @@ class AuthController extends Controller
 
             Auth::login($user);
 
-            return redirect('index')->with(['success' => 'Akun SSO anda berhasil didaftarkan']);;
+            return redirect('/')->with(['success' => 'Akun SSO anda berhasil didaftarkan']);
         }
 
         return redirect('/registersso')->with(['warning' => 'Akun SSO Anda Telah Terdaftar.']);

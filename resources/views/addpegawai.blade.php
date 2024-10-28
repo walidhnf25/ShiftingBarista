@@ -6,11 +6,21 @@
     <h1 class="h3 mb-0 text-gray-800">Tambah Pegawai</h1>
 </div>
 
-@if (session('success'))
-<div class="alert alert-success col-md-6 col-lg-3" role="alert">
-    {{ session('success') }}
-</div>
-@endif
+<div class="row">
+        <div class="col-12">
+            @if(session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if(session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
+        </div>
+    </div>
 
 <!-- Content Row -->
 <div class="row">
