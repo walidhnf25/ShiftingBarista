@@ -23,10 +23,6 @@ use Spatie\Permission\Models\Role;
 */
 
 Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::get('/', function () {
     return view('index');
 });
 
@@ -60,7 +56,7 @@ route::middleware(['guest:user'])->group(function () {
 });
 
 Route::middleware(['auth:user', 'checkRole:Staff'])->group(function () {
-    
+
 });
 
 Route::middleware(['auth:user', 'checkRole:Manager'])->group(function () {
@@ -70,7 +66,7 @@ Route::middleware(['auth:user', 'checkRole:Manager'])->group(function () {
     Route::get('/editTipePekerjaan', [TipePekerjaanController::class, 'editTipePekerjaan']);
     Route::post('/tipepekerjaan/update/{id}', [TipePekerjaanController::class, 'update'])->name('tipepekerjaan.update');
     Route::post('/tipepekerjaan/delete/{id}', [TipePekerjaanController::class, 'deleteTipePekerjaan'])->name('tipepekerjaan.deleteTipePekerjaan');
-    
+
     // add pegawai
     Route::get('/addpegawai', [UsersController::class,'index'])->name('addpegawai');
     Route::post('/addpegawai', [UsersController::class,'store'])->name('addpegawai.store');
@@ -81,7 +77,7 @@ Route::middleware(['auth:user', 'checkRole:Manager'])->group(function () {
     Route::post('/jadwalshift', [JadwalShiftController::class, 'store'])->name('jadwal_shift.store');
     Route::delete('/jadwalshift/{id}', [JadwalShiftController::class, 'destroy'])->name('jadwal_shift.destroy');
     Route::put('/jadwalshift/{id}', [JadwalShiftController::class, 'update'])->name('jadwalshift.update');
-    
+
     // jam shift
     Route::get('/jamshift', [jamShiftController::class, 'index'])->name('jamshift');
     Route::post('/jamshift', [jamShiftController::class, 'store'])->name('jam_shift.store');
@@ -92,13 +88,13 @@ Route::middleware(['auth:user', 'checkRole:Manager'])->group(function () {
 });
 
 Route::middleware(['auth:user'])->group(function () {
-  
+
     Route::get('/index', function () {
         return view('index');
     })->name('index');
     // ngecegah register ini cok
     // Route::post('/authSSO' , [AuthController::class, 'authSSO'])->name('authSSO');
-    Route::get('/proseslogout', [AuthController::class, 'proseslogout'])->name('proseslogout'); 
+    Route::get('/proseslogout', [AuthController::class, 'proseslogout'])->name('proseslogout');
 });
 
 Route::get('/createrolepermission', function(){

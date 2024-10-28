@@ -19,16 +19,16 @@ class UsersController extends Controller
     public function index()
     {
         $users = User::all();
-        
-        return view('addpegawai', compact('users'));  
+
+        return view('addpegawai', compact('users'));
     }
-    
-    public function roles(): BelongsToMany
-    {
-        return $this->belongsToMany(Role::class, 'model_has_roles', 'model_id', 'role_id')
-                    ->withPivot('model_type'); // Adjust if you have additional fields in the pivot table
-    }
-    
+
+    // public function roles(): BelongsToMany
+    // {
+    //     return $this->belongsToMany(Role::class, 'model_has_roles', 'model_id', 'role_id')
+    //                 ->withPivot('model_type'); // Adjust if you have additional fields in the pivot table
+    // }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -48,12 +48,13 @@ class UsersController extends Controller
     public function store(Request $request)
     {
         // Validasi input
+        // dd($request->all());
         $request->validate([
             'name' => 'required|max:50',
             'username' => 'required|max:50',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6',
-            'role' => 'required|max:10',  
+            'role' => 'required|max:255',
         ]);
 
         // Simpan pengguna baru ke database
@@ -62,7 +63,7 @@ class UsersController extends Controller
             'username' => $request->username,
             'email' => $request->email,
             'password' => bcrypt($request->password), // Hash password sebelum disimpan
-            'role' => $request->role, 
+            'role' => $request->role,
         ]);
 
         // Redirect kembali dengan pesan sukses
@@ -106,33 +107,35 @@ class UsersController extends Controller
             'name' => 'nullable|max:50',
             'email' => 'required|email|unique:users,email,' . $id, // Pastikan email unik kecuali untuk pengguna ini
             'password' => 'nullable|min:6', // Password tidak wajib, tetapi minimal 6 karakter
+            'role' => 'required|max:255',
         ]);
-    
+
         // Cari user berdasarkan ID
         $user = User::find($id);
-    
+
         // Jika user tidak ditemukan, berikan response gagal
         if (!$user) {
             return redirect()->route('addpegawai')->with('error', 'Pengguna tidak ditemukan');
         }
-    
+
         // Update data pengguna
         $user->id = $request->id;
         $user->name = $request->name;
         $user->email = $request->email;
-    
+        $user->role = $request->role;
+
         // Jika password diisi, maka update password
         if ($request->filled('password')) {
             $user->password = bcrypt($request->password);
         }
-    
+
         // Simpan perubahan
         $user->save();
-    
+
         // Redirect kembali dengan pesan sukses
         return redirect()->route('addpegawai')->with('success', 'Pengguna berhasil diupdate');
     }
-    
+
 
     /**
      * Remove the specified resource from storage.

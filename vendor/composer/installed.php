@@ -1265,5 +1265,5 @@
             'dev_requirement' => false,
         ),
     ),
-);
+),
 );

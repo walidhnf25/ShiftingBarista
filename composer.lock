@@ -481,11 +481,6 @@
                 "type": "github"
             }],
             "time": "2024-10-09T13:47:03+00:00"
-            "funding": [{
-                "url": "https://github.com/dragonmantank",
-                "type": "github"
-            }],
-            "time": "2024-10-09T13:47:03+00:00"
         },
         {
             "name": "egulias/email-validator",

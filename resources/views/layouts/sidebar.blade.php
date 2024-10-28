@@ -25,7 +25,7 @@
     <hr class="sidebar-divider">
 
     <!-- Nav Item - Tipe Pekerjaan -->
-    
+
     <li class="nav-item {{ Request::is('tipepekerjaan') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('tipepekerjaan') }}">
             <i class="fas fa-fw fa-briefcase"></i>
@@ -39,7 +39,7 @@
 
     <li class="nav-item {{ Request::is('addpegawai') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('addpegawai') }}">
-            <i class="fas fa-fw fa-users"></i>
+            <i class="fa fa-fw fa-users"></i>
             <span>Tambah Pegawai</span>
         </a>
     </li>
@@ -61,7 +61,7 @@
 
     <li class="nav-item {{ Request::is('jadwalshift') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('jadwalshift') }}">
-            <i class="fas fa-fw fa-clock"></i>
+            <i class="fas fa-fw fa fa-calendar"></i>
             <span>Tambah Jadwal Shift</span>
         </a>
     </li>
