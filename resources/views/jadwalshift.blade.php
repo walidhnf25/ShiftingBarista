@@ -1,133 +1,193 @@
 @extends('layouts.tabler')
 
 @section('content')
-<!-- Page Heading -->
-<div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">Tambah Jadwal Shift</h1>
-</div>
-
-@if (session('success'))
-<div class="alert alert-success col-md-6 col-lg-3" role="alert">
-    {{ session('success') }}
-</div>
-@endif
-
-<!-- Content Row -->
-<div class="row">
-    <div class="col-lg-12">
-        <form action="" method="POST">
-            @csrf
-            <div class="form-row">
-                <!-- JamShift -->
-                <div class="form-group col-md-6">
-                    <label for="jamShift">Jam Shift</label>
-                    <select class="form-control" id="jamShift" name="id_jam_shift" required>
-                        <option value="" disabled selected>Pilih Jam Shift</option>
-                        <option value="1">08:00 - 12:00</option>
-                        <option value="2">12:00 - 16:00</option>
-                        <option value="3">16:00 - 20:00</option>
-                    </select>
-                    {{-- Harusnya gni kalau udah fetch dari table jamshift
-                    <select class="form-control" id="jamShift" name="id_jam_shift" required>
-                        <option value="" disabled selected>Pilih Jam Shift</option>
-                        @foreach($jamShift as $shift)
-                            <option value="{{ $shift->id }}">{{ $shift->waktu_mulai }} - {{ $shift->waktu_selesai }}</option>
-                        @endforeach --}}
-                    </select>
-                </div>
-
-                <!-- Outlet -->
-                <div class="form-group col-md-6">
-                    <label for="outlet">Outlet</label>
-                    <select class="form-control" id="outlet" name="id_outlet" required>
-                        <option value="" disabled selected>Pilih Outlet</option>
-                        <option value="1">Outlet A - Jalan Merdeka No.1</option>
-                        <option value="2">Outlet B - Jalan Sudirman No.10</option>
-                        <option value="3">Outlet C - Jalan Thamrin No.20</option>
-                    </select>
-                    {{-- outlet aktifin aja lid kalau udah ada koneksi table nya
-                    <select class="form-control" id="outlet" name="id_outlet" required>
-                        <option value="" disabled selected>Pilih Outlet</option>
-                        @foreach($outlet as $o)
-                            <option value="{{ $o->id }}">{{ $o->nama }} - {{ $o->alamat }}</option>
-                        @endforeach
-                    </select> --}}
-                </div>
-            </div>
-
-            <div class="form-row">
-                <!-- Tipe Pekerjaan -->
-                <div class="form-group col-md-6">
-                    <label for="tipePekerjaan">Tipe Pekerjaan</label>
-                    <select class="form-control" id="tipePekerjaan" name="id_tipe_pekerjaan" required>
-                        <option value="" disabled selected>Pilih Tipe Pekerjaan</option>
-                        <option value="1">Barista</option>
-                        <option value="2">Kasir</option>
-                        <option value="3">Kitchen Helper</option>
-                    </select>
-                    {{-- <select class="form-control" id="tipePekerjaan" name="id_tipe_pekerjaan" required>
-                        <option value="" disabled selected>Pilih Tipe Pekerjaan</option>
-                        @foreach($tipePekerjaan as $tipe)
-                            <option value="{{ $tipe->id }}">{{ $tipe->nama_pekerjaan }}</option>
-                        @endforeach
-                    </select> --}}
-                </div>
-
-                <!-- Tanggal -->
-                <div class="form-group col-md-6">
-                    <label for="tanggal">Tanggal</label>
-                    <input type="date" class="form-control" id="tanggal" name="hari_tanggal" required>
-                </div>
-            </div>
-
-            <!-- Submit Button -->
-            <button type="submit" class="btn btn-primary mt-3">Tambah Jadwal Shift</button>
-        </form>
-    </div>
-</div>
-
-<!-- Table Data Jadwal Shift -->
-<div class="row mt-5">
-    <div class="col-lg-12">
-        <h2 class="h4 mb-4">Data Jadwal Shift</h2>
-        <table class="table table-bordered table-striped">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Jam Shift</th>
-                    <th>Outlet</th>
-                    <th>Tipe Pekerjaan</th>
-                    <th>Tanggal</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>08:00 - 16:00</td>
-                    <td>Outlet A - Jalan Merdeka No.1</td>
-                    <td>Barista</td>
-                    <td>2024-11-01</td>
-                    <td>
-                        <!-- Tombol untuk Read, Update, Delete -->
-                        <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#EditModal">
-                            Edit
-                        </button>
-                        {{-- Fungsi di action --}}
-                        <form action="" method="POST" class="d-inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm delete-confirm" id="btnDelete" >Delete</button>
-                        </form>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Tambah Jadwal Shift</h1>
     </div>
 
-  
+    <div class="row">
+        <div class="col-12">
+            @if(session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
 
-</div>
+            @if(session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
+        </div>
+    </div>
+
+    <!-- Content Row -->
+    <div class="row">
+        <div class="col-lg-12">
+            <form action="{{ route('jadwal_shift.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="form-row">
+                    <!-- Jam Shift Start -->
+                    <div class="form-group col-md-6">
+                        <label for="jam_mulai">Jam Mulai</label>
+                        <select class="form-control" id="jam_mulai" name="jam_mulai" required>
+                            <option value="" disabled selected>Pilih Jam Mulai</option>
+                            @foreach ($jamShift as $d)
+                                <option value="{{ $d->jam_mulai }}">{{ $d->jam_mulai }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- Jam Shift End -->
+                    <div class="form-group col-md-6">
+                        <label for="jam_selesai">Jam Selesai</label>
+                        <select class="form-control" id="jam_selesai" name="jam_selesai" required>
+                            <option value="" disabled selected>Pilih Jam Selesai</option>
+                            @foreach ($jamShift as $d)
+                                <option value="{{ $d->jam_selesai }}">{{ $d->jam_selesai }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- Outlet Selection -->
+                    <div class="form-group col-md-6">
+                        <label for="outlet">Outlet</label>
+                        <select class="form-control" id="outlet" name="outlet" required>
+                            <option value="" disabled selected>Pilih Outlet</option>
+                            <option value="Outlet A">Outlet A</option>
+                            <option value="Outlet B">Outlet B</option>
+                            <option value="Outlet C">Outlet C</option>
+                        </select>
+                    </div>
+
+                    <!-- Date Selection -->
+                    <div class="form-group col-md-6">
+                        <label for="tanggal">Tanggal</label>
+                        <input type="date" class="form-control" id="tanggal" name="tanggal" required>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary mt-3">Tambah Jadwal Shift</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Table Data Jadwal Shift -->
+    <div class="row mt-5">
+        <div class="col-lg-12">
+            <h2 class="h4 mb-4">Data Jadwal Shift</h2>
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Jam Mulai</th>
+                        <th>Jam Selesai</th>
+                        <th>Outlet</th>
+                        <th>Tanggal</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($jadwal_shift as $d)
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $d->jam_mulai }}</td>
+                            <td>{{ $d->jam_selesai }}</td>
+                            <td>{{ $d->outlet }}</td>
+                            <td>{{ $d->tanggal }}</td>
+                            <td>
+                                <!-- Edit Button -->
+                                <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#EditModal{{ $d->id }}">
+                                    Edit
+                                </button>
+
+                                <!-- Edit Modal -->
+                                <div class="modal fade" id="EditModal{{ $d->id }}" tabindex="-1" role="dialog" aria-labelledby="EditModalLabel{{ $d->id }}" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="EditModalLabel{{ $d->id }}">Edit Jadwal Shift</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="{{ route('jadwalshift.update', $d->id) }}" method="POST">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <div class="row">
+                                                        <div class="form-group col-md-6">
+                                                            <!-- Jam Mulai -->
+                                                            <label for="jam_mulai">Jam Mulai</label>
+                                                            <select class="form-control" id="jam_mulai" name="jam_mulai" required>
+                                                                <option value="" disabled selected>Pilih Jam Mulai</option>
+                                                                @foreach ($jamShift as $jam)
+                                                                    <option value="{{ $jam->jam_mulai }}" {{ $d->jam_mulai == $jam->jam_mulai ? 'selected' : '' }}>
+                                                                        {{ $jam->jam_mulai }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="form-group col-md-6">
+                                                            <!-- Jam Selesai -->
+                                                            <label for="jam_selesai">Jam Selesai</label>
+                                                            <select class="form-control" id="jam_selesai" name="jam_selesai" required>
+                                                                <option value="" disabled selected>Pilih Jam Selesai</option>
+                                                                @foreach ($jamShift as $jam)
+                                                                    <option value="{{ $jam->jam_selesai }}" {{ $d->jam_selesai == $jam->jam_selesai ? 'selected' : '' }}>
+                                                                        {{ $jam->jam_selesai }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="form-group col-md-6">
+                                                            <!-- Outlet -->
+                                                            <label for="outlet">Outlet</label>
+                                                            <select class="form-control" id="outlet" name="outlet" required>
+                                                                <option value="" disabled selected>Pilih Outlet</option>
+                                                                <option value="Outlet A" {{ $d->outlet == 'Outlet A' ? 'selected' : '' }}>Outlet A</option>
+                                                                <option value="Outlet B" {{ $d->outlet == 'Outlet B' ? 'selected' : '' }}>Outlet B</option>
+                                                                <option value="Outlet C" {{ $d->outlet == 'Outlet C' ? 'selected' : '' }}>Outlet C</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="form-group col-md-6">
+                                                            <!-- Tanggal -->
+                                                            <label for="tanggal">Tanggal</label>
+                                                            <input type="date" class="form-control" id="tanggal" name="tanggal" value="{{ $d->tanggal }}">
+                                                        </div>
+                                                    </div>
+                                            </div>
+
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">Save changes</button>
+                                            </div>
+                                                </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Delete Form -->
+                                <form action="{{ route('jadwal_shift.destroy', $d->id) }}" method="POST" class="d-inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm delete-confirm">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+
 @endsection
 
 @push('myscript')
@@ -177,70 +237,9 @@
             }
         });
     });
+    // Menghilangkan alert setelah beberapa detik
+    setTimeout(function() {
+        $('.alert').fadeOut('slow');
+    }, 2000);
 </script>
 @endpush
-
-
-
-<!-- Edit Modal -->
-<div class="modal fade" id="EditModal" tabindex="-1" aria-labelledby="EditModal" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Edit Jadwal Shift <strong>1 </strong></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form action="" method="POST">
-                    @csrf
-                    @method('PUT')
-                    <div class="form-row">
-                        <!-- Name -->
-                        <div class="form-group col-md-6">
-                            <label for="jamShift">Jam Shift</label>
-                            <select class="form-control" id="jamShift" name="jamShift" required>
-                                <option value="1">08:00 - 12:00</option>
-                                <option value="2">12:00 - 16:00</option>
-                                <option value="3">16:00 - 20:00</option>
-                            </select>
-                        </div>
-
-                        {{-- Username --}}
-                        <div class="form-group col-md-6">
-                             <label for="outlet">Outlet </label>
-                             <select class="form-control" id="outlet" name="outlet" >
-                                <option value="1">Outlet A - Jalan Merdeka No.1</option>
-                                <option value="2">Outlet B - Jalan Sudirman No.10</option>
-                                <option value="3">Outlet C - Jalan Thamrin No.20</option>
-                            </select>
-                        </div>
-
-                        <!-- Email -->
-                        <div class="form-group col-md-6">
-                            <label for="tipePekerjaan">Tipe Pekerjaan</label>
-                            <select class="form-control" id="tipePekerjaan" name="tipePekerjaan" >
-                                <option value="1">Barista</option>
-                                <option value="2">Kasir</option>
-                                <option value="3">Kitchen Helper</option>
-                            </select>
-                        </div>
-
-                          <!-- Email -->
-                          <div class="form-group col-md-6">
-                            <label for="tanggal">Tanggal</label>
-                            <input type="date" class="form-control" id="tanggal" name="tanggal" value="Barista">
-                        </div>
-                    </div>
-
-                    
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save changes</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>

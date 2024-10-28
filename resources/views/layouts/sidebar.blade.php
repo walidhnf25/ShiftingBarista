@@ -48,21 +48,21 @@
     @if (auth()->check() && auth()->user()->role === 'Manager')
     <hr class="sidebar-divider">
 
-    <li class="nav-item {{ Request::is('jadwalshift') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('jadwalshift') }}">
-            <i class="fas fa-fw fa-clock"></i>
-            <span>Tambah Jadwal Shift</span>
-        </a>
-    </li>
-    @endif
-    
-    @if (auth()->check() && auth()->user()->role === 'Staff')
-    <hr class="sidebar-divider">
-
     <li class="nav-item {{ Request::is('jamshift') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('jamshift') }}">
             <i class="fas fa-fw fa-clock"></i>
             <span>Waktu Shift</span>
+        </a>
+    </li>
+    @endif
+
+    @if (auth()->check() && auth()->user()->role === 'Manager')
+    <hr class="sidebar-divider">
+
+    <li class="nav-item {{ Request::is('jadwalshift') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('jadwalshift') }}">
+            <i class="fas fa-fw fa-clock"></i>
+            <span>Tambah Jadwal Shift</span>
         </a>
     </li>
     @endif
