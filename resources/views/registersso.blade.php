@@ -30,18 +30,18 @@
     <!-- Outer Row -->
     <div class="col-md-9 col-lg-6">
 
-        <div class="card o-hidden border-0 shadow shadow-blue my-5">
+        <div class="card o-hidden border-0 shadow shadow-red my-5">
 
             <!-- Nested Row within Card Body -->
             <div class="col-lg-12">
                 <div class="py-5 px-4">
                     <div class="text-center">
-                        <h1 class="h4 text-gray-900 mb-4" id="typing-text"></h1>
+                        <h1 class="h4 text-gray-900">Daftar Melalui SSO</h1>
+                        <p class="mb-4">Daftarkan diri anda melalui SSO Telkom di halaman ini</p>
                     </div>
                     <div class="text-center">
                         @php
                             $messagewarning = Session::get('warning');
-                            $successwarning = Session::get('success');
                         @endphp
                         @if ($messagewarning)
                             <div class="alert alert-warning">
@@ -52,37 +52,30 @@
                             </div>
                         @endif
 
-                        @if ($successwarning)
-                        <div class="alert alert-warning">
-                            {{ $successwarning }}
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                    @endif
 
-                        
                     </div>
-                    <form class="user" action="{{ route('proseslogin') }}" method="POST">
+                    <form class="user" action="{{ route('authSSO') }}" method="POST">
                         @csrf <!-- Token CSRF untuk keamanan -->
                         <div class="form-group">
-                            <label for="username">Username</label>
-                            <input type="username" name="username" id="username" class="form-control"
-                                id="exampleInputusername" aria-describedby="emailHelp"
-                                placeholder="Masukan Username" required>
+                            <label for="username">Username SSO Anda</label>
+                            <input type="text" name="username" id="username" class="form-control"
+                                 aria-describedby="emailHelp"
+                                placeholder="Masukan Username Anda" required>
                         </div>
                         <div class="form-group">
                             <label for="password">Password</label>
                             <input type="password" name="password" id="password" class="form-control"
                                 id="exampleInputPassword" placeholder="Password" required>
                         </div>
-                        <button type="submit" class="btn btn-primary btn-block mt-4">Masuk</button>
-                        <hr>
-                        <a href={{ route('registersso')}} class="btn btn-google btn-block ">
-                            Daftar melalui SSO
-                        </a>
+
+                        <button type="submit" class="btn btn-google btn-block">Daftar</button>
                     </form>
-                    
+
+                    <hr>
+                    <div class="text-center">
+                        <span class="medium" >Kembali halaman <a href={{ route('login')}} >Login</a> </span>
+                     
+                    </div>
                 </div>
             </div>
 
@@ -100,23 +93,6 @@
 
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
-
-    <script>
-        const text = "Welcome to Shifting Barista!";
-        let index = 0;
-        const speed = 100;
-
-        function typeEffect() {
-            if (index < text.length) {
-                document.getElementById("typing-text").innerHTML += text.charAt(index);
-                index++;
-                setTimeout(typeEffect, speed);
-            }
-        }
-
-        // Memulai efek mengetik saat halaman dimuat
-        window.onload = typeEffect;
-</script>
 
 </body>
 

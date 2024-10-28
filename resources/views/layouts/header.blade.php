@@ -14,7 +14,9 @@
                 <img class="img-profile rounded-circle mr-3" src="img/undraw_profile.svg">
                 <div class="small text-muted">
                     {{ Auth::guard('user')->user()->name }}<br>
+                    {{-- {{ Auth::guard('user')->user()->role }}<br> --}}
                 </div>
+                
             </a>
             <!-- Dropdown - User Information -->
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -24,7 +26,7 @@
                     Profile
                 </a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                <a class="dropdown-item" href="{{ route('proseslogout')}}" data-toggle="modal" data-target="#logoutModal">
                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                     Logout
                 </a>

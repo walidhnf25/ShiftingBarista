@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsersController;
 use App\Models\User;
 use App\Http\Controllers\TipePekerjaanController;
+use App\Http\Controllers\JadwalShiftController;
 use App\Http\Controllers\AuthController;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -45,23 +46,24 @@ Route::get('/blank', function () {
     return view('blank');
 })->name('blank');
 
+Route::get('/registersso', function () {
+    return view('registersso');
+})->name('registersso');
+
+// Code Walid
 route::middleware(['guest:user'])->group(function () {
     Route::get('/', function () {
         return view('login');
     })->name('login');
      Route::post('/proseslogin', [AuthController::class, 'proseslogin'])->name('proseslogin');
+     Route::post('/authSSO' , [AuthController::class, 'authSSO'])->name('authSSO');
 });
 
-Route::group(['middleware' => ['role:staff,user']], function () {
-    // jam shift
-    Route::get('/jamshift', [jamShiftController::class, 'index'])->name('jamshift');
-    Route::post('/jamshift', [jamShiftController::class, 'store'])->name('jam_shift.store');
-    Route::get('/editjamshift', [jamShiftController::class, 'editJamShift']);
-    Route::post('/jamshift/update/{id}', [jamShiftController::class, 'update'])->name('jamShift.update');
-    Route::post('/jamshift/delete/{id}', [jamShiftController::class, 'deleteJamShift'])->name('jamshift.deleteJamShift');
+Route::middleware(['auth:user', 'checkRole:Staff'])->group(function () {
+    
 });
 
-Route::group(['middleware' => ['role:manager,user']], function () {
+Route::middleware(['auth:user', 'checkRole:Manager'])->group(function () {
     // tipe pekerjaan
     Route::get('/tipepekerjaan', [TipePekerjaanController::class, 'index'])->name('tipepekerjaan');
     Route::post('/tipepekerjaan', [TipePekerjaanController::class, 'store'])->name('tipe_pekerjaan.store');
@@ -74,13 +76,28 @@ Route::group(['middleware' => ['role:manager,user']], function () {
     Route::post('/addpegawai', [UsersController::class,'store'])->name('addpegawai.store');
     Route::delete('/addpegawai/email/{email}', [UsersController::class, 'destroy'])->name('addpegawai.destroy');
     Route::put('/addpegawai/{id}', [UsersController::class, 'update'])->name('addpegawai.update');
+
+    Route::get('/jadwalshift', [JadwalShiftController::class, 'index'])->name('jadwalshift');
+    Route::post('/jadwalshift', [JadwalShiftController::class, 'store'])->name('jadwal_shift.store');
+    Route::delete('/jadwalshift/{id}', [JadwalShiftController::class, 'destroy'])->name('jadwal_shift.destroy');
+    Route::put('/jadwalshift/{id}', [JadwalShiftController::class, 'update'])->name('jadwalshift.update');
+    
+    // jam shift
+    Route::get('/jamshift', [jamShiftController::class, 'index'])->name('jamshift');
+    Route::post('/jamshift', [jamShiftController::class, 'store'])->name('jam_shift.store');
+    Route::get('/editjamshift', [jamShiftController::class, 'editJamShift']);
+    Route::post('/jamshift/update/{id}', [jamShiftController::class, 'update'])->name('jamShift.update');
+    Route::post('/jamshift/delete/{id}', [jamShiftController::class, 'deleteJamShift'])->name('jamshift.deleteJamShift');
+
 });
 
 Route::middleware(['auth:user'])->group(function () {
+  
     Route::get('/index', function () {
         return view('index');
     })->name('index');
-
+    // ngecegah register ini cok
+    // Route::post('/authSSO' , [AuthController::class, 'authSSO'])->name('authSSO');
     Route::get('/proseslogout', [AuthController::class, 'proseslogout'])->name('proseslogout'); 
 });
 
