@@ -59,8 +59,8 @@
     @if (auth()->check() && auth()->user()->role === 'Manager')
     <hr class="sidebar-divider">
 
-    <li class="nav-item {{ Request::is('jadwalshift') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('jadwalshift') }}">
+    <li class="nav-item {{ Request::is('outlet') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('outlet') }}">
             <i class="fas fa-fw fa fa-calendar"></i>
             <span>Tambah Jadwal Shift</span>
         </a>
