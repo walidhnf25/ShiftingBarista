@@ -11,7 +11,7 @@
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <div class="topbar-divider d-none d-sm-block"></div>
-                <img class="img-profile rounded-circle mr-3" src="img/undraw_profile.svg">
+                <img class="img-profile rounded-circle mr-3" src="{{ asset('img/undraw_profile.svg') }}">
                 <div class="small text-muted">
                     {{ Auth::guard('user')->user()->name }}<br>
                     {{-- {{ Auth::guard('user')->user()->role }}<br> --}}

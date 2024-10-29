@@ -16,7 +16,8 @@ class CreateJadwalShift extends Migration
         Schema::create('jadwal_shift', function (Blueprint $table) {
             $table->id();
             $table->string('jam_kerja')->nullable();
-            $table->string('outlet')->nullable();
+            $table->string('tipe_pekerjaan')->nullable();
+            $table->string('id_outlet')->nullable();
             $table->date('tanggal')->nullable();
             $table->timestamps();
         });
