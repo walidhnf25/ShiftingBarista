@@ -63,10 +63,16 @@
                             </select>
                         </div>
 
-                        <!-- Date Selection -->
+                        <!-- Tanggal Mulai -->                        
                         <div class="form-group col-md-6">
-                            <label for="tanggal">Tanggal</label>
-                            <input type="date" class="form-control" id="tanggal" name="tanggal" required>
+                            <label for="tanggal">Tanggal Mulai</label>
+                            <input type="date" class="form-control" id="tanggal_mulai" name="tanggal_mulai" required>
+                        </div>
+
+                        <!-- Tanggal Akhir -->     
+                        <div class="form-group col-md-6">
+                            <label for="tanggal">Tanggal Akhir</label>
+                            <input type="date" class="form-control" id="tanggal_akhir" name="tanggal_akhir" required>
                         </div>
                     </div>
 
@@ -84,10 +90,11 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Jam Kerja</th>
                             <th>Outlet</th>
+                            <th>Tanggal Mulai</th>
+                            <th>Tanggal Akhir</th>
+                            <th>Jam Kerja</th>
                             <th>Tipe Pekerjaan</th>
-                            <th>Tanggal</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -95,10 +102,11 @@
                         @foreach ($jadwal_shift as $shift) <!-- Ensure you're using this variable for each loop iteration -->
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $shift->jam_kerja }}</td>
                                 <td>{{ $outletMapping[$shift->id_outlet] }}</td>
+                                <td>{{ $shift->tanggal_mulai }}</td>
+                                <td>{{ $shift->tanggal_akhir }}</td>
+                                <td>{{ $shift->jam_kerja }}</td>
                                 <td>{{ $shift->tipe_pekerjaan }}</td>
-                                <td>{{ $shift->tanggal }}</td>
                                 <td>
                                     <!-- Edit Button -->
                                     <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
@@ -126,7 +134,7 @@
                                                         <div class="row">
                                                             <div class="form-group col-md-6">
                                                                 <label for="tipe_pekerjaan">Tipe Pekerjaan</label>
-                                                                <select class="form-control" id="tipe_pekerjaan" name="tipe_pekerjaan" required>
+                                                                <select class="form-control" id="tipe_pekerjaan" name="tipe_pekerjaan" >
                                                                     <option value="" disabled>Pilih Tipe Pekerjaan</option>
                                                                     @foreach ($TipePekerjaan as $type)
                                                                         <option value="{{ $type->tipe_pekerjaan }}" 
@@ -140,7 +148,7 @@
                                                             <!-- Jam Kerja -->
                                                             <div class="form-group col-md-6">
                                                                 <label for="jam_kerja">Jam Kerja</label>
-                                                                <select class="form-control" id="jam_kerja" name="jam_kerja" required>
+                                                                <select class="form-control" id="jam_kerja" name="jam_kerja" >
                                                                     <option value="" disabled selected>Pilih Jam Kerja</option>
                                                                     @foreach ($jamShift as $jam)
                                                                         <option value="{{ $jam->jam_mulai }} - {{ $jam->jam_selesai }}" 
@@ -151,12 +159,19 @@
                                                                 </select>
                                                             </div>
 
+                                                              <!-- Tanggal Mulai -->                        
                                                             <div class="form-group col-md-6">
-                                                                <!-- Tanggal -->
-                                                                <label for="tanggal">Tanggal</label>
-                                                                <input type="date" class="form-control" id="tanggal"
-                                                                    name="tanggal" value="{{ $shift->tanggal }}">
+                                                                <label for="tanggal">Tanggal Mulai</label>
+                                                                <input type="date" class="form-control" id="tanggal_mulai" name="tanggal_mulai" value="{{ $shift->tanggal_mulai }}" >
                                                             </div>
+
+                                                            <!-- Tanggal Akhir -->     
+                                                            <div class="form-group col-md-6">
+                                                                <label for="tanggal">Tanggal Akhir</label>
+                                                                <input type="date" class="form-control" id="tanggal_akhir" name="tanggal_akhir" value="{{ $shift->tanggal_akhir }}" >
+                                                            </div>
+
+                                                        
                                                         </div>
 
                                                         <div class="modal-footer">

@@ -116,9 +116,9 @@ class JadwalShiftController extends Controller
         
         $request->validate([
             'jam_kerja' => 'required|string',
-            
             'tipe_pekerjaan' => 'required|string',
-            'tanggal' => 'required|date',
+            'tanggal_mulai' => 'required|date',
+            'tanggal_akhir' => 'required|date',
         ]);
 
         // Cari jadwal shift berdasarkan ID
@@ -131,9 +131,9 @@ class JadwalShiftController extends Controller
 
         // Update data jadwal shift
         $jadwal_shift->jam_kerja = $request->jam_kerja;
-        
         $jadwal_shift->tipe_pekerjaan = $request->tipe_pekerjaan;
-        $jadwal_shift->tanggal = $request->tanggal;
+        $jadwal_shift->tanggal_mulai = $request->tanggal_mulai;
+        $jadwal_shift->tanggal_akhir = $request->tanggal_akhir;
 
         // Simpan perubahan
         $jadwal_shift->save();
@@ -180,15 +180,18 @@ class JadwalShiftController extends Controller
         $request->validate([
             'jam_kerja' => 'required|string',
             'tipe_pekerjaan' => 'required|string',
-            'tanggal' => 'required|date',
+            'tanggal_mulai' => 'required|date',
+            'tanggal_akhir' => 'required|date',
         ]);
 
         // Create a new record in the jadwal_shift table with id_outlet set to the passed id
         JadwalShift::create([
             'jam_kerja' => $request->jam_kerja,
             'tipe_pekerjaan' => $request->tipe_pekerjaan,
-            'tanggal' => $request->tanggal,
+            'tanggal_mulai' => $request->tanggal_mulai,
+            'tanggal_akhir' => $request->tanggal_akhir,
             'id_outlet' => $id, // Storing the id in the id_outlet column
+            'status' => "Waiting", // Inisiasi status Waiting
         ]);
 
         // Redirect back with a success message
