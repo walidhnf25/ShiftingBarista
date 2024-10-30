@@ -25,8 +25,9 @@
         <!-- Content Row -->
         <div class="row">
             <div class="col-lg-12">
-                <form action="{{ route('jadwal_shift.store') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('jadwal_shift.store', ['id' => $selectedOutlet['id']]) }}" method="POST" enctype="multipart/form-data">
                     @csrf
+
                     <div class="form-row">
                         <!-- Jam Kerja -->
                         <div class="form-group col-md-6">
@@ -42,12 +43,12 @@
 
                         <!-- Outlet Selection -->
                         <div class="form-group col-md-6">
-                            <label for="outlet">Outlet</label>
-                            <select class="form-control" id="outlet" name="outlet" required>
-                                <option value="" disabled selected>Pilih Outlet</option>
-                                <option value="Outlet A">Outlet A</option>
-                                <option value="Outlet B">Outlet B</option>
-                                <option value="Outlet C">Outlet C</option>
+                            <label for="outlet">Tipe Pekerjaan</label>
+                            <select class="form-control" id="tipe_pekerjaan" name="tipe_pekerjaan" required>
+                                <option value="" disabled selected>Pilih Tipe Pekerjaan</option>
+                                @foreach ($TipePekerjaan as $d)
+                                    <option value="{{ $d->tipe_pekerjaan }}">{{ $d->tipe_pekerjaan }}</option>
+                                @endforeach
                             </select>
                         </div>
 
@@ -91,36 +92,27 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($jadwal_shift as $d)
+                        @foreach ($jadwal_shift as $shift) <!-- Ensure you're using this variable for each loop iteration -->
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $d->outlet }}</td>
-                                <td>{{ $d->tipe_pekerjaan }}</td>
-                                <td>{{ $d->tanggal }}</td>
-                                <td>{{ $d->jam_kerja }}</td>
+                                <td>{{ $shift->jam_kerja }}</td>
+                                <td>{{ $outletMapping[$shift->id_outlet] }}</td>
+                                <td>{{ $shift->tipe_pekerjaan }}</td>
+                                <td>{{ $shift->tanggal }}</td>
                                 <td>
                                     <!-- Edit Button -->
                                     <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
-                                        data-target="#EditModal{{ $d->id }}">
+                                        data-target="#EditModal{{ $shift->id }}">
                                         Edit
                                     </button>
 
-                                    <!-- Delete Form -->
-                                    <form action="{{ route('jadwal_shift.destroy', $d->id) }}" method="POST"
-                                        class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm delete-confirm"
-                                            id="btnDelete">Delete</button>
-                                    </form>
-
                                     <!-- Edit Modal -->
-                                    <div class="modal fade" id="EditModal{{ $d->id }}" tabindex="-1" role="dialog"
-                                        aria-labelledby="EditModalLabel{{ $d->id }}" aria-hidden="true">
+                                    <div class="modal fade" id="EditModal{{ $shift->id }}" tabindex="-1" role="dialog"
+                                        aria-labelledby="EditModalLabel{{ $shift->id }}" aria-hidden="true">
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="EditModalLabel{{ $d->id }}">Edit
+                                                    <h5 class="modal-title" id="EditModalLabel{{ $shift->id }}">Edit
                                                         Jadwal Shift</h5>
                                                     <button type="button" class="close" data-dismiss="modal"
                                                         aria-label="Close">
@@ -128,21 +120,31 @@
                                                     </button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <form action="{{ route('jadwalshift.update', $d->id) }}"
-                                                        method="POST">
+                                                    <form action="{{ route('jadwalshift.update', $shift->id) }}" method="POST">
                                                         @csrf
                                                         @method('PUT')
                                                         <div class="row">
                                                             <div class="form-group col-md-6">
-                                                                <!-- Jam Kerja -->
-                                                                <label for="jam_mulai">Jam Kerja</label>
-                                                                <select class="form-control" id="jam_kerja" name="jam_kerja"
-                                                                    required>
-                                                                    <option value="" disabled selected>Pilih Jam Kerja
-                                                                    </option>
+                                                                <label for="tipe_pekerjaan">Tipe Pekerjaan</label>
+                                                                <select class="form-control" id="tipe_pekerjaan" name="tipe_pekerjaan" required>
+                                                                    <option value="" disabled>Pilih Tipe Pekerjaan</option>
+                                                                    @foreach ($TipePekerjaan as $type)
+                                                                        <option value="{{ $type->tipe_pekerjaan }}"
+                                                                            {{ $type->tipe_pekerjaan == $shift->tipe_pekerjaan ? 'selected' : '' }}>
+                                                                            {{ $type->tipe_pekerjaan }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+
+                                                            <!-- Jam Kerja -->
+                                                            <div class="form-group col-md-6">
+                                                                <label for="jam_kerja">Jam Kerja</label>
+                                                                <select class="form-control" id="jam_kerja" name="jam_kerja" required>
+                                                                    <option value="" disabled selected>Pilih Jam Kerja</option>
                                                                     @foreach ($jamShift as $jam)
-                                                                        <option value="{{ $jam->jam_kerja }}"
-                                                                            {{ $d->jam_kerja == $jam->jam_kerja ? 'selected' : '' }}>
+                                                                        <option value="{{ $jam->jam_mulai }} - {{ $jam->jam_selesai }}"
+                                                                            {{ ($jam->jam_mulai . ' - ' . $jam->jam_selesai) == $shift->jam_kerja ? 'selected' : '' }}>
                                                                             {{ $jam->jam_mulai }} - {{ $jam->jam_selesai }}
                                                                         </option>
                                                                     @endforeach
@@ -150,29 +152,10 @@
                                                             </div>
 
                                                             <div class="form-group col-md-6">
-                                                                <!-- Outlet -->
-                                                                <label for="outlet">Outlet</label>
-                                                                <select class="form-control" id="outlet" name="outlet"
-                                                                    required>
-                                                                    <option value="" disabled selected>Pilih Outlet
-                                                                    </option>
-                                                                    <option value="Outlet A"
-                                                                        {{ $d->outlet == 'Outlet A' ? 'selected' : '' }}>
-                                                                        Outlet A</option>
-                                                                    <option value="Outlet B"
-                                                                        {{ $d->outlet == 'Outlet B' ? 'selected' : '' }}>
-                                                                        Outlet B</option>
-                                                                    <option value="Outlet C"
-                                                                        {{ $d->outlet == 'Outlet C' ? 'selected' : '' }}>
-                                                                        Outlet C</option>
-                                                                </select>
-                                                            </div>
-
-                                                            <div class="form-group col-md-6">
                                                                 <!-- Tanggal -->
                                                                 <label for="tanggal">Tanggal</label>
                                                                 <input type="date" class="form-control" id="tanggal"
-                                                                    name="tanggal" value="{{ $d->tanggal }}">
+                                                                    name="tanggal" value="{{ $shift->tanggal }}">
                                                             </div>
 
                                                             <div class="form-group col-md-6">
@@ -194,16 +177,21 @@
                                                         </div>
 
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary"
-                                                                data-dismiss="modal">Close</button>
-                                                            <button type="submit" class="btn btn-primary">Save
-                                                                changes</button>
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            <button type="submit" class="btn btn-primary">Save changes</button>
                                                         </div>
                                                     </form>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+
+                                    <!-- Delete Form -->
+                                    <form action="{{ route('jadwal_shift.destroy', $shift->id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger btn-sm delete-confirm" id="btnDelete">Delete</button>
+                                    </form>
                                 </td>
                             </tr>
                         @endforeach

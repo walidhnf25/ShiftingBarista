@@ -74,7 +74,9 @@ Route::middleware(['auth:user', 'checkRole:Manager'])->group(function () {
     Route::put('/addpegawai/{id}', [UsersController::class, 'update'])->name('addpegawai.update');
 
     Route::get('/jadwalshift', [JadwalShiftController::class, 'index'])->name('jadwalshift');
-    Route::post('/jadwalshift', [JadwalShiftController::class, 'store'])->name('jadwal_shift.store');
+    Route::get('/outlet', [JadwalShiftController::class, 'listOutlets'])->name('outlet');
+    Route::get('/outlet/jadwalshift/{id}', [JadwalShiftController::class, 'showOutlet'])->name('outlet.jadwalshift');
+    Route::post('/outlet/jadwalshift/{id}', [JadwalShiftController::class, 'store'])->name('jadwal_shift.store');
     Route::delete('/jadwalshift/{id}', [JadwalShiftController::class, 'destroy'])->name('jadwal_shift.destroy');
     Route::put('/jadwalshift/{id}', [JadwalShiftController::class, 'update'])->name('jadwalshift.update');
 

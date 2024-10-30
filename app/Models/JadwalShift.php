@@ -11,7 +11,8 @@ class JadwalShift extends Model
     protected $table = 'jadwal_shift';
     protected $fillable = [
         'jam_kerja',
-        'outlet',
+        'id_outlet',
+        'tipe_pekerjaan',
         'tanggal',
         'tipe_pekerjaan',
     ];
