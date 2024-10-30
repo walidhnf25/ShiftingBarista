@@ -35,10 +35,10 @@ class JadwalShiftController extends Controller
         // Validasi input
         $request->validate([
             'id' => 'nullable|integer|min:1',
-            'jam_mulai' => 'required|string',
-            'jam_selesai' => 'required|string',
+            'jam_kerja' => 'required|string',
             'outlet' => 'required|string',
             'tanggal' => 'required|date',
+            'tipe_pekerjaan' => 'required|string',
         ]);
 
         // Cari user berdasarkan ID
@@ -51,9 +51,9 @@ class JadwalShiftController extends Controller
 
         // Update data pengguna
         $jadwal_shift->id = $request->id;
-        $jadwal_shift->jam_mulai = $request->jam_mulai;
-        $jadwal_shift->jam_selesai = $request->jam_selesai;
+        $jadwal_shift->jam_kerja = $request->jam_kerja;
         $jadwal_shift->outlet = $request->outlet;
+        $jadwal_shift->tipe_pekerjaan = $request->tipe_pekerjaan;
 
         // Simpan perubahan
         $jadwal_shift->save();
@@ -102,6 +102,7 @@ class JadwalShiftController extends Controller
             'jam_kerja' => 'required|string',
             'outlet' => 'required|string',
             'tanggal' => 'required|date',
+            'tipe_pekerjaan' => 'required|string',
         ]);
 
         // Create a new record in the jadwal_shift table
@@ -109,6 +110,7 @@ class JadwalShiftController extends Controller
             'jam_kerja' => $request->jam_kerja,
             'outlet' => $request->outlet,
             'tanggal' => $request->tanggal,
+            'tipe_pekerjaan' => $request->tipe_pekerjaan,
         ]);
 
         // Redirect back with a success message

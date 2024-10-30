@@ -17,6 +17,7 @@ class CreateJadwalShift extends Migration
             $table->id();
             $table->string('jam_kerja')->nullable();
             $table->string('outlet')->nullable();
+            $table->string('tipe_pekerjaan')->nullable();
             $table->date('tanggal')->nullable();
             $table->timestamps();
         });
