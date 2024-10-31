@@ -124,19 +124,6 @@
                                                         @csrf
                                                         @method('PUT')
                                                         <div class="row">
-                                                            <div class="form-group col-md-6">
-                                                                <label for="tipe_pekerjaan">Tipe Pekerjaan</label>
-                                                                <select class="form-control" id="tipe_pekerjaan" name="tipe_pekerjaan" required>
-                                                                    <option value="" disabled>Pilih Tipe Pekerjaan</option>
-                                                                    @foreach ($TipePekerjaan as $type)
-                                                                        <option value="{{ $type->tipe_pekerjaan }}" 
-                                                                            {{ $type->tipe_pekerjaan == $shift->tipe_pekerjaan ? 'selected' : '' }}>
-                                                                            {{ $type->tipe_pekerjaan }}
-                                                                        </option>
-                                                                    @endforeach
-                                                                </select>
-                                                            </div>
-
                                                             <!-- Jam Kerja -->
                                                             <div class="form-group col-md-6">
                                                                 <label for="jam_kerja">Jam Kerja</label>
@@ -152,7 +139,20 @@
                                                             </div>
 
                                                             <div class="form-group col-md-6">
-                                                                <!-- Tanggal -->
+                                                                <label for="tipe_pekerjaan">Tipe Pekerjaan</label>
+                                                                <select class="form-control" id="tipe_pekerjaan" name="tipe_pekerjaan" required>
+                                                                    <option value="" disabled>Pilih Tipe Pekerjaan</option>
+                                                                    @foreach ($TipePekerjaan as $type)
+                                                                        <option value="{{ $type->tipe_pekerjaan }}" 
+                                                                            {{ $type->tipe_pekerjaan == $shift->tipe_pekerjaan ? 'selected' : '' }}>
+                                                                            {{ $type->tipe_pekerjaan }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+
+                                                            <!-- Tanggal -->
+                                                            <div class="form-group col-md-6">
                                                                 <label for="tanggal">Tanggal</label>
                                                                 <input type="date" class="form-control" id="tanggal"
                                                                     name="tanggal" value="{{ $shift->tanggal }}">
