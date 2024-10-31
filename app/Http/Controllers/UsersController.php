@@ -47,11 +47,10 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-        // Validasi input
-        // dd($request->all());
+        // Validasi input termasuk unik untuk username
         $request->validate([
             'name' => 'required|max:50',
-            'username' => 'required|max:50',
+            'username' => 'required|max:50|unique:users,username', // Tambah validasi unique untuk username
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:6',
             'role' => 'required|max:255',
@@ -101,11 +100,12 @@ class UsersController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // Validasi input
+        // Validasi input termasuk unik untuk username kecuali pengguna saat ini
         $request->validate([
             'id' => 'nullable|integer|min:1',
             'name' => 'nullable|max:50',
-            'email' => 'required|email|unique:users,email,' . $id, // Pastikan email unik kecuali untuk pengguna ini
+            'username' => 'required|max:50|unique:users,username,' . $id, // Validasi unique username, kecuali untuk pengguna ini
+            'email' => 'required|email|unique:users,email,' . $id, // Validasi unik email kecuali untuk pengguna ini
             'password' => 'nullable|min:6', // Password tidak wajib, tetapi minimal 6 karakter
             'role' => 'required|max:255',
         ]);
@@ -119,8 +119,8 @@ class UsersController extends Controller
         }
 
         // Update data pengguna
-        $user->id = $request->id;
         $user->name = $request->name;
+        $user->username = $request->username;
         $user->email = $request->email;
         $user->role = $request->role;
 

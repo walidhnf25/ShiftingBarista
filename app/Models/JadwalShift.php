@@ -13,6 +13,9 @@ class JadwalShift extends Model
         'jam_kerja',
         'id_outlet',
         'tipe_pekerjaan',
-        'tanggal',
+        'tanggal_mulai',
+        'tanggal_akhir',
+        'status',
     ];
+
 }
