@@ -21,18 +21,20 @@ class JadwalShiftController extends Controller
      */
     public function index(Request $request)
     {
+        // Eager load TipePekerjaan with JadwalShift
+        $jadwal_shift = JadwalShift::with('tipePekerjaan')->get();
 
-        // Mengambil semua data dari TipePekerjaan
+        // Retrieve other necessary data
         $jamShift = JamShift::all();
         $TipePekerjaan = TipePekerjaan::all();
-        $jadwal_shift = JadwalShift::all();
         $apiOutlet = $this->getOutletData();
-        // Buat mapping ID outlet ke nama outlet
+
+        // Map outlet IDs to their names
         $outletMapping = [];
         foreach ($apiOutlet as $outlet) {
             $outletMapping[$outlet['id']] = $outlet['outlet_name'];
         }
-        // Meneruskan data ke tampilan
+
         return view('jadwalshift', compact('jadwal_shift', 'jamShift', 'TipePekerjaan', 'apiOutlet', 'outletMapping'));
     }
 
@@ -116,7 +118,7 @@ class JadwalShiftController extends Controller
         
         $request->validate([
             'jam_kerja' => 'required|string',
-            'tipe_pekerjaan' => 'required|string',
+            'id_tipe_pekerjaan' => 'required|string',
             'tanggal_mulai' => 'required|date',
             'tanggal_akhir' => 'required|date',
         ]);
@@ -131,7 +133,7 @@ class JadwalShiftController extends Controller
 
         // Update data jadwal shift
         $jadwal_shift->jam_kerja = $request->jam_kerja;
-        $jadwal_shift->tipe_pekerjaan = $request->tipe_pekerjaan;
+        $jadwal_shift->id_tipe_pekerjaan = $request->id_tipe_pekerjaan;
         $jadwal_shift->tanggal_mulai = $request->tanggal_mulai;
         $jadwal_shift->tanggal_akhir = $request->tanggal_akhir;
 
@@ -179,7 +181,7 @@ class JadwalShiftController extends Controller
         // Validate the form data
         $request->validate([
             'jam_kerja' => 'required|string',
-            'tipe_pekerjaan' => 'required|string',
+            'id_tipe_pekerjaan' => 'required|string', // Ensure this is validated
             'tanggal_mulai' => 'required|date',
             'tanggal_akhir' => 'required|date|after_or_equal:tanggal_mulai',
         ]);
@@ -190,12 +192,12 @@ class JadwalShiftController extends Controller
 
         // Loop through each date from start to end date
         for ($date = $startDate; $date <= $endDate; $date->modify('+1 day')) {
-            // Create a new record with looping tanggal_mulai and constant tanggal_akhir
+            // Save new data with looping
             JadwalShift::create([
                 'jam_kerja' => $request->jam_kerja,
-                'tipe_pekerjaan' => $request->tipe_pekerjaan,
-                'tanggal_mulai' => $date->format('Y-m-d'), // Looped start date
-                'tanggal_akhir' => $request->tanggal_akhir, // Constant end date
+                'id_tipe_pekerjaan' => $request->id_tipe_pekerjaan, // Use the correct variable here
+                'tanggal_mulai' => $date->format('Y-m-d'), // Start date looping
+                'tanggal_akhir' => $request->tanggal_akhir, // End date remains the same
                 'id_outlet' => $id,
                 'status' => "Waiting",
             ]);
