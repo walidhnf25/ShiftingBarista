@@ -181,18 +181,25 @@ class JadwalShiftController extends Controller
             'jam_kerja' => 'required|string',
             'tipe_pekerjaan' => 'required|string',
             'tanggal_mulai' => 'required|date',
-            'tanggal_akhir' => 'required|date',
+            'tanggal_akhir' => 'required|date|after_or_equal:tanggal_mulai',
         ]);
 
-        // Create a new record in the jadwal_shift table with id_outlet set to the passed id
-        JadwalShift::create([
-            'jam_kerja' => $request->jam_kerja,
-            'tipe_pekerjaan' => $request->tipe_pekerjaan,
-            'tanggal_mulai' => $request->tanggal_mulai,
-            'tanggal_akhir' => $request->tanggal_akhir,
-            'id_outlet' => $id, // Storing the id in the id_outlet column
-            'status' => "Waiting", // Inisiasi status Waiting
-        ]);
+        // Initialize start and end dates
+        $startDate = new \DateTime($request->tanggal_mulai);
+        $endDate = new \DateTime($request->tanggal_akhir);
+
+        // Loop through each date from start to end date
+        for ($date = $startDate; $date <= $endDate; $date->modify('+1 day')) {
+            // Create a new record with looping tanggal_mulai and constant tanggal_akhir
+            JadwalShift::create([
+                'jam_kerja' => $request->jam_kerja,
+                'tipe_pekerjaan' => $request->tipe_pekerjaan,
+                'tanggal_mulai' => $date->format('Y-m-d'), // Looped start date
+                'tanggal_akhir' => $request->tanggal_akhir, // Constant end date
+                'id_outlet' => $id,
+                'status' => "Waiting",
+            ]);
+        }
 
         // Redirect back with a success message
         return redirect()->back()->with('success', 'Jadwal Shift berhasil ditambahkan.');

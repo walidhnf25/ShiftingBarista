@@ -27,7 +27,6 @@
             <div class="col-lg-12">
                 <form action="{{ route('jadwal_shift.store', ['id' => $selectedOutlet['id']]) }}" method="POST" enctype="multipart/form-data">
                     @csrf
-                    
                     <div class="form-row">
                         {{-- <!-- Jam Shift Start -->
                     <div class="form-group col-md-6">
@@ -93,8 +92,7 @@
                             <th>Jam Kerja</th>
                             <th>Tipe Pekerjaan</th>
                             <th>Outlet</th>
-                            <th>Tanggal Mulai</th>
-                            <th>Tanggal Akhir</th>
+                            <th>Tanggal</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -106,7 +104,6 @@
                                 <td>{{ $shift->tipe_pekerjaan }}</td>
                                 <td>{{ $outletMapping[$shift->id_outlet] }}</td>
                                 <td>{{ $shift->tanggal_mulai }}</td>
-                                <td>{{ $shift->tanggal_akhir }}</td>
                                 <td>
                                     <!-- Edit Button -->
                                     <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
