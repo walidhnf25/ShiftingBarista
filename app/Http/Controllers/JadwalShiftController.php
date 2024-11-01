@@ -199,6 +199,7 @@ class JadwalShiftController extends Controller
                 'tanggal_mulai' => $date->format('Y-m-d'), // Start date looping
                 'tanggal_akhir' => $request->tanggal_akhir, // End date remains the same
                 'id_outlet' => $id,
+                'id_user' => null,
                 'status' => "Waiting",
             ]);
         }
