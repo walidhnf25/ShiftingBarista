@@ -20,6 +20,7 @@ class CreateJadwalShift extends Migration
             $table->string('id_outlet')->nullable();
             $table->date('tanggal_mulai')->nullable();
             $table->date('tanggal_akhir')->nullable();
+            $table->date('id_user')->nullable();
             $table->string('status')->nullable();
             $table->timestamps();
         });

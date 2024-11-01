@@ -63,17 +63,6 @@
                             <label for="tanggal">Tanggal Akhir</label>
                             <input type="date" class="form-control" id="tanggal_akhir" name="tanggal_akhir" required>
                         </div>
-
-                        <!-- Role Selection -->
-                        <div class="form-group col-md-6">
-                            <label for="role">Tipe Pekerjaan</label>
-                            <select class="form-control" id="tipe_pekerjaan" name="tipe_pekerjaan">
-                                <option value="" disabled selected>Pilih Tipe Pekerjaan</option>
-                                @foreach ($TipePekerjaan as $f)
-                                    <option value="{{ $f->tipe_pekerjaan }}">{{ $f->tipe_pekerjaan }}</option>
-                                @endforeach
-                            </select>
-                        </div>
                     </div>
 
                     <button type="submit" class="btn btn-primary mt-3">Tambah Jadwal Shift</button>
