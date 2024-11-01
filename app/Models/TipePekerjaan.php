@@ -12,4 +12,9 @@ class TipePekerjaan extends Model
     protected $fillable = [
         'tipe_pekerjaan', // Ensure this is here
     ];
+
+    public function jadwalShifts()
+    {
+        return $this->hasMany(JadwalShift::class, 'id_tipe_pekerjaan', 'id');
+    }
 }

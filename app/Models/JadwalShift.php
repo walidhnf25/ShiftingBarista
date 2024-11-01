@@ -12,8 +12,15 @@ class JadwalShift extends Model
     protected $fillable = [
         'jam_kerja',
         'id_outlet',
-        'tipe_pekerjaan',
-        'tanggal',
-        'tipe_pekerjaan',
+        'id_tipe_pekerjaan',
+        'tanggal_mulai',
+        'tanggal_akhir',
+        'status',
     ];
+
+    public function tipePekerjaan()
+    {
+        return $this->belongsTo(TipePekerjaan::class, 'id_tipe_pekerjaan', 'id'); // Foreign key and local key
+    }
+
 }
