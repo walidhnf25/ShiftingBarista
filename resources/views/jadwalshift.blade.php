@@ -54,10 +54,10 @@
                         <!-- Outlet Selection -->
                         <div class="form-group col-md-6">
                             <label for="outlet">Tipe Pekerjaan</label>
-                            <select class="form-control" id="tipe_pekerjaan" name="tipe_pekerjaan" required>
+                            <select class="form-control" id="id_tipe_pekerjaan" name="id_tipe_pekerjaan" required>
                                 <option value="" disabled selected>Pilih Tipe Pekerjaan</option>
                                 @foreach ($TipePekerjaan as $d)
-                                    <option value="{{ $d->tipe_pekerjaan }}">{{ $d->tipe_pekerjaan }}</option>
+                                    <option value="{{ $d->id }}">{{ $d->tipe_pekerjaan }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -101,7 +101,7 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $shift->jam_kerja }}</td>
-                                <td>{{ $shift->tipe_pekerjaan }}</td>
+                                <td>{{ $shift->tipePekerjaan ? $shift->tipePekerjaan->tipe_pekerjaan : 'N/A' }}</td>
                                 <td>{{ $outletMapping[$shift->id_outlet] }}</td>
                                 <td>{{ $shift->tanggal_mulai }}</td>
                                 <td>
@@ -146,11 +146,11 @@
                                                               <!-- Tanggal Mulai -->                        
                                                             <div class="form-group col-md-6">
                                                                 <label for="tipe_pekerjaan">Tipe Pekerjaan</label>
-                                                                <select class="form-control" id="tipe_pekerjaan" name="tipe_pekerjaan" required>
+                                                                <select class="form-control" id="id_tipe_pekerjaan" name="id_tipe_pekerjaan" required>
                                                                     <option value="" disabled>Pilih Tipe Pekerjaan</option>
                                                                     @foreach ($TipePekerjaan as $type)
-                                                                        <option value="{{ $type->tipe_pekerjaan }}" 
-                                                                            {{ $type->tipe_pekerjaan == $shift->tipe_pekerjaan ? 'selected' : '' }}>
+                                                                        <option value="{{ $type->id }}" 
+                                                                            {{ $type->id == $shift->id_tipe_pekerjaan ? 'selected' : '' }}>
                                                                             {{ $type->tipe_pekerjaan }}
                                                                         </option>
                                                                     @endforeach
