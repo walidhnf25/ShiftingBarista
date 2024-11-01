@@ -115,7 +115,7 @@ class JadwalShiftController extends Controller
     public function update(Request $request, $id)
     {
         // Validasi input
-        
+
         $request->validate([
             'jam_kerja' => 'required|string',
             'id_tipe_pekerjaan' => 'required|string',
