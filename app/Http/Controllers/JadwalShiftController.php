@@ -70,7 +70,8 @@ class JadwalShiftController extends Controller
             abort(404, 'Outlet not found');
         }
 
-        $jadwal_shift = JadwalShift::where('id_outlet', $id)->get();
+        $jamShift = JamShift::where('id_outlet', $id)->get();
+        $jadwal_shift = JadwalShift::with('tipePekerjaan')->where('id_outlet', $id)->get();
 
         // Create a mapping of outlet IDs to outlet names
         $outletMapping = collect($apiOutlet)->pluck('outlet_name', 'id');

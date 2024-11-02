@@ -17,6 +17,7 @@ class CreateJadwal extends Migration
             $table->id();
             $table->time('jam_mulai')->nullable();
             $table->time('jam_selesai')->nullable();
+            $table->string('id_outlet')->nullable();
             $table->timestamps();
         });
     }
