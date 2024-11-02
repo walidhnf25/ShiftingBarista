@@ -94,7 +94,7 @@
                                 <td>{{ $shift->jam_kerja }}</td>
                                 <td>{{ $shift->tipePekerjaan ? $shift->tipePekerjaan->tipe_pekerjaan : 'N/A' }}</td>
                                 <td>{{ $outletMapping[$shift->id_outlet] }}</td>
-                                <td>{{ $shift->tanggal_mulai }}</td>
+                                <td>{{ $shift->tanggal }}</td>
                                 <td>
                                     <!-- Edit Button -->
                                     <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
@@ -159,18 +159,9 @@
                                                             <div class="form-group col-md-6">
                                                                 <label for="tanggal">Tanggal Mulai</label>
                                                                 <input type="date" class="form-control"
-                                                                    id="tanggal_mulai" name="tanggal_mulai"
-                                                                    value="{{ $shift->tanggal_mulai }}">
+                                                                    id="tanggal" name="tanggal"
+                                                                    value="{{ $shift->tanggal }}">
                                                             </div>
-
-                                                            <!-- Tanggal Akhir -->
-                                                            <div class="form-group col-md-6">
-                                                                <label for="tanggal">Tanggal Akhir</label>
-                                                                <input type="date" class="form-control"
-                                                                    id="tanggal_akhir" name="tanggal_akhir"
-                                                                    value="{{ $shift->tanggal_akhir }}">
-                                                            </div>
-
 
                                                         </div>
 

@@ -34,6 +34,7 @@ class JadwalShiftController extends Controller
         foreach ($apiOutlet as $outlet) {
             $outletMapping[$outlet['id']] = $outlet['outlet_name'];
         }
+        $outletMapping = collect($apiOutlet)->pluck('outlet_name', 'id');
 
         return view('jadwalshift', compact('jadwal_shift', 'jamShift', 'TipePekerjaan', 'apiOutlet', 'outletMapping'));
     }
@@ -119,8 +120,7 @@ class JadwalShiftController extends Controller
         $request->validate([
             'jam_kerja' => 'required|string',
             'id_tipe_pekerjaan' => 'required|string',
-            'tanggal_mulai' => 'required|date',
-            'tanggal_akhir' => 'required|date',
+            'tanggal' => 'required|date',
         ]);
 
         // Cari jadwal shift berdasarkan ID
@@ -134,8 +134,7 @@ class JadwalShiftController extends Controller
         // Update data jadwal shift
         $jadwal_shift->jam_kerja = $request->jam_kerja;
         $jadwal_shift->id_tipe_pekerjaan = $request->id_tipe_pekerjaan;
-        $jadwal_shift->tanggal_mulai = $request->tanggal_mulai;
-        $jadwal_shift->tanggal_akhir = $request->tanggal_akhir;
+        $jadwal_shift->tanggal = $request->tanggal;
 
         // Simpan perubahan
         $jadwal_shift->save();
@@ -181,9 +180,9 @@ class JadwalShiftController extends Controller
         // Validate the form data
         $request->validate([
             'jam_kerja' => 'required|string',
-            'id_tipe_pekerjaan' => 'required|string', // Ensure this is validated
+            'id_tipe_pekerjaan' => 'required|string', 
             'tanggal_mulai' => 'required|date',
-            'tanggal_akhir' => 'required|date|after_or_equal:tanggal_mulai',
+            'tanggal_akhir' => 'required|date',
         ]);
 
         // Initialize start and end dates
@@ -195,9 +194,8 @@ class JadwalShiftController extends Controller
             // Save new data with looping
             JadwalShift::create([
                 'jam_kerja' => $request->jam_kerja,
-                'id_tipe_pekerjaan' => $request->id_tipe_pekerjaan, // Use the correct variable here
-                'tanggal_mulai' => $date->format('Y-m-d'), // Start date looping
-                'tanggal_akhir' => $request->tanggal_akhir, // End date remains the same
+                'id_tipe_pekerjaan' => $request->id_tipe_pekerjaan,
+                'tanggal' => $date->format('Y-m-d'), // Assign the current date in loop
                 'id_outlet' => $id,
                 'id_user' => null,
                 'status' => "Waiting",
