@@ -45,7 +45,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($jamShift as $d)
+                    @forelse ($jamShift as $d)
                     <tr>
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $d->jam_mulai }}</td>
@@ -65,7 +65,11 @@
                             </form>
                         </td>
                     </tr>
-                    @endforeach
+                    @empty
+                    <tr>
+                        <td colspan="5" class="text-center">Jam Shift belum ditambahkan</td>
+                    </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>

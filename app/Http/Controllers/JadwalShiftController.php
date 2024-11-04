@@ -36,7 +36,7 @@ class JadwalShiftController extends Controller
         }
         $outletMapping = collect($apiOutlet)->pluck('outlet_name', 'id');
 
-        return view('jadwalshift', compact('jadwal_shift', 'jamShift', 'TipePekerjaan', 'apiOutlet', 'outletMapping'));
+        return view('manager.jadwalshift', compact('jadwal_shift', 'jamShift', 'TipePekerjaan', 'apiOutlet', 'outletMapping'));
     }
 
     public function listOutlets(Request $request)
@@ -77,7 +77,7 @@ class JadwalShiftController extends Controller
         $outletMapping = collect($apiOutlet)->pluck('outlet_name', 'id');
 
         // Pass all data to the view, including apiOutlet
-        return view('jadwalshift', compact('jadwal_shift', 'jamShift', 'TipePekerjaan', 'selectedOutlet', 'outletMapping', 'apiOutlet'));
+        return view('manager.jadwalshift', compact('jadwal_shift', 'jamShift', 'TipePekerjaan', 'selectedOutlet', 'outletMapping', 'apiOutlet'));
     }
 
     public function getOutletData()
@@ -129,7 +129,7 @@ class JadwalShiftController extends Controller
 
         // Jika jadwal shift tidak ditemukan, berikan response gagal
         if (!$jadwal_shift) {
-            return redirect()->route('jadwalshift')->with('error', 'Jadwal Shift tidak ditemukan');
+            return redirect()->route('manager.jadwalshift')->with('error', 'Jadwal Shift tidak ditemukan');
         }
 
         // Update data jadwal shift
@@ -214,7 +214,7 @@ class JadwalShiftController extends Controller
 
         // Jika user tidak ditemukan, berikan response gagal
         if (!$JadwalShift) {
-            return redirect()->route('jadwalshift')->with('error', 'Jadwal Shift tidak ditemukan');
+            return redirect()->route('manager.jadwalshift')->with('error', 'Jadwal Shift tidak ditemukan');
         }
 
         // Hapus user
