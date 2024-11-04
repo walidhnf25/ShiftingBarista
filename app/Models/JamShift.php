@@ -12,5 +12,6 @@ class JamShift extends Model
     protected $fillable = [
         'jam_mulai',
         'jam_selesai', // Ensure this is here
+        'id_outlet',
     ];
 }

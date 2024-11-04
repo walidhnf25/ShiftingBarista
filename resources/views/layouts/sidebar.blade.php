@@ -70,10 +70,21 @@
     @if (auth()->check() && auth()->user()->role === 'Staff')
     <hr class="sidebar-divider">
 
-    <li class="nav-item {{ Request::is('outlet') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('outlet') }}">
-            <i class="fas fa-fw fa fa-calendar"></i>
-            <span>Pilih Jadwal Shift</span>
+    <li class="nav-item {{ Request::is('applyshift') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('applyshift') }}">
+            <i class="fas fa-fw fa fa-hand-pointer"></i>
+            <span>Pilih Shift</span>
+        </a>
+    </li>
+    @endif
+
+    @if (auth()->check() && auth()->user()->role === 'Manager')
+    <hr class="sidebar-divider">
+
+    <li class="nav-item {{ Request::is('requestshift') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('requestshift') }}">
+            <i class="fas fa-fw fa fa-address-book"></i>
+            <span>Request Jadwal Shift</span>
         </a>
     </li>
     @endif

@@ -59,6 +59,9 @@ Route::middleware(['auth:user', 'checkRole:Staff'])->group(function () {
     //tambah jadwal shift
 
 
+    Route::get('applyshift', function () {
+        return view('staff.applyshift');
+    })->name('applyshift');
 });
 
 Route::middleware(['auth:user', 'checkRole:Manager'])->group(function () {
@@ -89,6 +92,10 @@ Route::middleware(['auth:user', 'checkRole:Manager'])->group(function () {
     Route::get('/editjamshift', [jamShiftController::class, 'editJamShift']);
     Route::post('/jamshift/update/{id}', [jamShiftController::class, 'update'])->name('jamShift.update');
     Route::post('/jamshift/delete/{id}', [jamShiftController::class, 'deleteJamShift'])->name('jamshift.deleteJamShift');
+
+    Route::get('/requestshift', function () {
+        return view('manager.requestshift');
+    })->name('requestshift');
 
 });
 

@@ -44,32 +44,34 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($TipePekerjaan as $d)
-                    <tr>
-                        <td>{{ $loop->iteration }}</td>
-                        <td>{{ $d->tipe_pekerjaan }}</td>
-                        <td>
-                            <a href="#" class="edit btn btn-info btn-sm btn-circle" id="{{ $d->id }}">
-                                <i class="fa fa-edit"></i>
-                            </a>
-                            <form action="{{ route('tipepekerjaan.deleteTipePekerjaan', $d->id) }}" method="POST" style="display: inline-block;">
-                                @csrf
-                                <button type="submit" class="btn btn-danger btn-circle btn-sm delete-confirm">
-                                    <i class="fa fa-trash"></i>
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
-                    @endforeach
+                    @forelse($TipePekerjaan as $d)
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $d->tipe_pekerjaan }}</td>
+                            <td>
+                                <a href="#" class="edit btn btn-info btn-sm btn-circle" id="{{ $d->id }}">
+                                    <i class="fa fa-edit"></i>
+                                </a>
+                                <form action="{{ route('tipepekerjaan.deleteTipePekerjaan', $d->id) }}" method="POST" style="display: inline-block;">
+                                    @csrf
+                                    <button type="submit" class="btn btn-danger btn-circle btn-sm delete-confirm">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="3" class="text-center">Tipe pekerjaan belum ditambahkan</td>
+                        </tr>
+                    @endforelse
                 </tbody>
+                
             </table>
         </div>
     </div>
 
-    <!-- Content Row -->
-    <div class="row">
-        <!-- Tambahkan konten di sini jika diperlukan -->
-    </div>
+    
 
     <div class="modal fade" id="modal-inputpekerjaan" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">

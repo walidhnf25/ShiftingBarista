@@ -63,17 +63,6 @@
                             <label for="tanggal">Tanggal Akhir</label>
                             <input type="date" class="form-control" id="tanggal_akhir" name="tanggal_akhir" required>
                         </div>
-
-                        <!-- Role Selection -->
-                        <div class="form-group col-md-6">
-                            <label for="role">Tipe Pekerjaan</label>
-                            <select class="form-control" id="tipe_pekerjaan" name="tipe_pekerjaan">
-                                <option value="" disabled selected>Pilih Tipe Pekerjaan</option>
-                                @foreach ($TipePekerjaan as $f)
-                                    <option value="{{ $f->tipe_pekerjaan }}">{{ $f->tipe_pekerjaan }}</option>
-                                @endforeach
-                            </select>
-                        </div>
                     </div>
 
                     <button type="submit" class="btn btn-primary mt-3">Tambah Jadwal Shift</button>
@@ -105,7 +94,7 @@
                                 <td>{{ $shift->jam_kerja }}</td>
                                 <td>{{ $shift->tipePekerjaan ? $shift->tipePekerjaan->tipe_pekerjaan : 'N/A' }}</td>
                                 <td>{{ $outletMapping[$shift->id_outlet] }}</td>
-                                <td>{{ $shift->tanggal_mulai }}</td>
+                                <td>{{ $shift->tanggal }}</td>
                                 <td>
                                     <!-- Edit Button -->
                                     <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
@@ -170,18 +159,9 @@
                                                             <div class="form-group col-md-6">
                                                                 <label for="tanggal">Tanggal Mulai</label>
                                                                 <input type="date" class="form-control"
-                                                                    id="tanggal_mulai" name="tanggal_mulai"
-                                                                    value="{{ $shift->tanggal_mulai }}">
+                                                                    id="tanggal" name="tanggal"
+                                                                    value="{{ $shift->tanggal }}">
                                                             </div>
-
-                                                            <!-- Tanggal Akhir -->
-                                                            <div class="form-group col-md-6">
-                                                                <label for="tanggal">Tanggal Akhir</label>
-                                                                <input type="date" class="form-control"
-                                                                    id="tanggal_akhir" name="tanggal_akhir"
-                                                                    value="{{ $shift->tanggal_akhir }}">
-                                                            </div>
-
 
                                                         </div>
 

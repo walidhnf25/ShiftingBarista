@@ -34,8 +34,9 @@ class JadwalShiftController extends Controller
         foreach ($apiOutlet as $outlet) {
             $outletMapping[$outlet['id']] = $outlet['outlet_name'];
         }
+        $outletMapping = collect($apiOutlet)->pluck('outlet_name', 'id');
 
-        return view('jadwalshift', compact('jadwal_shift', 'jamShift', 'TipePekerjaan', 'apiOutlet', 'outletMapping'));
+        return view('manager.jadwalshift', compact('jadwal_shift', 'jamShift', 'TipePekerjaan', 'apiOutlet', 'outletMapping'));
     }
 
     public function listOutlets(Request $request)
@@ -69,13 +70,14 @@ class JadwalShiftController extends Controller
             abort(404, 'Outlet not found');
         }
 
-        $jadwal_shift = JadwalShift::where('id_outlet', $id)->get();
+        $jamShift = JamShift::where('id_outlet', $id)->get();
+        $jadwal_shift = JadwalShift::with('tipePekerjaan')->where('id_outlet', $id)->get();
 
         // Create a mapping of outlet IDs to outlet names
         $outletMapping = collect($apiOutlet)->pluck('outlet_name', 'id');
 
         // Pass all data to the view, including apiOutlet
-        return view('jadwalshift', compact('jadwal_shift', 'jamShift', 'TipePekerjaan', 'selectedOutlet', 'outletMapping', 'apiOutlet'));
+        return view('manager.jadwalshift', compact('jadwal_shift', 'jamShift', 'TipePekerjaan', 'selectedOutlet', 'outletMapping', 'apiOutlet'));
     }
 
     public function getOutletData()
@@ -119,8 +121,7 @@ class JadwalShiftController extends Controller
         $request->validate([
             'jam_kerja' => 'required|string',
             'id_tipe_pekerjaan' => 'required|string',
-            'tanggal_mulai' => 'required|date',
-            'tanggal_akhir' => 'required|date',
+            'tanggal' => 'required|date',
         ]);
 
         // Cari jadwal shift berdasarkan ID
@@ -128,14 +129,13 @@ class JadwalShiftController extends Controller
 
         // Jika jadwal shift tidak ditemukan, berikan response gagal
         if (!$jadwal_shift) {
-            return redirect()->route('jadwalshift')->with('error', 'Jadwal Shift tidak ditemukan');
+            return redirect()->route('manager.jadwalshift')->with('error', 'Jadwal Shift tidak ditemukan');
         }
 
         // Update data jadwal shift
         $jadwal_shift->jam_kerja = $request->jam_kerja;
         $jadwal_shift->id_tipe_pekerjaan = $request->id_tipe_pekerjaan;
-        $jadwal_shift->tanggal_mulai = $request->tanggal_mulai;
-        $jadwal_shift->tanggal_akhir = $request->tanggal_akhir;
+        $jadwal_shift->tanggal = $request->tanggal;
 
         // Simpan perubahan
         $jadwal_shift->save();
@@ -181,9 +181,9 @@ class JadwalShiftController extends Controller
         // Validate the form data
         $request->validate([
             'jam_kerja' => 'required|string',
-            'id_tipe_pekerjaan' => 'required|string', // Ensure this is validated
+            'id_tipe_pekerjaan' => 'required|string', 
             'tanggal_mulai' => 'required|date',
-            'tanggal_akhir' => 'required|date|after_or_equal:tanggal_mulai',
+            'tanggal_akhir' => 'required|date',
         ]);
 
         // Initialize start and end dates
@@ -195,10 +195,10 @@ class JadwalShiftController extends Controller
             // Save new data with looping
             JadwalShift::create([
                 'jam_kerja' => $request->jam_kerja,
-                'id_tipe_pekerjaan' => $request->id_tipe_pekerjaan, // Use the correct variable here
-                'tanggal_mulai' => $date->format('Y-m-d'), // Start date looping
-                'tanggal_akhir' => $request->tanggal_akhir, // End date remains the same
+                'id_tipe_pekerjaan' => $request->id_tipe_pekerjaan,
+                'tanggal' => $date->format('Y-m-d'), // Assign the current date in loop
                 'id_outlet' => $id,
+                'id_user' => null,
                 'status' => "Waiting",
             ]);
         }
@@ -214,7 +214,7 @@ class JadwalShiftController extends Controller
 
         // Jika user tidak ditemukan, berikan response gagal
         if (!$JadwalShift) {
-            return redirect()->route('jadwalshift')->with('error', 'Jadwal Shift tidak ditemukan');
+            return redirect()->route('manager.jadwalshift')->with('error', 'Jadwal Shift tidak ditemukan');
         }
 
         // Hapus user

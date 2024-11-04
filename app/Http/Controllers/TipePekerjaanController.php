@@ -16,7 +16,7 @@ class TipePekerjaanController extends Controller
         $TipePekerjaan = TipePekerjaan::all();
 
         // Meneruskan data ke tampilan
-        return view('tipepekerjaan', compact('TipePekerjaan', 'user'));
+        return view('manager.tipepekerjaan', compact('TipePekerjaan', 'user'));
     }
 
     public function store(Request $request)

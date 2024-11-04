@@ -13,8 +13,7 @@ class JadwalShift extends Model
         'jam_kerja',
         'id_outlet',
         'id_tipe_pekerjaan',
-        'tanggal_mulai',
-        'tanggal_akhir',
+        'tanggal',
         'status',
     ];
 

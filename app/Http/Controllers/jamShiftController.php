@@ -42,7 +42,7 @@ class jamShiftController extends Controller
         });
 
         // Kirim data ke view
-        return view('jamShift', compact('jamShift'));
+        return view('manager.jamShift', compact('jamShift'));
     }
 
     public function store(Request $request)
