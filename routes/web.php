@@ -6,6 +6,7 @@ use App\Http\Controllers\UsersController;
 use App\Models\User;
 use App\Http\Controllers\TipePekerjaanController;
 use App\Http\Controllers\JadwalShiftController;
+use App\Http\Controllers\ApplyShiftController;
 use App\Http\Controllers\AuthController;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -56,12 +57,7 @@ route::middleware(['guest:user'])->group(function () {
 });
 
 Route::middleware(['auth:user', 'checkRole:Staff'])->group(function () {
-    //tambah jadwal shift
-
-
-    Route::get('applyshift', function () {
-        return view('staff.applyshift');
-    })->name('applyshift');
+    Route::get('/applyshift', [ApplyShiftController::class, 'index'])->name('applyshift');
 });
 
 Route::middleware(['auth:user', 'checkRole:Manager'])->group(function () {

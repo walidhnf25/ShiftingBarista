@@ -80,7 +80,7 @@
                         <tr>
                             <th>#</th>
                             <th>Jam Kerja</th>
-                            <th>Tipe Pekerjaan</th>
+                            <th>Pekerjaan</th>
                             <th>Outlet</th>
                             <th>Tanggal</th>
                             <th>Aksi</th>
