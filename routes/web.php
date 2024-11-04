@@ -56,6 +56,8 @@ route::middleware(['guest:user'])->group(function () {
 });
 
 Route::middleware(['auth:user', 'checkRole:Staff'])->group(function () {
+    //tambah jadwal shift
+
 
 });
 
@@ -73,6 +75,7 @@ Route::middleware(['auth:user', 'checkRole:Manager'])->group(function () {
     Route::delete('/addpegawai/email/{email}', [UsersController::class, 'destroy'])->name('addpegawai.destroy');
     Route::put('/addpegawai/{id}', [UsersController::class, 'update'])->name('addpegawai.update');
 
+    //jadwal shift
     Route::get('/jadwalshift', [JadwalShiftController::class, 'index'])->name('jadwalshift');
     Route::get('/outlet', [JadwalShiftController::class, 'listOutlets'])->name('outlet');
     Route::get('/outlet/jadwalshift/{id}', [JadwalShiftController::class, 'showOutlet'])->name('outlet.jadwalshift');

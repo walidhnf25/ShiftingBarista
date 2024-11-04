@@ -67,6 +67,17 @@
     </li>
     @endif
 
+    @if (auth()->check() && auth()->user()->role === 'Staff')
+    <hr class="sidebar-divider">
+
+    <li class="nav-item {{ Request::is('outlet') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('outlet') }}">
+            <i class="fas fa-fw fa fa-calendar"></i>
+            <span>Pilih Jadwal Shift</span>
+        </a>
+    </li>
+    @endif
+
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
 
