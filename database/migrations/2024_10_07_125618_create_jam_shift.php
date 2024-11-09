@@ -15,7 +15,9 @@ class CreateJamShift extends Migration
     {
         Schema::create('jam_shift', function (Blueprint $table) {
             $table->id();
-            $table->string('jam', 20)->nullable();
+            $table->time('jam_mulai')->nullable();
+            $table->time('jam_selesai')->nullable();
+            $table->string('id_outlet')->nullable();
             $table->timestamps();
         });
     }

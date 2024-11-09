@@ -66,7 +66,7 @@ class UsersController extends Controller
         ]);
 
         // Redirect kembali dengan pesan sukses
-        return redirect()->route('manager.addpegawai')->with('success', 'Pengguna berhasil ditambahkan');
+        return redirect()->route('addpegawai')->with('success', 'Pengguna berhasil ditambahkan');
     }
 
     /**
@@ -115,7 +115,7 @@ class UsersController extends Controller
 
         // Jika user tidak ditemukan, berikan response gagal
         if (!$user) {
-            return redirect()->route('manager.addpegawai')->with('error', 'Pengguna tidak ditemukan');
+            return redirect()->route('addpegawai')->with('error', 'Pengguna tidak ditemukan');
         }
 
         // Update data pengguna
@@ -133,7 +133,7 @@ class UsersController extends Controller
         $user->save();
 
         // Redirect kembali dengan pesan sukses
-        return redirect()->route('manager.addpegawai')->with('success', 'Pengguna berhasil diupdate');
+        return redirect()->route('addpegawai')->with('success', 'Pengguna berhasil diupdate');
     }
 
 
@@ -157,7 +157,7 @@ class UsersController extends Controller
         $user->delete();
 
         // Redirect kembali dengan pesan sukses
-        return redirect()->route('manager.addpegawai')->with('success', 'Pengguna berhasil dihapus');
+        return redirect()->route('addpegawai')->with('success', 'Pengguna berhasil dihapus');
     }
 
 }
