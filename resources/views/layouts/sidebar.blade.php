@@ -70,6 +70,17 @@
     @if (auth()->check() && auth()->user()->role === 'Staff')
     <hr class="sidebar-divider">
 
+    <li class="nav-item {{ Request::is('waktushift') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('waktushift') }}">
+            <i class="fas fa-fw fa fa-clock"></i>
+            <span>Waktu Shift Anda</span>
+        </a>
+    </li>
+    @endif
+
+    @if (auth()->check() && auth()->user()->role === 'Staff')
+    <hr class="sidebar-divider">
+
     <li class="nav-item {{ Request::is('applyshift') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('applyshift') }}">
             <i class="fas fa-fw fa fa-hand-pointer"></i>

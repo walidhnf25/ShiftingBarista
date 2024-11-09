@@ -56,8 +56,14 @@ route::middleware(['guest:user'])->group(function () {
      Route::post('/authSSO' , [AuthController::class, 'authSSO'])->name('authSSO');
 });
 
+
+
 Route::middleware(['auth:user', 'checkRole:Staff'])->group(function () {
     Route::get('/applyshift', [ApplyShiftController::class, 'index'])->name('applyshift');
+
+    Route::get('/waktushift', function () {
+        return view('staff.waktushift');
+    })->name('waktushift');
 });
 
 Route::middleware(['auth:user', 'checkRole:Manager'])->group(function () {
