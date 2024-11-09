@@ -59,8 +59,15 @@ route::middleware(['guest:user'])->group(function () {
      Route::post('/authSSO' , [AuthController::class, 'authSSO'])->name('authSSO');
 });
 
+
+
 Route::middleware(['auth:user', 'checkRole:Staff'])->group(function () {
     Route::get('/applyshift', [ApplyShiftController::class, 'index'])->name('applyshift');
+
+    Route::get('/waktushift', function () {
+        return view('staff.waktushift');
+    })->name('waktushift');
+  
     Route::get('/filter-jadwal-shift', [ApplyShiftController::class, 'filterJadwalShift'])->name('filterJadwalShift');
     Route::post('/store-shift', [ApplyShiftController::class, 'storeShift'])->name('storeShift');
     Route::post('/kesediaan/store', [ApplyShiftController::class, 'store'])->name('kesediaan.store');
