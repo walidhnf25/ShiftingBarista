@@ -78,7 +78,7 @@
                         </div>
                         <button type="submit" class="btn btn-primary btn-block mt-4">Masuk</button>
                         <hr>
-                        <a href={{ route('registersso')}} class="btn btn-google btn-block ">
+                        <a href="{{ route('registersso')}}" class="btn btn-google btn-block ">
                             Daftar melalui SSO
                         </a>
                     </form>

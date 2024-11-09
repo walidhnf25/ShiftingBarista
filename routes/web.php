@@ -10,7 +10,10 @@ use App\Http\Controllers\ApplyShiftController;
 use App\Http\Controllers\AuthController;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
-
+use Illuminate\Support\Facades\Cache;
+use App\Models\JadwalShift;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,6 +61,46 @@ route::middleware(['guest:user'])->group(function () {
 
 Route::middleware(['auth:user', 'checkRole:Staff'])->group(function () {
     Route::get('/applyshift', [ApplyShiftController::class, 'index'])->name('applyshift');
+    Route::get('/filter-jadwal-shift', [ApplyShiftController::class, 'filterJadwalShift'])->name('filterJadwalShift');
+    Route::post('/store-shift', [ApplyShiftController::class, 'storeShift'])->name('storeShift');
+    Route::post('/kesediaan/store', [ApplyShiftController::class, 'store'])->name('kesediaan.store');
+    
+    Route::get('/index', function(){
+        $jadwal_shift = JadwalShift::get();
+        return view('index', ['jadwal_shift' => $jadwal_shift]);
+    });
+
+    Route::get('/putCache', function(){
+        $seconds = '10';
+        $jadwal_shift = JadwalShift::all();
+        Cache::put('jadwal_shift', $jadwal_shift, $seconds);
+    });
+
+    Route::get('/getCache', function(){
+        $jadwal_shift = Cache::get('jadwal_shift');
+        return view('index', ['jadwal_shift' => $jadwal_shift]);
+    });
+
+    Route::get('getJadwalshift/{id}', [ApplyShiftController::class, 'getJadwalShift']);
+    Route::get('/storeAndGetJadwalshift/{id}', [ApplyShiftController::class, 'storeAndGetJadwalShift'])->name('storeAndGetJadwalshift');    
+    
+    Route::get('getJadwalshift', function () {
+        $seconds = 10;
+        $jadwal_shifts = [];
+    
+        // Ambil semua ID dari database untuk memastikan semua data masuk ke cache
+        $ids = JadwalShift::pluck('id'); // Mengambil semua ID dari tabel jadwal_shift
+    
+        // Loop setiap ID dan simpan di cache jika belum ada
+        foreach ($ids as $id) {
+            $jadwal_shifts[] = Cache::remember("jadwal_shift_{$id}", $seconds, function() use ($id) {
+                return JadwalShift::find($id); // Menyimpan setiap data berdasarkan ID
+            });
+        }
+    
+        return view('index', ['jadwal_shifts' => $jadwal_shifts]);
+    });
+
 });
 
 Route::middleware(['auth:user', 'checkRole:Manager'])->group(function () {

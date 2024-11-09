@@ -37,7 +37,7 @@
                 <div class="py-5 px-4">
                     <div class="text-center">
                         <h1 class="h4 text-gray-900">Daftar Melalui SSO</h1>
-                        <p class="mb-4">Daftarkan diri anda melalui SSO Telkom di halaman ini</p>
+                        <p class="mb-4">Daftarkan diri anda menggunakan SSO Telkom University</p>
                     </div>
                     <div class="text-center">
                         @php
