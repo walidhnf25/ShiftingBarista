@@ -89,9 +89,11 @@ Route::middleware(['auth:user', 'checkRole:Manager'])->group(function () {
     Route::post('/jamshift/update/{id}', [jamShiftController::class, 'update'])->name('jamShift.update');
     Route::post('/jamshift/delete/{id}', [jamShiftController::class, 'deleteJamShift'])->name('jamshift.deleteJamShift');
 
+    // request shift
     Route::get('/requestshift', function () {
         return view('manager.requestshift');
     })->name('requestshift');
+    Route::get('/outlet', [RequestShiftController::class, 'listOutlets'])->name('outlet');
 
 });
 
