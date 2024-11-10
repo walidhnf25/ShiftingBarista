@@ -124,6 +124,7 @@ Route::middleware(['auth:user', 'checkRole:Manager'])->group(function () {
     Route::delete('/addpegawai/email/{email}', [UsersController::class, 'destroy'])->name('addpegawai.destroy');
     Route::put('/addpegawai/{id}', [UsersController::class, 'update'])->name('addpegawai.update');
 
+    //jadwal shift
     Route::get('/jadwalshift', [JadwalShiftController::class, 'index'])->name('jadwalshift');
     Route::get('/outlet', [JadwalShiftController::class, 'listOutlets'])->name('outlet');
     Route::get('/outlet/jadwalshift/{id}', [JadwalShiftController::class, 'showOutlet'])->name('outlet.jadwalshift');
@@ -138,9 +139,11 @@ Route::middleware(['auth:user', 'checkRole:Manager'])->group(function () {
     Route::post('/jamshift/update/{id}', [jamShiftController::class, 'update'])->name('jamShift.update');
     Route::post('/jamshift/delete/{id}', [jamShiftController::class, 'deleteJamShift'])->name('jamshift.deleteJamShift');
 
+    // request shift
     Route::get('/requestshift', function () {
         return view('manager.requestshift');
     })->name('requestshift');
+    Route::get('/outlet', [RequestShiftController::class, 'listOutlets'])->name('outlet');
 
 });
 
