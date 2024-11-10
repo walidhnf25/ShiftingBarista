@@ -2,9 +2,8 @@
 
 @section('content')
 <div class="d-sm-flex align-items-center justify-content-between mb-2">
-    <h1 class="h2 mb-0 text-gray-800">Jadwal Shift Anda</h1>
+    <h1 class="h2 mb-2 text-gray-800">Jadwal Shift Anda</h1>
 </div>
-<p class="h6 mb-4">Mohon Perhatikan shift yang anda pilih dengan seksama !!</p>
 
 <div class="row">
     <div class="col-md-12">
