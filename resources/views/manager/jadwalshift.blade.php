@@ -158,9 +158,8 @@
                                                             <!-- Tanggal -->
                                                             <div class="form-group col-md-6">
                                                                 <label for="tanggal">Tanggal Mulai</label>
-                                                                <input type="date" class="form-control"
-                                                                    id="tanggal" name="tanggal"
-                                                                    value="{{ $shift->tanggal }}">
+                                                                <input type="date" class="form-control" id="tanggal"
+                                                                    name="tanggal" value="{{ $shift->tanggal }}">
                                                             </div>
 
                                                         </div>
