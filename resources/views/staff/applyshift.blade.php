@@ -4,7 +4,7 @@
 
 <!-- Page Heading -->
 <div class="d-sm-flex align-items-center justify-content-between mb-2">
-    <h1 class="h2 mb-0 text-gray-800">Terapkan Shift Anda</h1>
+    <h1 class="h2 mb-0 text-gray-800">Reservasi Shift Anda</h1>
 </div>
 <p class="h6 mb-3">Mohon perhatikan shift yang anda pilih dengan seksama!!</p>
 

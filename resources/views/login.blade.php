@@ -33,10 +33,13 @@
         <div class="card o-hidden border-0 shadow shadow-blue my-5">
 
             <!-- Nested Row within Card Body -->
-            <div class="col-lg-12">
+            <div class="col-lg-12 bg-gradient-primary">
                 <div class="py-5 px-4">
                     <div class="text-center">
-                        <h1 class="h4 text-gray-900 mb-4" id="typing-text"></h1>
+                        <h1 class="h4 text-white mb-3" id="typing-text"></h1>
+                    </div>
+                    <div class="text-center text-white">
+                        <i class="fas fa-mug-hot fa-3x rotate-n-15 mb-3"></i>
                     </div>
                     <div class="text-center">
                         @php
@@ -66,15 +69,18 @@
                     <form class="user" action="{{ route('proseslogin') }}" method="POST">
                         @csrf <!-- Token CSRF untuk keamanan -->
                         <div class="form-group">
-                            <label for="username">Username</label>
+                            <label for="username" class="text-white">Username</label>
                             <input type="username" name="username" id="username" class="form-control"
                                 id="exampleInputusername" aria-describedby="emailHelp"
                                 placeholder="Masukan Username" required>
                         </div>
-                        <div class="form-group">
-                            <label for="password">Password</label>
+                        <div class="form-group position-relative">
+                            <label for="password" class="text-white">Password</label>
                             <input type="password" name="password" id="password" class="form-control"
                                 id="exampleInputPassword" placeholder="Password" required>
+                                <button type="button" onclick="togglePassword()" style="position: absolute; right: 10px; top: 75%; transform: translateY(-50%); border: none; background: none;">
+                                    <i id="toggleIcon" class="fas fa-eye"></i>
+                                </button>
                         </div>
                         <button type="submit" class="btn btn-primary btn-block mt-4">Masuk</button>
                         <hr>
@@ -116,7 +122,21 @@
 
         // Memulai efek mengetik saat halaman dimuat
         window.onload = typeEffect;
-</script>
+
+        function togglePassword() {
+        const passwordInput = document.getElementById("password");
+        const toggleIcon = document.getElementById("toggleIcon");
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            toggleIcon.classList.remove("fa-eye");
+            toggleIcon.classList.add("fa-eye-slash");
+        } else {
+            passwordInput.type = "password";
+            toggleIcon.classList.remove("fa-eye-slash");
+            toggleIcon.classList.add("fa-eye");
+        }
+    }
+    </script>
 
 </body>
 
