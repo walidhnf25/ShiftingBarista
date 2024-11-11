@@ -51,7 +51,7 @@
     <li class="nav-item {{ Request::is('jamshift') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('jamshift') }}">
             <i class="fas fa-fw fa-clock"></i>
-            <span>Waktu Shift</span>
+            <span>Jam Shift</span>
         </a>
     </li>
     @endif
@@ -63,6 +63,17 @@
         <a class="nav-link" href="{{ route('outlet') }}">
             <i class="fas fa-fw fa fa-calendar"></i>
             <span>Tambah Jadwal Shift</span>
+        </a>
+    </li>
+    @endif
+
+    @if (auth()->check() && auth()->user()->role === 'Staff')
+    <hr class="sidebar-divider">
+
+    <li class="nav-item {{ Request::is('waktushift') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('waktushift') }}">
+            <i class="fas fa-fw fa fa-clock"></i>
+            <span>Jadwal Shift</span>
         </a>
     </li>
     @endif
@@ -84,7 +95,7 @@
     <li class="nav-item {{ Request::is('requestshift') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('requestshift') }}">
             <i class="fas fa-fw fa fa-address-book"></i>
-            <span>Request Jadwal Shift</span>
+            <span>ACC Jadwal Shift</span>
         </a>
     </li>
     @endif

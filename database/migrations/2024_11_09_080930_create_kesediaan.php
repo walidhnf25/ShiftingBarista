@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateOutlet extends Migration
+class CreateKesediaan extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateOutlet extends Migration
      */
     public function up()
     {
-        Schema::create('outlet', function (Blueprint $table) {
+        Schema::create('kesediaan', function (Blueprint $table) {
             $table->id();
-            $table->string('alamat', 255)->nullable();
-            $table->string('nama', 255)->nullable();
+            $table->string('id_jadwal_shift', 3)->nullable();
+            $table->string('id_user', 3)->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ class CreateOutlet extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('outlet');
+        Schema::dropIfExists('kesediaan');
     }
 }

@@ -16,7 +16,7 @@ class AuthController extends Controller
         if (Auth::guard('user')->attempt(['username' => $request->username, 'password' => $request->password])) {
             return redirect('/index');
         } else {
-            return redirect('/')->with(['warning' => 'Email atau Password salah']);
+            return redirect('/')->with(['warning' => 'Username atau Password salah']);
         }
     }
 
@@ -36,7 +36,7 @@ class AuthController extends Controller
         ]);
 
         if ($response->failed()) {
-            return back()->with(['warning' => 'Pendaftaran Gagal. Kredensial yang anda masukan salah']);
+            return back()->with(['warning' => 'Kredensial yang anda masukan salah']);
         }
 
         // Ekstrak token dari respons
