@@ -3,7 +3,7 @@
 @section('content')
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Jadwal Shift yang direquest</h1>
+        <h1 class="h3 mb-0 text-gray-800">Request Jadwal Shift</h1>
     </div>
 
     <div class="row">
@@ -22,56 +22,15 @@
         </div>
     </div>
 
-    <!-- Content Row -->
-    <div class="row">
-        <div class="col-lg-12">
-            <form action="{{ route('jadwal_shift.store', ['id' => $selectedOutlet['id']]) }}" method="POST"
-                enctype="multipart/form-data">
-                @csrf
-                <div class="form-row">
-                    <!-- Jam Kerja -->
-                    <div class="form-group col-md-6">
-                        <label for="jam_kerja">Jam Kerja</label>
-                        <select class="form-control" id="jam_kerja" name="jam_kerja">
-                            <option value="" disabled selected>Pilih Jam Kerja</option>
-                            @foreach ($jamShift as $d)
-                                <option value="{{ $d->jam_mulai }} - {{ $d->jam_selesai }}">{{ $d->jam_mulai }} -
-                                    {{ $d->jam_selesai }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <!-- Outlet Selection -->
-                    <div class="form-group col-md-6">
-                        <label for="outlet">Tipe Pekerjaan</label>
-                        <select class="form-control" id="id_tipe_pekerjaan" name="id_tipe_pekerjaan" required>
-                            <option value="" disabled selected>Pilih Tipe Pekerjaan</option>
-                            @foreach ($TipePekerjaan as $d)
-                                <option value="{{ $d->id }}">{{ $d->tipe_pekerjaan }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <!-- Tanggal Mulai -->
-                    <div class="form-group col-md-6">
-                        <label for="tanggal">Tanggal Mulai</label>
-                        <input type="date" class="form-control" id="tanggal_mulai" name="tanggal_mulai" required>
-                    </div>
-
-                    <!-- Tanggal Akhir -->
-                    <div class="form-group col-md-6">
-                        <label for="tanggal">Tanggal Akhir</label>
-                        <input type="date" class="form-control" id="tanggal_akhir" name="tanggal_akhir" required>
-                    </div>
-                </div>
-
-                <button type="submit" class="btn btn-primary mt-3">Tambah Jadwal Shift</button>
-            </form>
+    {{-- <!-- Add Shift Button -->
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <a href="#" class="btn btn-primary" id="btnTambahJamShift">
+                <i class="fa fa-plus"></i> Request Jadwal Shift
+            </a>
         </div>
-    </div>
+    </div> --}}
 
-
-    <!-- Table Data Jadwal Shift -->
     <div class="row mt-5">
         <div class="col-lg-12">
             <h2 class="h4 mb-4">Data Jadwal Shift</h2>
@@ -124,7 +83,8 @@
                                                         <!-- Jam Kerja -->
                                                         <div class="form-group col-md-6">
                                                             <label for="jam_kerja">Jam Kerja</label>
-                                                            <select class="form-control" id="jam_kerja" name="jam_kerja">
+                                                            <select class="form-control" id="jam_kerja"
+                                                                name="jam_kerja">
                                                                 <option value="" disabled selected>Pilih Jam Kerja
                                                                 </option>
                                                                 @foreach ($jamShift as $jam)
@@ -190,58 +150,136 @@
             </table>
         </div>
     </div>
+
+<!-- Modal - Tambah Shift -->
+<div class="modal fade" id="modal-inputjamshift" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Tambah Jam Shift</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ route('jam_shift.store') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group mb-3">
+                                <label for="jam_mulai">Jam Mulai</label>
+                                <input type="time" class="form-control" id="jamMulai" name="jam_mulai" placeholder="Jam Mulai">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group mb-3">
+                                <label for="jam_selesai">Jam Selesai</label>
+                                <input type="time" class="form-control" id="jamSelesai" name="jam_selesai" placeholder="Jam Selesai">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group d-flex justify-content-center">
+                                <button type="submit" class="btn btn-primary flex-grow-1">Simpan</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal - Edit Shift -->
+<div class="modal modal-blur fade" id="modal-ubahjamshift" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Jam Shift</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="loadeditform"></div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @push('myscript')
-    <script>
-        // Delete confirmation
-        $(".delete-confirm").click(function(e) {
-            var form = $(this).closest('form');
-            e.preventDefault();
+<script>
+    // Show modal to add shift
+    $("#btnTambahJamShift").click(function() {
+        $('#modal-inputjamshift').modal('show');
+    });
 
-            Swal.fire({
-                title: '<span style="color:#f00">Apakah Anda Yakin?</span>',
-                html: "<strong>Data Pegawai ini akan dihapus secara permanen!</strong><br>Anda tidak akan bisa mengembalikan data setelah penghapusan.",
-                icon: 'warning',
-                iconColor: '#ff6b6b',
-                showCancelButton: true,
-                background: '#f7f7f7',
-                backdrop: `
-            rgba(0, 0, 0, 0.4)
-            url("https://cdn.pixabay.com/photo/2016/11/18/15/07/red-alert-1837455_960_720.png")
-            left top
-            no-repeat
-        `,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ya, Hapus!',
-                cancelButtonText: 'Batalkan',
-                customClass: {
-                    popup: 'animated zoomIn faster',
-                    confirmButton: 'btn btn-primary',
-                    cancelButton: 'btn btn-danger',
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    form.submit();
+    // Delete confirmation
+    $(".delete-confirm").click(function(e) {
+        var form = $(this).closest('form');
+        e.preventDefault();
 
-                    Swal.fire({
-                        title: 'Info!',
-                        text: 'Data berhasil dihapus.',
-                        icon: 'success',
-                        background: '#f7f7f7',
-                        customClass: {
-                            popup: 'animated bounceIn faster',
-                        },
-                        showConfirmButton: false,
-                        timer: 1500,
-                    });
-                }
-            });
+        Swal.fire({
+            title: '<span style="color:#f00">Apakah Anda Yakin?</span>',
+            html: "<strong>Data ini akan dihapus secara permanen!</strong><br>Anda tidak akan bisa mengembalikan data setelah penghapusan.",
+            icon: 'warning',
+            iconColor: '#ff6b6b',
+            showCancelButton: true,
+            background: '#f7f7f7',
+            backdrop: `
+                rgba(0, 0, 0, 0.4)
+                url("https://cdn.pixabay.com/photo/2016/11/18/15/07/red-alert-1837455_960_720.png")
+                left top
+                no-repeat
+            `,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, Hapus!',
+            cancelButtonText: 'Batalkan',
+            customClass: {
+                popup: 'animated zoomIn faster',
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger',
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+
+                Swal.fire({
+                    title: 'Info!',
+                    text: 'Data berhasil dihapus.',
+                    icon: 'success',
+                    background: '#f7f7f7',
+                    customClass: {
+                        popup: 'animated bounceIn faster',
+                    },
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
+            }
         });
-        // Menghilangkan alert setelah beberapa detik
-        setTimeout(function() {
-            $('.alert').fadeOut('slow');
-        }, 2000);
-    </script>
+    });
+
+    // Edit shift
+    $(".edit").click(function() {
+        var id = $(this).attr('id');
+        $.ajax({
+            type: "GET",
+            url: "/editjamshift",
+            cache: false,
+            data: { id: id },
+            success: function(respond) {
+                $('#loadeditform').html(respond);
+                $('#modal-ubahjamshift').modal('show');
+            }
+        });
+    });
+
+    // Fade out alert messages
+    setTimeout(function() {
+        $('.alert').fadeOut('slow');
+    }, 2000);
+</script>
 @endpush

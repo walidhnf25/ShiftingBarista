@@ -93,7 +93,7 @@ Route::middleware(['auth:user', 'checkRole:Manager'])->group(function () {
     Route::get('/requestshift', function () {
         return view('manager.requestshift');
     })->name('requestshift');
-    Route::get('/outlet', [RequestShiftController::class, 'listOutlets'])->name('outlet');
+    // Route::get('/outlet', [RequestShiftController::class, 'listOutlets'])->name('outlet');
 
 });
 

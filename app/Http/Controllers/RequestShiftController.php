@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
-use App\Models\RequestShift;
+use App\Models\JadwalShift;
 use App\Models\JamShift;
 use App\Models\TipePekerjaan;
+use App\Models\RequestShift;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Crypt;
+
 
 class JadwalShiftController extends Controller
 {
@@ -22,7 +24,7 @@ class JadwalShiftController extends Controller
     public function index(Request $request)
     {
         // Eager load TipePekerjaan with JadwalShift
-        $request_shift = RequestShift::with('tipePekerjaan')->get();
+        $jadwal_shift = JadwalShift::with('tipePekerjaan')->get();
 
         // Retrieve other necessary data
         $jamShift = JamShift::all();
@@ -36,7 +38,7 @@ class JadwalShiftController extends Controller
         }
         $outletMapping = collect($apiOutlet)->pluck('outlet_name', 'id');
 
-        return view('manager.requestshift', compact('request_shift', 'jamShift', 'TipePekerjaan', 'apiOutlet', 'outletMapping'));
+        return view('manager.jadwalshift', compact('jadwal_shift', 'jamShift', 'TipePekerjaan', 'apiOutlet', 'outletMapping'));
     }
 
     public function listOutlets(Request $request)
@@ -44,14 +46,14 @@ class JadwalShiftController extends Controller
         // Retrieve all necessary data for displaying the list of outlets
         $jamShift = JamShift::all();
         $TipePekerjaan = TipePekerjaan::all();
-        $request_shift = RequestShift::all();
+        $jadwal_shift = JadwalShift::all();
         $apiOutlet = $this->getOutletData();
 
         // Create a mapping of outlet IDs to outlet names
         $outletMapping = collect($apiOutlet)->pluck('outlet_name', 'id');
 
         // Pass data to the view
-        return view('outlet', compact('request_shift', 'jamShift', 'TipePekerjaan', 'apiOutlet', 'outletMapping'));
+        return view('outlet', compact('jadwal_shift', 'jamShift', 'TipePekerjaan', 'apiOutlet', 'outletMapping'));
     }
 
     public function showOutlet(Request $request, $id)
@@ -59,7 +61,7 @@ class JadwalShiftController extends Controller
         // Retrieve all necessary data
         $jamShift = JamShift::all();
         $TipePekerjaan = TipePekerjaan::all();
-        $request_shift = RequestShift::all();
+        $jadwal_shift = JadwalShift::all();
         $apiOutlet = $this->getOutletData();
 
         // Find the specific outlet by ID
@@ -71,13 +73,13 @@ class JadwalShiftController extends Controller
         }
 
         $jamShift = JamShift::where('id_outlet', $id)->get();
-        $request_shift = RequestShift::with('tipePekerjaan')->where('id_outlet', $id)->get();
+        $jadwal_shift = JadwalShift::with('tipePekerjaan')->where('id_outlet', $id)->get();
 
         // Create a mapping of outlet IDs to outlet names
         $outletMapping = collect($apiOutlet)->pluck('outlet_name', 'id');
 
         // Pass all data to the view, including apiOutlet
-        return view('manager.requestshift', compact('request_shift', 'jamShift', 'TipePekerjaan', 'selectedOutlet', 'outletMapping', 'apiOutlet'));
+        return view('manager.jadwalshift', compact('jadwal_shift', 'jamShift', 'TipePekerjaan', 'selectedOutlet', 'outletMapping', 'apiOutlet'));
     }
 
     public function getOutletData()
@@ -125,20 +127,20 @@ class JadwalShiftController extends Controller
         ]);
 
         // Cari jadwal shift berdasarkan ID
-        $request_shift = RequestShift::find($id);
+        $jadwal_shift = JadwalShift::find($id);
 
         // Jika jadwal shift tidak ditemukan, berikan response gagal
-        if (!$request_shift) {
+        if (!$jadwal_shift) {
             return redirect()->route('manager.jadwalshift')->with('error', 'Jadwal Shift tidak ditemukan');
         }
 
         // Update data jadwal shift
-        $request_shift->jam_kerja = $request->jam_kerja;
-        $request_shift->id_tipe_pekerjaan = $request->id_tipe_pekerjaan;
-        $request_shift->tanggal = $request->tanggal;
+        $jadwal_shift->jam_kerja = $request->jam_kerja;
+        $jadwal_shift->id_tipe_pekerjaan = $request->id_tipe_pekerjaan;
+        $jadwal_shift->tanggal = $request->tanggal;
 
         // Simpan perubahan
-        $request_shift->save();
+        $jadwal_shift->save();
 
         // Redirect kembali dengan pesan sukses
         return redirect()->back()->with('success', 'Jadwal Shift berhasil diupdate');
@@ -193,7 +195,7 @@ class JadwalShiftController extends Controller
         // Loop through each date from start to end date
         for ($date = $startDate; $date <= $endDate; $date->modify('+1 day')) {
             // Save new data with looping
-            RequestShift::create([
+            JadwalShift::create([
                 'jam_kerja' => $request->jam_kerja,
                 'id_tipe_pekerjaan' => $request->id_tipe_pekerjaan,
                 'tanggal' => $date->format('Y-m-d'), // Assign the current date in loop
@@ -210,15 +212,15 @@ class JadwalShiftController extends Controller
     public function destroy($id)
     {
         // Cari JadwalShift berdasarkan ID
-        $RequestShift = RequestShift::where('id', $id);
+        $JadwalShift = JadwalShift::where('id', $id);
 
         // Jika user tidak ditemukan, berikan response gagal
-        if (!$RequestShift) {
-            return redirect()->route('manager.requestshift')->with('error', 'Jadwal Shift tidak ditemukan');
+        if (!$JadwalShift) {
+            return redirect()->route('manager.jadwalshift')->with('error', 'Jadwal Shift tidak ditemukan');
         }
 
         // Hapus user
-        $RequestShift->delete();
+        $JadwalShift->delete();
 
         // Redirect kembali dengan pesan sukses
         return redirect()->back()->with('success', 'Jadwal Shift berhasil ditambahkan.');
