@@ -41,6 +41,11 @@
                     backgroundColor: '#4e73df'
                 },
                 { 
+                    title: 'Shift Pagi',
+                    start: '2024-11-10',
+                    backgroundColor: '#4e73df'
+                },
+                { 
                     title: 'Shift Siang',
                     start: '2024-11-12',
                     backgroundColor: '#1cc88a'
