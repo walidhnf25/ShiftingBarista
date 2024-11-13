@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Http\Controllers\TipePekerjaanController;
 use App\Http\Controllers\JadwalShiftController;
 use App\Http\Controllers\ApplyShiftController;
+use App\Http\Controllers\RequestShiftController;
 use App\Http\Controllers\AuthController;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -140,10 +141,8 @@ Route::middleware(['auth:user', 'checkRole:Manager'])->group(function () {
     Route::post('/jamshift/delete/{id}', [jamShiftController::class, 'deleteJamShift'])->name('jamshift.deleteJamShift');
 
     // request shift
-    Route::get('/requestshift', function () {
-        return view('manager.requestshift');
-    })->name('requestshift');
-    Route::get('/outlet', [RequestShiftController::class, 'listOutlets'])->name('outlet');
+    
+    Route::get('/requestshift', [RequestShiftController::class, 'showOutlet'])->name('requestshift');
 
 });
 

@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Crypt;
 
-class JadwalShiftController extends Controller
+class RequestShiftController extends Controller
 {
     /**
      * Display a listing of the resource.
