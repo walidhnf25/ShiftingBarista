@@ -108,7 +108,7 @@
                                 <td>{{ $shift->tanggal }}</td>
                                 <td>{{ $outletMapping[$shift->id_outlet] }}</td>
                                 <!-- Add the button to dynamically remove the shift -->
-                                <td><button type="button" class="btn btn-outline-primary add-to-cache" data-id="{{ $shift->id }}">-</button></td>
+                                <td><button type="button" class="btn btn-outline-danger add-to-cache" data-id="{{ $shift->id }}">-</button></td>
                             </tr>
                         @endforeach
                     @else
@@ -120,17 +120,18 @@
             </table>
         </div>
         <div class="d-flex justify-content-end mt-3">
-            <form action="{{ route('kesediaan.store') }}" method="POST">
+            <form action="{{ route('kesediaan.store') }}" method="POST" id="registerForm">
                 @csrf
-                <button type="submit" class="btn btn-primary">Register</button>
+                <button type="button" class="btn btn-primary" id="registerButton">Register</button>
             </form>
-        </div>
+        </div>        
     </div>
 </div>
 @endsection
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
 <script>
-$(document).ready(function () {
+(document).ready(function () {
     // Fungsi untuk menambah shift ke cache saat tombol diklik
     function rebindAddToCache() {
         $('.add-to-cache').off('click').on('click', function () {
@@ -266,5 +267,25 @@ $(document).ready(function () {
     setTimeout(function () {
         $('.alert').fadeOut('slow');
     }, 2000);
-});
+
+    $('#registerButton').on('click', function (event) {
+        // Mencegah submit form secara otomatis
+        event.preventDefault();
+
+        // Tampilkan dialog SweetAlert
+        Swal.fire({
+            title: 'Apakah Anda yakin?',
+            text: "Pastikan Anda telah memilih shift dengan benar.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Jika pengguna memilih "Yes," submit form
+                $('#registerForm').submit();
+            }
+        });
+    });
+});$
 </script>
