@@ -10,7 +10,7 @@
         <div class="card shadow">
             <div class="card-body ">
                 <div id="calendar"></div>
-                <div class="mt-4 d-flex flex-column" style="gap:8px; width:12rem;">         
+                <div class="mt-3 d-flex flex-column" style="gap:8px; width:12rem;">         
                     <p class="mb-0 d-flex ">Keterangan Warna :</p>
                     <li class="btn text-white" style="background-color:red;">Harmony Cafe</li>
                     <li class="btn text-white" style="background-color: #1cc88a">Literasi Cafe</li>
@@ -18,6 +18,7 @@
                     <li class="btn text-white" style="background-color: #f6c23e">Lakeside FIT+</li>
                 </div>
             </div>
+            
         </div>
     </div>
 </div>
@@ -25,11 +26,6 @@
 
 @push('style')
 <style>
-    /* Mengubah warna background dan cursor saat hover pada tanggal di kalender */
-    .fc-daygrid-day:hover {
-        background-color: #e0e0e0 !important; /* Warna abu-abu */
-        cursor: pointer; /* Ubah cursor menjadi pointer */
-    }
 </style>
 @endpush
 
@@ -38,7 +34,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         var calendarEl = document.getElementById('calendar');
         var calendar = new FullCalendar.Calendar(calendarEl, {
-            height: 800,
+            height:800,
             initialView: 'dayGridMonth',
             headerToolbar: {
                 left: 'prev,next today',
@@ -68,10 +64,10 @@
                     backgroundColor: '#f6c23e'
                 }
             ],
+
             dateClick: function(info) {
                 // Filter events that match the clicked date
                 var events = calendar.getEvents().filter(event => event.startStr === info.dateStr);
-
                 if (events.length > 0) {
                     // If there are events, display them in SweetAlert
                     var eventTitles = events.map(event => event.title).join(', ');
@@ -93,5 +89,4 @@
         calendar.render();
     });
 </script>
-
 @endpush
