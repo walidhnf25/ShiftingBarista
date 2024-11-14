@@ -108,7 +108,7 @@
                                 <td>{{ $shift->tanggal }}</td>
                                 <td>{{ $outletMapping[$shift->id_outlet] }}</td>
                                 <!-- Add the button to dynamically remove the shift -->
-                                <td><button type="button" class="btn btn-outline-primary add-to-cache" data-id="{{ $shift->id }}">-</button></td>
+                                <td><button type="button" class="btn btn-outline-danger add-to-cache" data-id="{{ $shift->id }}">-</button></td>
                             </tr>
                         @endforeach
                     @else
