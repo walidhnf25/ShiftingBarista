@@ -47,40 +47,47 @@
 <div class="row">
     <div class="col-md-12 col-lg-12">
         <h2 class="h4 mb-2">PILIHAN JADWAL SHIFT</h2>
-        <div class="table-responsive" style="max-height: 250px; overflow-y: auto;">
-            <table class="table table-bordered table-striped" id="shiftTable">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>Jam Kerja</th>
-                        <th>Pekerjaan</th>
-                        <th>Tanggal</th>
-                        <th>Outlet</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody id="shiftData">
-                    @if ($jadwal_shift->isEmpty())
+            <!-- Show the table only if avail_register is not "No" -->
+            <div class="table-responsive" style="max-height: 250px; overflow-y: auto;">
+                <table class="table table-bordered table-striped" id="shiftTable">
+                    <thead>
                         <tr>
-                            <td colspan="6" class="text-center">Jadwal Shift Kosong.</td>
+                            <th>No</th>
+                            <th>Jam Kerja</th>
+                            <th>Pekerjaan</th>
+                            <th>Tanggal</th>
+                            <th>Outlet</th>
+                            <th>Aksi</th>
                         </tr>
-                    @else
-                        @foreach ($jadwal_shift as $shift)
+                    </thead>
+                    <tbody id="shiftData">
+                        @if ($jadwal_shift->isEmpty())
                             <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $shift->jam_kerja }}</td>
-                                <td>{{ $shift->tipePekerjaan ? $shift->tipePekerjaan->tipe_pekerjaan : 'N/A' }}</td>
-                                <td>{{ $shift->tanggal }}</td>
-                                <td>{{ $outletMapping[$shift->id_outlet] }}</td>
-                                <td>
-                                    <button type="button" class="btn btn-outline-primary add-to-cache" data-id="{{ $shift->id }}">+</button>
-                                </td>
+                                <td colspan="6" class="text-center">Jadwal Shift Kosong.</td>
                             </tr>
-                        @endforeach
-                    @endif
-                </tbody>
-            </table>
-        </div>
+                        @else
+                        @if ($availRegister === 'No')
+                            <tr>
+                                <td colspan="6" class="text-center">Anda Sudah Memilih Jadwal Shift.</td>
+                            </tr>
+                        @else
+                            @foreach ($jadwal_shift as $shift)
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $shift->jam_kerja }}</td>
+                                    <td>{{ $shift->tipePekerjaan ? $shift->tipePekerjaan->tipe_pekerjaan : 'N/A' }}</td>
+                                    <td>{{ $shift->tanggal }}</td>
+                                    <td>{{ $outletMapping[$shift->id_outlet] }}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-outline-primary add-to-cache" data-id="{{ $shift->id }}">+</button>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endif
+                    </tbody>
+                </table>
+            </div>
+        @endif
     </div>
 </div>
 <div class="row">
@@ -108,7 +115,9 @@
                                 <td>{{ $shift->tanggal }}</td>
                                 <td>{{ $outletMapping[$shift->id_outlet] }}</td>
                                 <!-- Add the button to dynamically remove the shift -->
-                                <td><button type="button" class="btn btn-outline-danger add-to-cache" data-id="{{ $shift->id }}">-</button></td>
+                                <td>
+                                    <button type="button" class="btn btn-outline-danger remove-from-cache" data-id="{{ $shift->id }}">-</button>
+                                </td>
                             </tr>
                         @endforeach
                     @else
@@ -120,10 +129,10 @@
             </table>
         </div>
         <div class="d-flex justify-content-end mt-3">
-            <form action="{{ route('kesediaan.store') }}" method="POST">
-                @csrf
-                <button type="submit" class="btn btn-primary">Register</button>
-            </form>
+        <form id="registrationForm" action="{{ route('kesediaan.store') }}" method="POST">
+            @csrf
+            <button type="button" class="btn btn-primary" id="registerButton">Registrasi</button>
+        </form>
         </div>
     </div>
 </div>
@@ -183,7 +192,7 @@ $(document).ready(function () {
     // Saat tombol "All Outlet" diklik
     $('.all-outlet-button').click(function () {
         // Reset teks tombol kembali ke "All Outlet"
-        $('.btn.btn-primary.dropdown-toggle').text('ALL OUTLET');
+        $('.btn.btn-primary.dropdown-toggle').text('ALL OUTLET ');
 
         // Ambil semua data shift tanpa filter berdasarkan outlet
         $.ajax({
@@ -225,7 +234,7 @@ $(document).ready(function () {
                                 <td>${shiftData.pekerjaan}</td>
                                 <td>${shiftData.tanggal}</td>
                                 <td>${shiftData.outletName}</td>
-                                <td><button type="button" class="btn btn-outline-primary remove-from-cache" data-id="${shiftData.no}">-</button></td> <!-- Tombol hapus -->
+                                <td><button type="button" class="btn btn-outline-danger remove-from-cache" data-id="${shiftData.no}">-</button></td> <!-- Tombol hapus -->
                             </tr>
                         `;
                         
@@ -258,6 +267,49 @@ $(document).ready(function () {
             },
             error: function (xhr, status, error) {
                 console.error('Error fetching shift data:', error);
+            }
+        });
+    });
+
+    $('#selectedShiftData').on('click', '.remove-from-cache', function () {
+        let shiftId = $(this).data('id');
+
+        $.ajax({
+            url: "{{ url('/removeFromCache') }}/" + shiftId,
+            method: 'GET',
+            success: function (response) {
+                if (response.success) {
+                    $('tr[data-id="' + shiftId + '"]').remove();
+
+                    // Check if the table is empty, and add the placeholder row if so
+                    if ($('#selectedShiftData tr').length === 0) {
+                        $('#selectedShiftData').append('<tr class="placeholder-row"><td colspan="6" class="text-center">Belum ada shift yang dipilih.</td></tr>');
+                    }
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                alert('Error removing shift from cache: ' + error);
+                console.error('Error details:', xhr);
+            }
+        });
+    });
+
+    document.getElementById("registerButton").addEventListener("click", function () {
+        Swal.fire({
+            title: 'Apakah kamu yakin?',
+            text: "Data yang telah telah diregistrasikan tidak dapat direset!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, Registrasi!',
+            cancelButtonText: 'Batalkan'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // If user confirms, submit the form
+                document.getElementById("registrationForm").submit();
             }
         });
     });
