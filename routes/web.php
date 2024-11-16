@@ -72,6 +72,7 @@ Route::middleware(['auth:user', 'checkRole:Staff'])->group(function () {
     Route::get('/filter-jadwal-shift', [ApplyShiftController::class, 'filterJadwalShift'])->name('filterJadwalShift');
     Route::post('/store-shift', [ApplyShiftController::class, 'storeShift'])->name('storeShift');
     Route::post('/kesediaan/store', [ApplyShiftController::class, 'store'])->name('kesediaan.store');
+    Route::get('/removeFromCache/{id}', [ApplyShiftController::class, 'removeFromCache'])->name('removeFromCache');
     
     Route::get('/index', function(){
         $jadwal_shift = JadwalShift::get();
