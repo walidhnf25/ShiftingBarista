@@ -22,22 +22,21 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($requestShift as $rs)
+                    @foreach ($jadwal_shift as $rs)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $rs->jam_kerja }}</td>
-                            {{-- <td>{{ optional($rs->jadwalShift->tipePekerjaan)->tipe_pekerjaan ?? 'Tidak Ada Tipe Pekerjaan' }}</td> --}}
-                            {{-- <td>
+                            <td>{{ $rs->tipePekerjaan ? $rs->tipePekerjaan->tipe_pekerjaan : 'N/A' }}</td>
+                            <td>
                                 <select class="form-select">
-                                    @if ($rs->jadwalShift->users->isEmpty())
-                                        <option>Tidak Ada</option>
-                                    @else
-                                        @foreach ($rs->jadwalShift->users as $user)
-                                            <option value="{{ $user->id }}">{{ $user->name }}</option>
-                                        @endforeach
-                                    @endif
+                                    @foreach ($users as $user)
+                                        <option value="{{ $user->id }}"
+                                            @if ($user->id == $kesediaan->id_user) selected @endif>
+                                            {{ $user->name }}
+                                        </option>
+                                    @endforeach
                                 </select>
-                            </td> --}}
+                            </td>
                             <td>{{ $rs->tanggal }}</td>
                             <td>
                                 <input type="checkbox" name="selected[]" value="{{ $rs->id }}">

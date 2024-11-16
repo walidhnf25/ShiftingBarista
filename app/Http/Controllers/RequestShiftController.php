@@ -17,12 +17,15 @@ use Illuminate\Support\Facades\Crypt;
 class RequestShiftController extends Controller
 {
     public function index(){
-        $requestShift = RequestShift::with(['jadwalShift.tipePekerjaan', 'jadwalShift.users'])->get();
+        $jadwal_shift = JadwalShift::with('tipePekerjaan')->get();
+        $kesediaan = Kesediaan::with('id_user')->get();
+        $users = User::with('name')->get();
 
+        // $requestShift = RequestShift::with(['jadwalShift.tipePekerjaan', 'jadwalShift.users'])->get();
         // $jadwalShift = JadwalShift::all();
         // $tipePekerjaan = TipePekerjaan::all();
         // dd($requestShift);
-        return view('manager.requestshift', compact('requestShift'));
+        return view('manager.requestshift', compact('jadwal_shift', 'users'));
     }
 
 }
