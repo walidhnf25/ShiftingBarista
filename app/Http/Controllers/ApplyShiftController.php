@@ -14,42 +14,49 @@ use App\Models\User;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
 
 class ApplyShiftController extends Controller
 {
     public function index(Request $request)
-    {
-        $userId = Auth::id(); // Ambil ID pengguna yang sedang login
-        
-        // Retrieve all necessary data
-        $jamShift = JamShift::all();
-        $TipePekerjaan = TipePekerjaan::all();
-        $jadwal_shift = JadwalShift::where('status', 'Waiting')->get();
-        $apiOutlet = $this->getOutletData();
-        $outletMapping = collect($apiOutlet)->pluck('outlet_name', 'id');
+{
+    $userId = Auth::id(); // Get the ID of the logged-in user
+    $user = Auth::user(); // Retrieve the logged-in user instance
 
-        // Ambil daftar ID yang sudah disimpan di cache untuk pengguna tertentu
-        $cachedIds = Cache::get("jadwal_shift_ids_user_{$userId}", []);
+    // Check if the user has already taken a shift reservation
+    $availRegister = $user->avail_register; // Get the avail_register status
 
-        // Ambil semua data jadwal shift yang sudah ada di cache berdasarkan ID untuk pengguna ini
-        $cachedJadwalShifts = [];
-        foreach ($cachedIds as $cachedId) {
-            $shift = Cache::get("jadwal_shift_{$userId}_{$cachedId}");
-            if ($shift) {
-                $cachedJadwalShifts[] = $shift;
-            }
+    // Retrieve all necessary data
+    $jamShift = JamShift::all();
+    $TipePekerjaan = TipePekerjaan::all();
+    $jadwal_shift = JadwalShift::where('status', 'Waiting')->get();
+    $apiOutlet = $this->getOutletData();
+    $outletMapping = collect($apiOutlet)->pluck('outlet_name', 'id');
+
+    // Retrieve cached shift IDs for the logged-in user
+    $cachedIds = Cache::get("jadwal_shift_ids_user_{$userId}", []);
+
+    // Retrieve all cached shift schedules for this user
+    $cachedJadwalShifts = [];
+    foreach ($cachedIds as $cachedId) {
+        $shift = Cache::get("jadwal_shift_{$userId}_{$cachedId}");
+        if ($shift) {
+            $cachedJadwalShifts[] = $shift;
         }
-
-        // Pass all data to the view, including data from cache
-        return view('staff.applyshift', [
-            'jadwal_shift' => $jadwal_shift, 
-            'jamShift' => $jamShift, 
-            'TipePekerjaan' => $TipePekerjaan, 
-            'apiOutlet' => $apiOutlet, 
-            'outletMapping' => $outletMapping,
-            'cachedJadwalShifts' => $cachedJadwalShifts  // Data dari cache
-        ]);
     }
+
+    // Pass all data to the view, including the avail_register status
+    return view('staff.applyshift', [
+        'jadwal_shift' => $jadwal_shift, 
+        'jamShift' => $jamShift, 
+        'TipePekerjaan' => $TipePekerjaan, 
+        'apiOutlet' => $apiOutlet, 
+        'outletMapping' => $outletMapping,
+        'cachedJadwalShifts' => $cachedJadwalShifts,
+        'availRegister' => $availRegister  // Pass avail_register status
+    ]);
+}
+
 
     public function getJadwalShift($id)
     {
@@ -101,11 +108,52 @@ class ApplyShiftController extends Controller
             Cache::forget($key);
         }
 
+        // Update the avail_register column for the authenticated user
+        User::where('id', $userId)->update(['avail_register' => 'No']);
+
         // Hapus daftar kunci cache pengguna dan cachedIds
         Cache::forget("user_{$userId}_cache_keys");
         Cache::forget("jadwal_shift_ids_user_{$userId}");
 
         return redirect()->back()->with('success', 'Reservasi anda berhasil didaftarkan.');
+    }
+
+    public function removeFromCache($shiftId)
+    {
+        try {
+            $userId = Auth::id();
+            
+            // Retrieve cached shift IDs for the user
+            $cachedIds = Cache::get("jadwal_shift_ids_user_{$userId}", []);
+            
+            // Remove the shift ID from the cached list if it exists
+            if (($key = array_search($shiftId, $cachedIds)) !== false) {
+                unset($cachedIds[$key]);
+                Cache::put("jadwal_shift_ids_user_{$userId}", array_values($cachedIds));
+            }
+
+            // Forget individual shift cache
+            Cache::forget("jadwal_shift_{$userId}_{$shiftId}");
+
+            // Update the user cache keys list
+            $cacheKeysList = Cache::get("user_{$userId}_cache_keys", []);
+            if (($cacheKeyIndex = array_search("jadwal_shift_{$userId}_{$shiftId}", $cacheKeysList)) !== false) {
+                unset($cacheKeysList[$cacheKeyIndex]);
+                Cache::put("user_{$userId}_cache_keys", array_values($cacheKeysList));
+            }
+
+            // Retrieve updated shift data to render
+            $jadwal_shifts = [];
+            foreach ($cachedIds as $cachedId) {
+                $jadwal_shifts[] = Cache::get("jadwal_shift_{$userId}_{$cachedId}");
+            }
+
+            return response()->json(['success' => true, 'jadwal_shifts' => $jadwal_shifts]);
+
+        } catch (\Exception $e) {
+            \Log::error('Error removing shift from cache: ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Error removing shift from cache.'], 500);
+        }
     }
 
     public function storeAndGetJadwalShift($id)
