@@ -3,39 +3,10 @@
 @section('content')
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Request Jadwal Shift</h1>
-    </div>
-
-    <!-- Page Heading -->
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <h1 class="h3 mb-0 text-gray-800">ACC Jadwal Shift</h1>
     </div>
 
-    <div class="row">
-        <div class="col-12">
-            @if (session('success'))
-                <div class="alert alert-success">
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            @if (session('error'))
-                <div class="alert alert-danger">
-                    {{ session('error') }}
-                </div>
-            @endif
-        </div>
-    </div>
-
-    {{-- <!-- Add Shift Button -->
-    <div class="row mb-3">
-        <div class="col-md-3">
-            <a href="#" class="btn btn-primary" id="btnTambahJamShift">
-                <i class="fa fa-plus"></i> Request Jadwal Shift
-            </a>
-        </div>
-    </div> --}}
-
+    <!-- Table Data ACC Shift -->
     <div class="row mt-5">
         <div class="col-lg-12">
             <h2 class="h4 mb-4">Data Jadwal Shift</h2>
@@ -44,177 +15,47 @@
                     <tr>
                         <th>#</th>
                         <th>Jam Kerja</th>
-                        <th>Pekerjaan</th>
-                        <th>Outlet</th>
+                        {{-- <th>Tipe Pekerjaan</th>
+                        <th>Staff</th> --}}
                         <th>Tanggal</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($jadwal_shift as $shift)
-                        <!-- Ensure you're using this variable for each loop iteration -->
+                    @foreach ($requestShift as $rs)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
-                            <td>{{ $shift->jam_kerja }}</td>
-                            <td>{{ $shift->tipePekerjaan ? $shift->tipePekerjaan->tipe_pekerjaan : 'N/A' }}</td>
-                            <td>{{ $outletMapping[$shift->id_outlet] }}</td>
-                            <td>{{ $shift->tanggal }}</td>
+                            <td>{{ $rs->jam_kerja }}</td>
+                            {{-- <td>{{ optional($rs->jadwalShift->tipePekerjaan)->tipe_pekerjaan ?? 'Tidak Ada Tipe Pekerjaan' }}</td> --}}
+                            {{-- <td>
+                                <select class="form-select">
+                                    @if ($rs->jadwalShift->users->isEmpty())
+                                        <option>Tidak Ada</option>
+                                    @else
+                                        @foreach ($rs->jadwalShift->users as $user)
+                                            <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </td> --}}
+                            <td>{{ $rs->tanggal }}</td>
                             <td>
-                                <!-- Edit Button -->
-                                <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
-                                    data-target="#EditModal{{ $shift->id }}">
-                                    Edit
-                                </button>
-
-                                <!-- Edit Modal -->
-                                <div class="modal fade" id="EditModal{{ $shift->id }}" tabindex="-1" role="dialog"
-                                    aria-labelledby="EditModalLabel{{ $shift->id }}" aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="EditModalLabel{{ $shift->id }}">Edit
-                                                    Jadwal Shift</h5>
-                                                <button type="button" class="close" data-dismiss="modal"
-                                                    aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <form action="{{ route('jadwalshift.update', $shift->id) }}"
-                                                    method="POST">
-                                                    @csrf
-                                                    @method('PUT')
-                                                    <div class="row">
-                                                        <!-- Jam Kerja -->
-                                                        <div class="form-group col-md-6">
-                                                            <label for="jam_kerja">Jam Kerja</label>
-                                                            <select class="form-control" id="jam_kerja"
-                                                                name="jam_kerja">
-                                                                <option value="" disabled selected>Pilih Jam Kerja
-                                                                </option>
-                                                                @foreach ($jamShift as $jam)
-                                                                    <option
-                                                                        value="{{ $jam->jam_mulai }} - {{ $jam->jam_selesai }}"
-                                                                        {{ $jam->jam_mulai . ' - ' . $jam->jam_selesai == $shift->jam_kerja ? 'selected' : '' }}>
-                                                                        {{ $jam->jam_mulai }} -
-                                                                        {{ $jam->jam_selesai }}
-                                                                    </option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
-
-                                                        <!-- Tanggal Mulai -->
-                                                        <div class="form-group col-md-6">
-                                                            <label for="tipe_pekerjaan">Tipe Pekerjaan</label>
-                                                            <select class="form-control" id="id_tipe_pekerjaan"
-                                                                name="id_tipe_pekerjaan" required>
-                                                                <option value="" disabled>Pilih Tipe Pekerjaan
-                                                                </option>
-                                                                @foreach ($TipePekerjaan as $type)
-                                                                    <option value="{{ $type->id }}"
-                                                                        {{ $type->id == $shift->id_tipe_pekerjaan ? 'selected' : '' }}>
-                                                                        {{ $type->tipe_pekerjaan }}
-                                                                    </option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
-
-                                                        <!-- Tanggal -->
-                                                        <div class="form-group col-md-6">
-                                                            <label for="tanggal">Tanggal Mulai</label>
-                                                            <input type="date" class="form-control" id="tanggal"
-                                                                name="tanggal" value="{{ $shift->tanggal }}">
-                                                        </div>
-
-                                                    </div>
-
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary"
-                                                            data-dismiss="modal">Close</button>
-                                                        <button type="submit" class="btn btn-primary">Save
-                                                            changes</button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Delete Form -->
-                                <form action="{{ route('jadwal_shift.destroy', $shift->id) }}" method="POST"
-                                    class="d-inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm delete-confirm"
-                                        id="btnDelete">Delete</button>
-                                </form>
+                                <input type="checkbox" name="selected[]" value="{{ $rs->id }}">
                             </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
-        </div>
-    </div>
 
-<!-- Modal - Tambah Shift -->
-<div class="modal fade" id="modal-inputjamshift" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Tambah Jam Shift</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+            <!-- Tombol ACC -->
+            <div class="mt-3 text-end">
+                <button type="submit" class="btn btn-primary">ACC</button>
             </div>
-            <div class="modal-body">
-                <form action="{{ route('jam_shift.store') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="form-group mb-3">
-                                <label for="jam_mulai">Jam Mulai</label>
-                                <input type="time" class="form-control" id="jamMulai" name="jam_mulai" placeholder="Jam Mulai">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="form-group mb-3">
-                                <label for="jam_selesai">Jam Selesai</label>
-                                <input type="time" class="form-control" id="jamSelesai" name="jam_selesai" placeholder="Jam Selesai">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="form-group d-flex justify-content-center">
-                                <button type="submit" class="btn btn-primary flex-grow-1">Simpan</button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
+            </form>
         </div>
     </div>
-</div>
-
-<!-- Modal - Edit Shift -->
-<div class="modal modal-blur fade" id="modal-ubahjamshift" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Edit Jam Shift</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body" id="loadeditform"></div>
-        </div>
-    </div>
-</div>
 @endsection
-
-@push('myscript')
+{{-- @push('myscript')
 <script>
     // Show modal to add shift
     $("#btnTambahJamShift").click(function() {
@@ -287,4 +128,4 @@
         $('.alert').fadeOut('slow');
     }, 2000);
 </script>
-@endpush
+@endpush --}}

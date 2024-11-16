@@ -142,7 +142,7 @@ Route::middleware(['auth:user', 'checkRole:Manager'])->group(function () {
 
     // request shift
 
-    Route::get('/requestshift', [RequestShiftController::class, 'showOutlet'])->name('requestshift');
+    Route::get('/requestshift', [RequestShiftController::class, 'index'])->name('requestshift');
 
 });
 

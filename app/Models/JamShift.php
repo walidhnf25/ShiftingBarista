@@ -14,4 +14,9 @@ class JamShift extends Model
         'jam_selesai', // Ensure this is here
         'id_outlet',
     ];
+
+    public function kesediaan()
+    {
+        return $this->hasMany(Kesediaan::class, 'id_jadwal_shift');
+    }
 }

@@ -19,7 +19,11 @@ class JadwalShift extends Model
 
     public function tipePekerjaan()
     {
-        return $this->belongsTo(TipePekerjaan::class, 'id_tipe_pekerjaan', 'id'); // Foreign key and local key
+        return $this->belongsTo(TipePekerjaan::class, 'id_tipe_pekerjaan'); // Foreign key and local key
     }
 
+    public function users()
+    {
+        return $this->hasMany(User::class, 'id_jadwal_shift'); // Adjust the foreign key as necessary
+    }
 }
