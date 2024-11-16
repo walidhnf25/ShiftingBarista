@@ -68,7 +68,7 @@ Route::middleware(['auth:user', 'checkRole:Staff'])->group(function () {
     Route::get('/waktushift', function () {
         return view('staff.waktushift');
     })->name('waktushift');
-  
+
     Route::get('/filter-jadwal-shift', [ApplyShiftController::class, 'filterJadwalShift'])->name('filterJadwalShift');
     Route::post('/store-shift', [ApplyShiftController::class, 'storeShift'])->name('storeShift');
     Route::post('/kesediaan/store', [ApplyShiftController::class, 'store'])->name('kesediaan.store');
@@ -91,22 +91,22 @@ Route::middleware(['auth:user', 'checkRole:Staff'])->group(function () {
     });
 
     Route::get('getJadwalshift/{id}', [ApplyShiftController::class, 'getJadwalShift']);
-    Route::get('/storeAndGetJadwalshift/{id}', [ApplyShiftController::class, 'storeAndGetJadwalShift'])->name('storeAndGetJadwalshift');    
-    
+    Route::get('/storeAndGetJadwalshift/{id}', [ApplyShiftController::class, 'storeAndGetJadwalShift'])->name('storeAndGetJadwalshift');
+
     Route::get('getJadwalshift', function () {
         $seconds = 10;
         $jadwal_shifts = [];
-    
+
         // Ambil semua ID dari database untuk memastikan semua data masuk ke cache
         $ids = JadwalShift::pluck('id'); // Mengambil semua ID dari tabel jadwal_shift
-    
+
         // Loop setiap ID dan simpan di cache jika belum ada
         foreach ($ids as $id) {
             $jadwal_shifts[] = Cache::remember("jadwal_shift_{$id}", $seconds, function() use ($id) {
                 return JadwalShift::find($id); // Menyimpan setiap data berdasarkan ID
             });
         }
-    
+
         return view('index', ['jadwal_shifts' => $jadwal_shifts]);
     });
 
@@ -142,8 +142,8 @@ Route::middleware(['auth:user', 'checkRole:Manager'])->group(function () {
     Route::post('/jamshift/delete/{id}', [jamShiftController::class, 'deleteJamShift'])->name('jamshift.deleteJamShift');
 
     // request shift
-    
-    Route::get('/requestshift', [RequestShiftController::class, 'showOutlet'])->name('requestshift');
+
+    Route::get('/requestshift', [RequestShiftController::class, 'index'])->name('requestshift');
 
 });
 

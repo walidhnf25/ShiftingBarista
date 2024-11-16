@@ -46,8 +46,18 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function role(){
-        return $this->belongsTo(Role::class,'roles');
+    public function role()
+    {
+        return $this->belongsTo(Role::class, 'roles');
     }
 
+    public function kesediaan()
+    {
+        return $this->hasMany(Kesediaan::class, 'id_user');
+    }
+
+    public function jadwalShifts()
+    {
+        return $this->belongsToMany(JadwalShift::class, 'kesediaan', 'id_user', 'id_jadwal_shift');
+    }
 }

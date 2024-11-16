@@ -41,6 +41,7 @@
                         <th>Jam mulai</th>
                         <th>Jam selesai</th>
                         <th>Durasi</th>
+                        <th>Outlet</th>
                         <th>Control</th>
                     </tr>
                 </thead>
@@ -51,6 +52,7 @@
                         <td>{{ $d->jam_mulai }}</td>
                         <td>{{ $d->jam_selesai }}</td>
                         <td>{{ $d->durasi }}</td>
+                        <td>{{ $d->id_outlet }}</td>
                         <!-- Tombol edit dan delete -->
                         <td>
                             <a href="#" class="edit btn btn-info btn-sm btn-circle"

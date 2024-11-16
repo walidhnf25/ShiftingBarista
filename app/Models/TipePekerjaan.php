@@ -15,6 +15,6 @@ class TipePekerjaan extends Model
 
     public function jadwalShifts()
     {
-        return $this->hasMany(JadwalShift::class, 'id_tipe_pekerjaan', 'id');
+        return $this->hasMany(JadwalShift::class, 'id_tipe_pekerjaan');
     }
 }

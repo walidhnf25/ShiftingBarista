@@ -16,6 +16,16 @@ class RequestShift extends Model
 
     public function tipePekerjaan()
     {
-        return $this->belongsTo(TipePekerjaan::class, 'id_tipe_pekerjaan', 'id'); // Foreign key and local key
+        return $this->belongsTo(TipePekerjaan::class, 'id_tipe_pekerjaan'); // Foreign key and local key
+    }
+
+    public function jadwalShift()
+    {
+        return $this->belongsTo(JadwalShift::class, 'id_jadwal_shift');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_user');
     }
 }
