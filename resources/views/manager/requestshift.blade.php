@@ -29,7 +29,7 @@
                             <td>{{ $rs->tanggal }}</td>
                             <td>{{ $rs->tipePekerjaan ? $rs->tipePekerjaan->tipe_pekerjaan : 'N/A' }}</td>
                             <td>
-                                <select class="form-select">
+                                <select class="form-select" style="width: 250px; height: 25px;">
                                     @foreach ($rs->kesediaan as $kesediaan)
                                         <option value="{{ $kesediaan->user->id }}">
                                             {{ $kesediaan->user->name }}
@@ -38,7 +38,8 @@
                                 </select>
                             </td>
                             <td>
-                                <input type="checkbox" name="selected[]" value="{{ $rs->id }}">
+                                <input type="checkbox" name="selected[]" value="{{ $rs->id }}"
+                                style="width: 20px; height: 20px; cursor: pointer;">
                             </td>
                         </tr>
                     @endforeach
