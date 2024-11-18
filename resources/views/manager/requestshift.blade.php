@@ -15,9 +15,9 @@
                     <tr>
                         <th>#</th>
                         <th>Jam Kerja</th>
-                        {{-- <th>Tipe Pekerjaan</th>
-                        <th>Staff</th> --}}
                         <th>Tanggal</th>
+                        <th>Tipe Pekerjaan</th>
+                        <th>Staff</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -26,18 +26,17 @@
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $rs->jam_kerja }}</td>
+                            <td>{{ $rs->tanggal }}</td>
                             <td>{{ $rs->tipePekerjaan ? $rs->tipePekerjaan->tipe_pekerjaan : 'N/A' }}</td>
                             <td>
                                 <select class="form-select">
-                                    @foreach ($users as $user)
-                                        <option value="{{ $user->id }}"
-                                            @if ($user->id == $kesediaan->id_user) selected @endif>
-                                            {{ $user->name }}
+                                    @foreach ($rs->kesediaan as $kesediaan)
+                                        <option value="{{ $kesediaan->user->id }}">
+                                            {{ $kesediaan->user->name }}
                                         </option>
                                     @endforeach
                                 </select>
                             </td>
-                            <td>{{ $rs->tanggal }}</td>
                             <td>
                                 <input type="checkbox" name="selected[]" value="{{ $rs->id }}">
                             </td>
@@ -45,7 +44,6 @@
                     @endforeach
                 </tbody>
             </table>
-
             <!-- Tombol ACC -->
             <div class="mt-3 text-end">
                 <button type="submit" class="btn btn-primary">ACC</button>
