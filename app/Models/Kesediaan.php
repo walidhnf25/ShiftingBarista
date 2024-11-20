@@ -24,7 +24,7 @@ class Kesediaan extends Model
         return $this->belongsTo(User::class, 'id_user', 'id');
     }
 
-    public function jadwal()
+    public function jadwalShift()
     {
         return $this->belongsTo(JadwalShift::class, 'id_jadwal_shift', 'id');
     }
