@@ -28,14 +28,17 @@
     <div class="col mb-3">
         <div class="btn-group">
             <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            @if($availRegister === 'No') @endif
                 {{ strtoupper('All Outlet') }}
             </button>
             <div class="dropdown-menu">
-                <button class="dropdown-item all-outlet-button" type="button">
+                <button class="dropdown-item all-outlet-button" type="button" 
+                    @if($availRegister === 'No')  disabled @endif>
                     {{ strtoupper('All Outlet') }}
                 </button>
                 @foreach ($outletMapping as $id => $outletName)
-                    <button class="dropdown-item outlet-button" type="button" data-id="{{ $id }}">
+                    <button class="dropdown-item outlet-button" type="button" data-id="{{ $id }}"
+                        @if($availRegister === 'No') disabled @endif>
                         {{ $outletName }}
                     </button>
                 @endforeach
@@ -90,7 +93,7 @@
         @endif
     </div>
 </div>
-<div class="row">
+<div class="row"> 
     <div class="col-md-12 col-lg-12 d-flex flex-column mt-3">
         <h2 class="h4 mb-2">RESERVASI JADWAL SHIFT</h2>
         <div class="table-responsive" style="max-height: 250px; overflow-y: auto;">
@@ -106,7 +109,25 @@
                     </tr>
                 </thead>
                 <tbody id="selectedShiftData">
-                    @if(count($cachedJadwalShifts) > 0)
+                    @if($availRegister === 'No' && $kesediaanShifts->isNotEmpty()) <!-- Check if 'No' and have shifts in kesediaan -->
+                        @foreach($kesediaanShifts as $shift)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $shift->jam_kerja }}</td>
+                                <td>{{ $shift->tipePekerjaan ? $shift->tipePekerjaan->tipe_pekerjaan : 'N/A' }}</td>
+                                <td>{{ $shift->tanggal }}</td>
+                                <td>{{ $outletMapping[$shift->id_outlet] }}</td>
+                                <td>
+                                    <button type="button" 
+                                            class="btn btn-outline-danger remove-from-cache" 
+                                            data-id="{{ $shift->id }}" 
+                                            @if($availRegister === 'No') disabled @endif>
+                                        -
+                                    </button>
+                                </td>
+                            </tr>
+                        @endforeach
+                    @elseif($availRegister !== 'No' && count($cachedJadwalShifts) > 0) <!-- If avail_register isn't 'No' show cached shifts -->
                         @foreach($cachedJadwalShifts as $shift)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
@@ -114,7 +135,6 @@
                                 <td>{{ $shift->tipePekerjaan ? $shift->tipePekerjaan->tipe_pekerjaan : 'N/A' }}</td>
                                 <td>{{ $shift->tanggal }}</td>
                                 <td>{{ $outletMapping[$shift->id_outlet] }}</td>
-                                <!-- Add the button to dynamically remove the shift -->
                                 <td>
                                     <button type="button" class="btn btn-outline-danger remove-from-cache" data-id="{{ $shift->id }}">-</button>
                                 </td>
@@ -129,10 +149,10 @@
             </table>
         </div>
         <div class="d-flex justify-content-end mt-3">
-        <form id="registrationForm" action="{{ route('kesediaan.store') }}" method="POST">
-            @csrf
-            <button type="button" class="btn btn-primary" id="registerButton">Registrasi</button>
-        </form>
+            <form id="registrationForm" action="{{ route('kesediaan.store') }}" method="POST">
+                @csrf
+                <button type="button" class="btn btn-primary" id="registerButton">Registrasi</button>
+            </form>
         </div>
     </div>
 </div>
