@@ -36,20 +36,18 @@
             <table class="table table-bordered table-striped">
                 <thead>
                     <tr>
-                        <th>#</th>
+                        <th>No</th>
                         <th>Nama</th>
                         <th>Status Registrasi</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($users as $user)
-                        @if ($user->avail_register === 'Yes')
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $user->name }}</td>
-                                <td>{{ $user->avail_register }}</td>
-                            </tr>
-                        @endif
+                    @foreach ($usersForTable as $user)
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $user->name }}</td>
+                            <td>{{ $user->avail_register }}</td>
+                        </tr>
                     @endforeach
                 </tbody>
             </table>
