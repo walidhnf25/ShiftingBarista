@@ -12,8 +12,6 @@ class ResetAvailController extends Controller
     public function index()
     {
         $users = User::all();
-        // //Filter users untuk dropdown
-        // $usersForDropdown = User::where('avail_register', 'No')->get();
 
         // Filter users untuk tabel
         $usersForTable = User::where('avail_register', 'Yes')->get();
