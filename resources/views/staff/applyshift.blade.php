@@ -50,25 +50,24 @@
 <div class="row">
     <div class="col-md-12 col-lg-12">
         <h2 class="h4 mb-2">PILIHAN JADWAL SHIFT</h2>
-            <!-- Show the table only if avail_register is not "No" -->
-            <div class="table-responsive" style="max-height: 250px; overflow-y: auto;">
-                <table class="table table-bordered table-striped" id="shiftTable">
-                    <thead>
+        <div class="table-responsive" style="max-height: 250px; overflow-y: auto;">
+            <table class="table table-bordered table-striped" id="shiftTable">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Jam Kerja</th>
+                        <th>Pekerjaan</th>
+                        <th>Tanggal</th>
+                        <th>Outlet</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="shiftData">
+                    @if ($jadwal_shift->isEmpty())
                         <tr>
-                            <th>No</th>
-                            <th>Jam Kerja</th>
-                            <th>Pekerjaan</th>
-                            <th>Tanggal</th>
-                            <th>Outlet</th>
-                            <th>Aksi</th>
+                            <td colspan="6" class="text-center">Jadwal Shift Kosong.</td>
                         </tr>
-                    </thead>
-                    <tbody id="shiftData">
-                        @if ($jadwal_shift->isEmpty())
-                            <tr>
-                                <td colspan="6" class="text-center">Jadwal Shift Kosong.</td>
-                            </tr>
-                        @else
+                    @else
                         @if ($availRegister === 'No')
                             <tr>
                                 <td colspan="6" class="text-center">Anda Sudah Memilih Jadwal Shift.</td>
@@ -80,19 +79,20 @@
                                     <td>{{ $shift->jam_kerja }}</td>
                                     <td>{{ $shift->tipePekerjaan ? $shift->tipePekerjaan->tipe_pekerjaan : 'N/A' }}</td>
                                     <td>{{ $shift->tanggal }}</td>
-                                    <td>{{ $outletMapping[$shift->id_outlet] }}</td>
+                                    <td>{{ $outletMapping[$shift->id_outlet] ?? 'Outlet Not Found' }}</td>
                                     <td>
                                         <button type="button" class="btn btn-outline-primary add-to-cache" data-id="{{ $shift->id }}">+</button>
                                     </td>
                                 </tr>
                             @endforeach
                         @endif
-                    </tbody>
-                </table>
-            </div>
-        @endif
+                    @endif
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
+
 <div class="row"> 
     <div class="col-md-12 col-lg-12 d-flex flex-column mt-3">
         <h2 class="h4 mb-2">RESERVASI JADWAL SHIFT</h2>
@@ -109,32 +109,27 @@
                     </tr>
                 </thead>
                 <tbody id="selectedShiftData">
-                    @if($availRegister === 'No' && $kesediaanShifts->isNotEmpty()) <!-- Check if 'No' and have shifts in kesediaan -->
-                        @foreach($kesediaanShifts as $shift)
+                    @if ($availRegister === 'No' && $kesediaanShifts->isNotEmpty())
+                        @foreach ($kesediaanShifts as $shift)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $shift->jam_kerja }}</td>
                                 <td>{{ $shift->tipePekerjaan ? $shift->tipePekerjaan->tipe_pekerjaan : 'N/A' }}</td>
                                 <td>{{ $shift->tanggal }}</td>
-                                <td>{{ $outletMapping[$shift->id_outlet] }}</td>
+                                <td>{{ $outletMapping[$shift->id_outlet] ?? 'Outlet Not Found' }}</td>
                                 <td>
-                                    <button type="button" 
-                                            class="btn btn-outline-danger remove-from-cache" 
-                                            data-id="{{ $shift->id }}" 
-                                            @if($availRegister === 'No') disabled @endif>
-                                        -
-                                    </button>
+                                    <button type="button" class="btn btn-outline-danger remove-from-cache" data-id="{{ $shift->id }}" disabled>-</button>
                                 </td>
                             </tr>
                         @endforeach
-                    @elseif($availRegister !== 'No' && count($cachedJadwalShifts) > 0) <!-- If avail_register isn't 'No' show cached shifts -->
-                        @foreach($cachedJadwalShifts as $shift)
+                    @elseif ($availRegister !== 'No' && count($cachedJadwalShifts) > 0)
+                        @foreach ($cachedJadwalShifts as $shift)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $shift->jam_kerja }}</td>
                                 <td>{{ $shift->tipePekerjaan ? $shift->tipePekerjaan->tipe_pekerjaan : 'N/A' }}</td>
                                 <td>{{ $shift->tanggal }}</td>
-                                <td>{{ $outletMapping[$shift->id_outlet] }}</td>
+                                <td>{{ $outletMapping[$shift->id_outlet] ?? 'Outlet Not Found' }}</td>
                                 <td>
                                     <button type="button" class="btn btn-outline-danger remove-from-cache" data-id="{{ $shift->id }}">-</button>
                                 </td>
@@ -156,6 +151,7 @@
         </div>
     </div>
 </div>
+
 @endsection
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
