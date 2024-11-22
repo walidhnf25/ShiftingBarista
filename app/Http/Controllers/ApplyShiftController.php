@@ -19,54 +19,53 @@ use Illuminate\Support\Facades\Log;
 class ApplyShiftController extends Controller
 {
     public function index(Request $request)
-{
-    $userId = Auth::id(); // Get the ID of the logged-in user
-    $user = Auth::user(); // Retrieve the logged-in user instance
+    {
+        $userId = Auth::id(); // Get the ID of the logged-in user
+        $user = Auth::user(); // Retrieve the logged-in user instance
 
-    // Get the avail_register status of the logged-in user
-    $availRegister = $user->avail_register;
+        // Get the avail_register status of the logged-in user
+        $availRegister = $user->avail_register;
 
-    // Retrieve all necessary data
-    $jamShift = JamShift::all();
-    $TipePekerjaan = TipePekerjaan::all();
-    $jadwal_shift = JadwalShift::where('status', 'Waiting')->get();
-    $apiOutlet = $this->getOutletData();
-    $outletMapping = collect($apiOutlet)->pluck('outlet_name', 'id');
+        // Retrieve all necessary data
+        $jamShift = JamShift::all();
+        $TipePekerjaan = TipePekerjaan::all();
+        $jadwal_shift = JadwalShift::where('status', 'Waiting')->get();
+        $apiOutlet = $this->getOutletData();
+        $outletMapping = collect($apiOutlet)->pluck('outlet_name', 'id');
 
-    // Retrieve cached shift IDs for the logged-in user
-    $cachedIds = Cache::get("jadwal_shift_ids_user_{$userId}", []);
-    
-    // Retrieve all cached shift schedules for this user
-    $cachedJadwalShifts = [];
-    foreach ($cachedIds as $cachedId) {
-        $shift = Cache::get("jadwal_shift_{$userId}_{$cachedId}");
-        if ($shift) {
-            $cachedJadwalShifts[] = $shift;
+        // Retrieve cached shift IDs for the logged-in user
+        $cachedIds = Cache::get("jadwal_shift_ids_user_{$userId}", []);
+        
+        // Retrieve all cached shift schedules for this user
+        $cachedJadwalShifts = [];
+        foreach ($cachedIds as $cachedId) {
+            $shift = Cache::get("jadwal_shift_{$userId}_{$cachedId}");
+            if ($shift) {
+                $cachedJadwalShifts[] = $shift;
+            }
         }
+
+        // If avail_register is 'No', get shifts from kesediaan
+        if ($availRegister === 'No') {
+            $kesediaanShifts = Kesediaan::where('id_user', $userId)
+                                        ->whereHas('jadwalShift') // Ensure there's a relationship
+                                        ->get()->pluck('jadwalShift'); // Get related jadwalShift
+        } else {
+            $kesediaanShifts = collect(); // If not 'No', we don't need to retrieve this data
+        }
+
+        // Pass all data to the view, including the avail_register status
+        return view('staff.applyshift', [
+            'jadwal_shift' => $jadwal_shift,
+            'jamShift' => $jamShift,
+            'TipePekerjaan' => $TipePekerjaan,
+            'apiOutlet' => $apiOutlet,
+            'outletMapping' => $outletMapping,
+            'cachedJadwalShifts' => $cachedJadwalShifts,
+            'availRegister' => $availRegister,
+            'kesediaanShifts' => $kesediaanShifts // Pass the shifts from kesediaan
+        ]);
     }
-
-    // If avail_register is 'No', get shifts from kesediaan
-    if ($availRegister === 'No') {
-        $kesediaanShifts = Kesediaan::where('id_user', $userId)
-                                     ->whereHas('jadwalShift') // Ensure there's a relationship
-                                     ->get()->pluck('jadwalShift'); // Get related jadwalShift
-    } else {
-        $kesediaanShifts = collect(); // If not 'No', we don't need to retrieve this data
-    }
-
-    // Pass all data to the view, including the avail_register status
-    return view('staff.applyshift', [
-        'jadwal_shift' => $jadwal_shift,
-        'jamShift' => $jamShift,
-        'TipePekerjaan' => $TipePekerjaan,
-        'apiOutlet' => $apiOutlet,
-        'outletMapping' => $outletMapping,
-        'cachedJadwalShifts' => $cachedJadwalShifts,
-        'availRegister' => $availRegister,
-        'kesediaanShifts' => $kesediaanShifts // Pass the shifts from kesediaan
-    ]);
-}
-
 
     public function getJadwalShift($id)
     {

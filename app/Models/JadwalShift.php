@@ -15,6 +15,7 @@ class JadwalShift extends Model
         'id_tipe_pekerjaan',
         'tanggal',
         'status',
+        'id_user',
     ];
 
     public function tipePekerjaan()
@@ -25,5 +26,10 @@ class JadwalShift extends Model
     public function kesediaan()
     {
         return $this->hasMany(Kesediaan::class, 'id_jadwal_shift');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_user', 'id'); // 'id_user' is the foreign key
     }
 }

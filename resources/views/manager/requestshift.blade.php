@@ -6,54 +6,77 @@
         <h1 class="h3 mb-0 text-gray-800">ACC Jadwal Shift</h1>
     </div>
 
-    <!-- Table Data ACC Shift -->
-    <div class="row mt-5">
-        <div class="col-lg-12">
-            <h2 class="h4 mb-4">Data Jadwal Shift</h2>
-            <table class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Jam Kerja</th>
-                        <th>Tanggal</th>
-                        <th>Tipe Pekerjaan</th>
-                        <th>Staff</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($jadwal_shift as $rs)
-                        <tr>
-                            <td>{{ $loop->iteration }}</td>
-                            <td>{{ $rs->jam_kerja }}</td>
-                            <td>{{ $rs->tanggal }}</td>
-                            <td>{{ $rs->tipePekerjaan ? $rs->tipePekerjaan->tipe_pekerjaan : 'N/A' }}</td>
-                            <td>
-                                <select class="form-select" style="width: 250px; height: 25px;">
-                                    @foreach ($rs->kesediaan as $kesediaan)
-                                        <option value="{{ $kesediaan->user->id }}">
-                                            {{ $kesediaan->user->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </td>
-                            <td>
-                                <input type="checkbox" name="selected[]" value="{{ $rs->id }}"
-                                style="width: 20px; height: 20px; cursor: pointer;">
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-            <!-- Tombol ACC -->
-            <div class="mt-3 text-end">
-                <button type="submit" class="btn btn-primary">ACC</button>
-            </div>
-            </form>
+    <div class="row">
+        <div class="col-12">
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
         </div>
     </div>
+
+    <!-- Table Data ACC Shift -->
+    <form action="{{ route('requestshift.store') }}" method="POST">
+        @csrf
+        <div class="row">
+            <div class="col-lg-12">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Jam Kerja</th>
+                            <th>Tanggal</th>
+                            <th>Tipe Pekerjaan</th>
+                            <th>Staff</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($jadwal_shift as $rs)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $rs->jam_kerja }}</td>
+                                <td>{{ $rs->tanggal }}</td>
+                                <td>{{ $rs->tipePekerjaan ? $rs->tipePekerjaan->tipe_pekerjaan : 'N/A' }}</td>
+                                <td>
+                                    <select name="selected_user[{{ $rs->id }}]" class="form-control" style="width: 250px;">
+                                        <option value="" disabled selected>Pilih User</option>
+                                        @foreach ($rs->kesediaan as $kesediaan)
+                                            <option value="{{ $kesediaan->user->id }}">
+                                                {{ $kesediaan->user->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="checkbox" name="selected_shifts[]" value="{{ $rs->id }}"
+                                        style="width: 20px; height: 20px; cursor: pointer;">
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="6" class="text-center">Jadwal Belum Tersedia.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+                <!-- Tombol ACC -->
+                <div class="mt-3 text-end">
+                    <button type="submit" class="btn btn-primary">ACC Shift</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
 @endsection
-{{-- @push('myscript')
+@push('myscript')
 <script>
     // Show modal to add shift
     $("#btnTambahJamShift").click(function() {
@@ -126,4 +149,4 @@
         $('.alert').fadeOut('slow');
     }, 2000);
 </script>
-@endpush --}}
+@endpush
