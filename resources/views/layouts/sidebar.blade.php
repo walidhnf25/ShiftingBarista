@@ -22,7 +22,7 @@
 
     @if (auth()->check() && auth()->user()->role === 'Manager')
     <!-- Divider -->
-    <hr class="sidebar-divider">
+    <hr class="sidebar-divider my-0">
 
     <!-- Nav Item - Tipe Pekerjaan -->
 
@@ -35,7 +35,7 @@
     @endif
 
     @if (auth()->check() && auth()->user()->role === 'Manager')
-    <hr class="sidebar-divider">
+    <hr class="sidebar-divider my-0">
 
     <li class="nav-item {{ Request::is('addpegawai') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('addpegawai') }}">
@@ -46,7 +46,7 @@
     @endif
 
     @if (auth()->check() && auth()->user()->role === 'Manager')
-    <hr class="sidebar-divider">
+    <hr class="sidebar-divider my-0">
 
     <li class="nav-item {{ Request::is('jamshift') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('jamshift') }}">
@@ -57,7 +57,7 @@
     @endif
 
     @if (auth()->check() && auth()->user()->role === 'Manager')
-    <hr class="sidebar-divider">
+    <hr class="sidebar-divider my-0">
 
     <li class="nav-item {{ Request::is('outlet') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('outlet') }}">
@@ -68,7 +68,7 @@
     @endif
 
     @if (auth()->check() && auth()->user()->role === 'Staff')
-    <hr class="sidebar-divider">
+    <hr class="sidebar-divider my-0">
 
     <li class="nav-item {{ Request::is('waktushift') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('waktushift') }}">
@@ -78,8 +78,30 @@
     </li>
     @endif
 
+    @if (auth()->check() && auth()->user()->role === 'Manager')
+    <hr class="sidebar-divider my-0">
+
+    <li class="nav-item {{ Request::is('requestshift') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('requestshift') }}">
+            <i class="fas fa-fw fa fa-address-book"></i>
+            <span>ACC Jadwal Shift</span>
+        </a>
+    </li>
+    @endif
+
+    @if (auth()->check() && auth()->user()->role === 'Manager')
+    <hr class="sidebar-divider my-0">
+
+    <li class="nav-item {{ Request::is('resetavail') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('resetavail') }}">
+            <i class="fas fa-fw fa fa-undo"></i>
+            <span>Reset Availability</span>
+        </a>
+    </li>
+    @endif
+
     @if (auth()->check() && auth()->user()->role === 'Staff')
-    <hr class="sidebar-divider">
+    <hr class="sidebar-divider my-0">
 
     <li class="nav-item {{ Request::is('applyshift') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('applyshift') }}">
@@ -89,16 +111,6 @@
     </li>
     @endif
 
-    @if (auth()->check() && auth()->user()->role === 'Manager')
-    <hr class="sidebar-divider">
-
-    <li class="nav-item {{ Request::is('requestshift') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('requestshift') }}">
-            <i class="fas fa-fw fa fa-address-book"></i>
-            <span>ACC Jadwal Shift</span>
-        </a>
-    </li>
-    @endif
 
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">

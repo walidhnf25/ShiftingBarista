@@ -10,6 +10,7 @@ use App\Http\Controllers\ApplyShiftController;
 use App\Http\Controllers\RequestShiftController;
 use App\Http\Controllers\WaktuShiftController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ResetAvailController;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Cache;
@@ -72,7 +73,7 @@ Route::middleware(['auth:user', 'checkRole:Staff'])->group(function () {
     Route::post('/store-shift', [ApplyShiftController::class, 'storeShift'])->name('storeShift');
     Route::post('/kesediaan/store', [ApplyShiftController::class, 'store'])->name('kesediaan.store');
     Route::get('/removeFromCache/{id}', [ApplyShiftController::class, 'removeFromCache'])->name('removeFromCache');
-    
+
     Route::get('/index', function(){
         $jadwal_shift = JadwalShift::get();
         return view('index', ['jadwal_shift' => $jadwal_shift]);
@@ -143,6 +144,10 @@ Route::middleware(['auth:user', 'checkRole:Manager'])->group(function () {
     // request shift
     Route::get('/requestshift', [RequestShiftController::class, 'index'])->name('requestshift');
     Route::post('/requestshift', [RequestShiftController::class, 'store'])->name('requestshift.store');
+
+    // Reset Availability User
+    Route::get('/resetavail', [ResetAvailController::class, 'index'])->name('resetavail');
+    Route::post('/resetavail', [ResetAvailController::class, 'store'])->name('resetavail.store');
 
 });
 
