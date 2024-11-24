@@ -49,7 +49,7 @@
         events: [
             @foreach ($jadwal_shifts as $shift)
                 {
-                    title: '{{ $outletMapping[$shift->id_outlet] ?? 'Unknown Outlet' }}',
+                    title:'{{ $shift->jam_kerja }}',
                     start: '{{ $shift->tanggal }}',
                     backgroundColor: getOutletColor('{{ $shift->id_outlet }}'),
                     extendedProps: {

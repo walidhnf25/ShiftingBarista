@@ -12,13 +12,15 @@
     <!-- Divider -->
     <hr class="sidebar-divider my-0">
 
+    @if (auth()->check() && auth()->user()->role === 'Staff')
     <!-- Nav Item - Dashboard -->
-    <li class="nav-item {{ Request::is('index') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('index') }}">
+    <li class="nav-item {{ Request::is('staffdashboard') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('staffdashboard') }}">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span>
         </a>
     </li>
+    @endif
 
     @if (auth()->check() && auth()->user()->role === 'Manager')
     <!-- Divider -->
