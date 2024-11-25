@@ -110,6 +110,10 @@ Route::middleware(['auth:user', 'checkRole:Staff'])->group(function () {
         return view('index', ['jadwal_shifts' => $jadwal_shifts]);
     });
 
+    Route::get('/dashboard', function () {
+        return view('staff.dashboard');
+    })->name('staffdashboard');
+
 });
 
 Route::middleware(['auth:user', 'checkRole:Manager'])->group(function () {
