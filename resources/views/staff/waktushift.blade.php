@@ -6,26 +6,6 @@
 </div>
 
 <div class="row">
-    <div class="col mb-2">
-        <i>Keterangan:</i>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-3">
-        <button class="btn text-white w-100" style="background-color:red;" disabled>Harmony Cafe</button>
-    </div>
-    <div class="col-md-3">
-        <button class="btn text-white w-100" style="background-color: #1cc88a;" disabled>Literasi Cafe</button>
-    </div>
-    <div class="col-md-3">
-        <button class="btn text-white w-100" style="background-color: #4e73df;" disabled>Lakeside</button>
-    </div>
-    <div class="col-md-3">
-        <button class="btn text-white w-100" style="background-color: #f6c23e;" disabled>Lakeside FIT+</button>
-    </div>
-</div>
-
-<div class="row">
     <div class="col-md-12 mt-3">
         <div id="calendar"></div>
     </div>

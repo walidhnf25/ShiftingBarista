@@ -27,6 +27,7 @@ class JadwalShiftController extends Controller
         // Retrieve other necessary data
         $jamShift = JamShift::all();
         $TipePekerjaan = TipePekerjaan::all();
+        $User = User::all();
         $apiOutlet = $this->getOutletData();
 
         // Map outlet IDs to their names
@@ -36,7 +37,7 @@ class JadwalShiftController extends Controller
         }
         $outletMapping = collect($apiOutlet)->pluck('outlet_name', 'id');
 
-        return view('manager.jadwalshift', compact('jadwal_shift', 'jamShift', 'TipePekerjaan', 'apiOutlet', 'outletMapping'));
+        return view('manager.jadwalshift', compact('jadwal_shift', 'jamShift', 'TipePekerjaan', 'User', 'apiOutlet', 'outletMapping'));
     }
 
     public function listOutlets(Request $request)
@@ -59,6 +60,7 @@ class JadwalShiftController extends Controller
         // Retrieve all necessary data
         $jamShift = JamShift::all();
         $TipePekerjaan = TipePekerjaan::all();
+        $User = User::where('role', 'Staff')->get();
         $jadwal_shift = JadwalShift::all();
         $apiOutlet = $this->getOutletData();
 
@@ -77,7 +79,7 @@ class JadwalShiftController extends Controller
         $outletMapping = collect($apiOutlet)->pluck('outlet_name', 'id');
 
         // Pass all data to the view, including apiOutlet
-        return view('manager.jadwalshift', compact('jadwal_shift', 'jamShift', 'TipePekerjaan', 'selectedOutlet', 'outletMapping', 'apiOutlet'));
+        return view('manager.jadwalshift', compact('jadwal_shift', 'jamShift', 'TipePekerjaan', 'User', 'selectedOutlet', 'outletMapping', 'apiOutlet'));
     }
 
     public function getOutletData()
@@ -121,6 +123,7 @@ class JadwalShiftController extends Controller
         $request->validate([
             'jam_kerja' => 'required|string',
             'id_tipe_pekerjaan' => 'required|string',
+            'id_user' => 'required|string',
             'tanggal' => 'required|date',
         ]);
 
@@ -135,6 +138,7 @@ class JadwalShiftController extends Controller
         // Update data jadwal shift
         $jadwal_shift->jam_kerja = $request->jam_kerja;
         $jadwal_shift->id_tipe_pekerjaan = $request->id_tipe_pekerjaan;
+        $jadwal_shift->id_user = $request->id_user;
         $jadwal_shift->tanggal = $request->tanggal;
 
         // Simpan perubahan
