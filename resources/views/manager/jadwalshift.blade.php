@@ -156,6 +156,18 @@
                                                                 </select>
                                                             </div>
 
+                                                            <div class="form-group col-md-6">
+                                                                <label for="id_user">User</label>
+                                                                <select class="form-control" id="id_user" name="id_user" required>
+                                                                    <option value="" disabled selected>Pilih Tipe Pekerjaan</option>
+                                                                    @foreach ($User as $type)
+                                                                        <option value="{{ $type->id }}" {{ $type->id == $shift->id_user ? 'selected' : '' }}>
+                                                                            {{ strtoupper($type->name) }}
+                                                                        </option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+
                                                             <!-- Tanggal -->
                                                             <div class="form-group col-md-6">
                                                                 <label for="tanggal">Tanggal Mulai</label>
