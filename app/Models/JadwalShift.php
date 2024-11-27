@@ -10,7 +10,7 @@ class JadwalShift extends Model
     use HasFactory;
     protected $table = 'jadwal_shift';
     protected $fillable = [
-        'jam_kerja',
+        'id_jam',
         'id_outlet',
         'id_tipe_pekerjaan',
         'tanggal',
@@ -31,5 +31,10 @@ class JadwalShift extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'id_user', 'id'); // 'id_user' is the foreign key
+    }
+
+    public function jamShift()
+    {
+        return $this->belongsTo(JamShift::class, 'id_jam', 'id');
     }
 }

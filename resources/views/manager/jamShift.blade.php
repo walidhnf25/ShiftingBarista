@@ -52,7 +52,7 @@
                         <td>{{ $d->jam_mulai }}</td>
                         <td>{{ $d->jam_selesai }}</td>
                         <td>{{ $d->durasi }}</td>
-                        <td>{{ $d->id_outlet }}</td>
+                        <td>{{ $outletMapping[$d->id_outlet] }}</td>
                         <!-- Tombol edit dan delete -->
                         <td>
                             <a href="#" class="edit btn btn-info btn-sm btn-circle"
@@ -103,6 +103,19 @@
                             <div class="form-group mb-3">
                                 <label for="jam_selesai">Jam Selesai</label>
                                 <input type="time" class="form-control" id="jamSelesai" name="jam_selesai" placeholder="Jam Selesai">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group mb-3">
+                                <label for="jam_selesai">Outlet</label>
+                                <select class="form-control" id="id_outlet" name="id_outlet" required>
+                                    <option value="" disabled selected>Pilih Outlet</option>
+                                    @foreach ($apiOutlet as $item)
+                                        <option value="{{ $item['id'] }}">{{ $item['outlet_name'] }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                     </div>

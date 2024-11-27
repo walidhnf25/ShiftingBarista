@@ -2,12 +2,14 @@
 <aside class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('index') }}">
+    @if (auth()->check() && auth()->user()->role === 'Staff')
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('staffdashboard') }}">
         <div class="sidebar-brand-icon rotate-n-15">
             <i class="fas fa-mug-hot"></i>
         </div>
         <div class="sidebar-brand-text mx-3">Shifting Barista</div>
     </a>
+    @endif
 
     <!-- Divider -->
     <hr class="sidebar-divider my-0">
@@ -22,12 +24,35 @@
     </li>
     @endif
 
+    <!-- Sidebar - Brand -->
+    @if (auth()->check() && auth()->user()->role === 'Manager')
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('managerdashboard') }}">
+        <div class="sidebar-brand-icon rotate-n-15">
+            <i class="fas fa-mug-hot"></i>
+        </div>
+        <div class="sidebar-brand-text mx-3">Shifting Barista</div>
+    </a>
+    @endif
+
+    @if (auth()->check() && auth()->user()->role === 'Manager')
+
+    <!-- Divider -->
+    <hr class="sidebar-divider my-0">
+
+    <!-- Nav Item - Dashboard -->
+    <li class="nav-item {{ Request::is('managerdashboard') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('managerdashboard') }}">
+            <i class="fas fa-fw fa-tachometer-alt"></i>
+            <span>Dashboard</span>
+        </a>
+    </li>
+    @endif
+
     @if (auth()->check() && auth()->user()->role === 'Manager')
     <!-- Divider -->
     <hr class="sidebar-divider my-0">
 
     <!-- Nav Item - Tipe Pekerjaan -->
-
     <li class="nav-item {{ Request::is('tipepekerjaan') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('tipepekerjaan') }}">
             <i class="fas fa-fw fa-briefcase"></i>
@@ -113,6 +138,16 @@
     </li>
     @endif
 
+    @if (auth()->check() && auth()->user()->role === 'Manager')
+    <hr class="sidebar-divider my-0">
+
+    <li class="nav-item {{ Request::is('tukarshift') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('tukarshift') }}">
+            <i class="fas fa-fw fa fa-retweet"></i>
+            <span>Tukar Shift</span>
+        </a>
+    </li>
+    @endif
 
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">

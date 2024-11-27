@@ -13,9 +13,23 @@ class AuthController extends Controller
 {
     public function proseslogin(Request $request)
     {
+        // Cek kredensial login dengan guard 'user'
         if (Auth::guard('user')->attempt(['username' => $request->username, 'password' => $request->password])) {
-            return redirect('/index');
+            // Ambil pengguna yang sedang login
+            $user = Auth::guard('user')->user();
+
+            // Periksa role pengguna dan arahkan ke halaman yang sesuai
+            if ($user->role === 'Staff') {
+                return redirect('/staffdashboard');
+            } elseif ($user->role === 'Manager') {
+                return redirect('/managerdashboard');
+            } else {
+                // Jika role tidak sesuai, logout dan beri peringatan
+                Auth::guard('user')->logout();
+                return redirect('/')->with(['warning' => 'Role tidak diizinkan.']);
+            }
         } else {
+            // Jika login gagal
             return redirect('/')->with(['warning' => 'Username atau Password salah']);
         }
     }

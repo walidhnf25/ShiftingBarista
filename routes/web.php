@@ -6,11 +6,13 @@ use App\Http\Controllers\UsersController;
 use App\Models\User;
 use App\Http\Controllers\TipePekerjaanController;
 use App\Http\Controllers\JadwalShiftController;
+use App\Http\Controllers\TukarShiftController;
 use App\Http\Controllers\ApplyShiftController;
 use App\Http\Controllers\RequestShiftController;
 use App\Http\Controllers\WaktuShiftController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ResetAvailController;
+use App\Http\Controllers\DashboardController;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Cache;
@@ -65,14 +67,15 @@ route::middleware(['guest:user'])->group(function () {
 
 
 Route::middleware(['auth:user', 'checkRole:Staff'])->group(function () {
-    Route::get('/applyshift', [ApplyShiftController::class, 'index'])->name('applyshift');
-
     Route::get('/waktushift', [WaktuShiftController::class, 'showCalendar'])->name('waktushift');
+    Route::get('/user-shift', [DashboardController::class, 'getUserShiftDetails'])->name('userShiftDetails');
+    Route::get('/staffdashboard', [DashboardController::class, 'staffdashboard'])->name('staffdashboard');
 
+    Route::get('/applyshift', [ApplyShiftController::class, 'index'])->name('applyshift');
     Route::get('/filter-jadwal-shift', [ApplyShiftController::class, 'filterJadwalShift'])->name('filterJadwalShift');
-    Route::post('/store-shift', [ApplyShiftController::class, 'storeShift'])->name('storeShift');
+    Route::get('/store-shift/{id}', [ApplyShiftController::class, 'storeAndGetJadwalShift']);
     Route::post('/kesediaan/store', [ApplyShiftController::class, 'store'])->name('kesediaan.store');
-    Route::get('/removeFromCache/{id}', [ApplyShiftController::class, 'removeFromCache'])->name('removeFromCache');
+    Route::post('/removeFromCache/{id}', [ApplyShiftController::class, 'removeFromCache'])->name('removeFromCache');
 
     Route::get('/index', function(){
         $jadwal_shift = JadwalShift::get();
@@ -90,7 +93,7 @@ Route::middleware(['auth:user', 'checkRole:Staff'])->group(function () {
         return view('index', ['jadwal_shift' => $jadwal_shift]);
     });
 
-    Route::get('getJadwalshift/{id}', [ApplyShiftController::class, 'getJadwalShift']);
+    Route::get('getJadwalshift/{id}', [ApplyShiftController::class, 'getJadwalShift'])->name('getJadwalShift');
     Route::get('/storeAndGetJadwalshift/{id}', [ApplyShiftController::class, 'storeAndGetJadwalShift'])->name('storeAndGetJadwalshift');
 
     Route::get('getJadwalshift', function () {
@@ -109,11 +112,6 @@ Route::middleware(['auth:user', 'checkRole:Staff'])->group(function () {
 
         return view('index', ['jadwal_shifts' => $jadwal_shifts]);
     });
-
-    Route::get('/dashboard', function () {
-        return view('staff.dashboard');
-    })->name('staffdashboard');
-
 });
 
 Route::middleware(['auth:user', 'checkRole:Manager'])->group(function () {
@@ -132,6 +130,9 @@ Route::middleware(['auth:user', 'checkRole:Manager'])->group(function () {
 
     //jadwal shift
     Route::get('/jadwalshift', [JadwalShiftController::class, 'index'])->name('jadwalshift');
+    Route::get('/tukarshift', [TukarShiftController::class, 'showOutlet'])->name('tukarshift');
+    Route::post('/jadwal-shift/update-user', [TukarShiftController::class, 'update'])->name('jadwalshift.update-user');
+    Route::get('/filter-jadwal-shifts', [TukarShiftController::class, 'filter'])->name('filterJadwalShifts');
     Route::get('/outlet', [JadwalShiftController::class, 'listOutlets'])->name('outlet');
     Route::get('/outlet/jadwalshift/{id}', [JadwalShiftController::class, 'showOutlet'])->name('outlet.jadwalshift');
     Route::post('/outlet/jadwalshift/{id}', [JadwalShiftController::class, 'store'])->name('jadwal_shift.store');
@@ -153,6 +154,11 @@ Route::middleware(['auth:user', 'checkRole:Manager'])->group(function () {
     Route::get('/resetavail', [ResetAvailController::class, 'index'])->name('resetavail');
     Route::post('/resetavail', [ResetAvailController::class, 'store'])->name('resetavail.store');
 
+    Route::get('/managerdashboard', function () {
+        return view('manager.dashboard');
+    })->name('managerdashboard');
+
+    Route::get('/managerdashboard', [DashboardController::class, 'showCalendar'])->name('managerdashboard');
 });
 
 Route::middleware(['auth:user'])->group(function () {

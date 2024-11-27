@@ -26,26 +26,22 @@
 
 <div class="row"> 
     <div class="col mb-3">
-        <div class="btn-group">
-            <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-            @if($availRegister === 'No') @endif
-                {{ strtoupper('All Outlet') }}
-            </button>
-            <div class="dropdown-menu">
-                <button class="dropdown-item all-outlet-button" type="button" 
-                    @if($availRegister === 'No')  disabled @endif>
-                    {{ strtoupper('All Outlet') }}
-                </button>
-                @foreach ($outletMapping as $id => $outletName)
-                    <button class="dropdown-item outlet-button" type="button" data-id="{{ $id }}"
-                        @if($availRegister === 'No') disabled @endif>
-                        {{ $outletName }}
-                    </button>
-                @endforeach
+        <form action="{{ route('filterJadwalShift') }}" method="GET"> <!-- Ganti ke GET jika filter di URL -->
+            @csrf
+            <div class="btn-group">
+                <select name="id_outlet" class="form-control" onchange="this.form.submit()" @if($availRegister === 'No') disabled @endif>
+                    <option value="">ALL OUTLET</option>
+                    @foreach ($outletMapping as $id => $outletName)
+                        <option value="{{ $id }}" @if(request('id_outlet') == $id) selected @endif>
+                            {{ $outletName }}
+                        </option>
+                    @endforeach
+                </select>
             </div>
-        </div>
+        </form>
     </div>
 </div>
+
 
 <div class="row">
     <div class="col-md-12 col-lg-12">
@@ -70,18 +66,20 @@
                     @else
                         @if ($availRegister === 'No')
                             <tr>
-                                <td colspan="6" class="text-center">Anda Sudah Memilih Jadwal Shift.</td>
+                                <td colspan="6" class="text-center">Anda sudah memilih jadwal shift.</td>
                             </tr>
                         @else
                             @foreach ($jadwal_shift as $shift)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $shift->jam_kerja }}</td>
+                                    <td>
+                                        {{ $shift->jamShift ? $shift->jamShift->jam_mulai . ' - ' . $shift->jamShift->jam_selesai : 'N/A' }}
+                                    </td>
                                     <td>{{ $shift->tipePekerjaan ? $shift->tipePekerjaan->tipe_pekerjaan : 'N/A' }}</td>
                                     <td>{{ $shift->tanggal }}</td>
                                     <td>{{ $outletMapping[$shift->id_outlet] ?? 'Outlet Not Found' }}</td>
                                     <td>
-                                        <button type="button" class="btn btn-outline-primary add-to-cache" data-id="{{ $shift->id }}">+</button>
+                                        <a href="{{ route('getJadwalShift', $shift->id) }}" class="btn btn-outline-primary">+</a>
                                     </td>
                                 </tr>
                             @endforeach
@@ -92,6 +90,7 @@
         </div>
     </div>
 </div>
+
 
 <div class="row"> 
     <div class="col-md-12 col-lg-12 d-flex flex-column mt-3">
@@ -113,7 +112,9 @@
                         @foreach ($kesediaanShifts as $shift)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $shift->jam_kerja }}</td>
+                                <td>
+                                    {{ $shift->jamShift ? $shift->jamShift->jam_mulai . ' - ' . $shift->jamShift->jam_selesai : 'N/A' }}
+                                </td>
                                 <td>{{ $shift->tipePekerjaan ? $shift->tipePekerjaan->tipe_pekerjaan : 'N/A' }}</td>
                                 <td>{{ $shift->tanggal }}</td>
                                 <td>{{ $outletMapping[$shift->id_outlet] ?? 'Outlet Not Found' }}</td>
@@ -126,12 +127,17 @@
                         @foreach ($cachedJadwalShifts as $shift)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $shift->jam_kerja }}</td>
+                                <td>
+                                    {{ $shift->jamShift ? $shift->jamShift->jam_mulai . ' - ' . $shift->jamShift->jam_selesai : 'N/A' }}
+                                </td>
                                 <td>{{ $shift->tipePekerjaan ? $shift->tipePekerjaan->tipe_pekerjaan : 'N/A' }}</td>
                                 <td>{{ $shift->tanggal }}</td>
                                 <td>{{ $outletMapping[$shift->id_outlet] ?? 'Outlet Not Found' }}</td>
                                 <td>
-                                    <button type="button" class="btn btn-outline-danger remove-from-cache" data-id="{{ $shift->id }}">-</button>
+                                    <form action="{{ route('removeFromCache', $shift->id) }}" method="POST" style="display: inline;">
+                                        @csrf
+                                        <button type="submit" class="btn btn-outline-danger remove-from-cache">-</button>
+                                    </form>
                                 </td>
                             </tr>
                         @endforeach
@@ -146,7 +152,8 @@
         <div class="d-flex justify-content-end mt-3">
             <form id="registrationForm" action="{{ route('kesediaan.store') }}" method="POST">
                 @csrf
-                <button type="button" class="btn btn-primary" id="registerButton">Registrasi</button>
+                
+                <button type="button" class="btn btn-primary" id="registerButton" @if($availRegister === 'No') disabled @endif>Registrasi</button>
             </form>
         </div>
     </div>
@@ -156,161 +163,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
 $(document).ready(function () {
-    // Fungsi untuk menambah shift ke cache saat tombol diklik
-    function rebindAddToCache() {
-        $('.add-to-cache').off('click').on('click', function () {
-            let shiftId = $(this).data('id');
-            
-            // Kirim permintaan AJAX untuk menyimpan ID shift ke cache
-            $.ajax({
-                url: '/getJadwalshift/' + shiftId,
-                method: 'GET',
-                success: function (response) {
-                    // Update tabel dengan data terbaru
-                    $('#cachedShifts').html(response);
-                },
-                error: function (xhr) {
-                    console.error('Error:', xhr);
-                }
-            });
-        });
-    }
-
-    // Binding awal untuk tombol "add to cache"
-    rebindAddToCache();
-
-    // Saat outlet dipilih
-    $('.outlet-button').click(function () {
-        let outletId = $(this).data('id');
-        let outletName = $(this).text(); // Dapatkan nama outlet yang dipilih
-
-        // Update teks tombol dengan nama outlet yang dipilih
-        $('.btn.btn-primary.dropdown-toggle').text(outletName);
-
-        // Ambil data shift yang difilter berdasarkan ID outlet
-        $.ajax({
-            url: "{{ route('filterJadwalShift') }}",
-            method: "GET",
-            data: { outlet_id: outletId },
-            success: function (response) {
-                // Masukkan data yang difilter ke dalam tabel
-                $('#shiftData').html(response);
-
-                // Re-bind tombol "add to cache" untuk data baru
-                rebindAddToCache();
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                alert('Failed to fetch data. ' + textStatus + ": " + errorThrown);
-            }
-        });
-    });
-
-    // Saat tombol "All Outlet" diklik
-    $('.all-outlet-button').click(function () {
-        // Reset teks tombol kembali ke "All Outlet"
-        $('.btn.btn-primary.dropdown-toggle').text('ALL OUTLET ');
-
-        // Ambil semua data shift tanpa filter berdasarkan outlet
-        $.ajax({
-            url: "{{ route('filterJadwalShift') }}",
-            method: "GET",
-            data: { outlet_id: '' },
-            success: function (response) {
-                // Masukkan semua data ke dalam tabel
-                $('#shiftData').html(response);
-
-                // Re-bind tombol "add to cache" untuk semua data
-                rebindAddToCache();
-            },
-            error: function () {
-                alert('Failed to fetch data.');
-            }
-        });
-    });
-
-    $('#shiftTable').on('click', '.add-to-cache', function () {
-        var shiftId = $(this).data('id'); // Dapatkan ID shift dari data-id
-
-        // Kirim permintaan AJAX untuk menyimpan shift dalam cache dan mendapatkan data shift
-        $.ajax({
-            url: '/storeAndGetJadwalshift/' + shiftId, // Sesuaikan route
-            method: 'GET',
-            success: function (response) {
-                // Iterasi melalui semua shift yang ada dalam response dan tambahkan ke tabel
-                $.each(response.jadwal_shifts, function(index, shiftData) {
-                    // Periksa apakah shift ini sudah ditambahkan ke tabel
-                    var existingRow = $('#selectedShiftData tr[data-id="' + shiftData.no + '"]');
-                    
-                    // Jika shift ini belum ada di tabel, tambahkan
-                    if (existingRow.length === 0) {
-                        var rowHtml = `
-                            <tr data-id="${shiftData.no}">
-                                <td>${shiftData.no}</td>
-                                <td>${shiftData.jam_kerja}</td>
-                                <td>${shiftData.pekerjaan}</td>
-                                <td>${shiftData.tanggal}</td>
-                                <td>${shiftData.outletName}</td>
-                                <td><button type="button" class="btn btn-outline-danger remove-from-cache" data-id="${shiftData.no}">-</button></td> <!-- Tombol hapus -->
-                            </tr>
-                        `;
-                        
-                        // Tambahkan baris baru ke tabel
-                        $('#selectedShiftData').append(rowHtml);
-
-                        // Hapus baris placeholder jika ada
-                        $('#selectedShiftData .placeholder-row').remove();
-                    }
-                });
-            },
-            error: function (xhr, status, error) {
-                console.error('Error fetching shift data:', error);
-            }
-        });
-    });
-
-    $('#shiftTable').on('click', '.view-shift', function () {
-        var shiftId = $(this).data('id'); // Ambil ID shift dari data-id
-
-        // Kirim permintaan AJAX untuk mengambil data shift berdasarkan ID
-        $.ajax({
-            url: '/getJadwalshift/' + shiftId, // Sesuaikan dengan route Anda
-            method: 'GET',
-            success: function (response) {
-                var shiftData = response.shift;
-
-                // Tampilan data shift di modal atau tempat lain
-                alert('Jam Kerja: ' + shiftData.jam_kerja);
-            },
-            error: function (xhr, status, error) {
-                console.error('Error fetching shift data:', error);
-            }
-        });
-    });
-
-    $('#selectedShiftData').on('click', '.remove-from-cache', function () {
-        let shiftId = $(this).data('id');
-
-        $.ajax({
-            url: "{{ url('/removeFromCache') }}/" + shiftId,
-            method: 'GET',
-            success: function (response) {
-                if (response.success) {
-                    $('tr[data-id="' + shiftId + '"]').remove();
-
-                    // Check if the table is empty, and add the placeholder row if so
-                    if ($('#selectedShiftData tr').length === 0) {
-                        $('#selectedShiftData').append('<tr class="placeholder-row"><td colspan="6" class="text-center">Belum ada shift yang dipilih.</td></tr>');
-                    }
-                } else {
-                    alert(response.message);
-                }
-            },
-            error: function (xhr, status, error) {
-                alert('Error removing shift from cache: ' + error);
-                console.error('Error details:', xhr);
-            }
-        });
-    });
 
     document.getElementById("registerButton").addEventListener("click", function () {
         Swal.fire({

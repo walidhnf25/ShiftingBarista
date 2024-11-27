@@ -3,7 +3,7 @@
 @section('content')
     {{-- PAGE HEADING --}}
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Reset Availability</h1>
+        <h1 class="h3 mb-0 text-gray-800">Reset User</h1>
     </div>
 
     {{-- DROPDOWN DAN TOMBOL RESET --}}
@@ -13,7 +13,6 @@
         <div class="row">
             <div class="col-12">
                 <div class="form-group">
-                    <h4 for="user-select" class="form-label">Reset User</h4>
                     <select id="user-select" name="user_id" class="form-control w-100" required>
                         <option value="" disabled selected>Pilih User</option>
                         @foreach ($users as $user)
@@ -36,7 +35,7 @@
             <table class="table table-bordered table-striped">
                 <thead>
                     <tr>
-                        <th>No</th>
+                        <th>#</th>
                         <th>Nama</th>
                         <th>Status Registrasi</th>
                     </tr>
@@ -45,7 +44,7 @@
                     @foreach ($usersForTable as $user)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
-                            <td>{{ $user->name }}</td>
+                            <td>{{ strtoupper($user->name) }}</td>
                             <td>{{ $user->avail_register }}</td>
                         </tr>
                     @endforeach

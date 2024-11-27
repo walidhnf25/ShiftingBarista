@@ -29,9 +29,76 @@ class ApplyShiftController extends Controller
         // Retrieve all necessary data
         $jamShift = JamShift::all();
         $TipePekerjaan = TipePekerjaan::all();
-        $jadwal_shift = JadwalShift::where('status', 'Waiting')->get();
+        
+        // Base query for jadwal_shift
+        $jadwal_shift = JadwalShift::where('status', 'Waiting');
+
+        // Filter by outlet if id_outlet is provided in the request
+        if ($request->has('id_outlet') && $request->input('id_outlet') !== '') {
+            $jadwal_shift = $jadwal_shift->where('id_outlet', $request->input('id_outlet'));
+        }
+
+        // Execute the query to get the filtered shifts
+        $jadwal_shift = $jadwal_shift->get();
+
         $apiOutlet = $this->getOutletData();
         $outletMapping = collect($apiOutlet)->pluck('outlet_name', 'id');
+
+        // Retrieve cached shift IDs for the logged-in user
+        $cachedIds = Cache::get("jadwal_shift_ids_user_{$userId}", []);
+        
+        // Retrieve all cached shift schedules for this user
+        $cachedJadwalShifts = [];
+        foreach ($cachedIds as $cachedId) {
+            $shift = Cache::get("jadwal_shift_{$userId}_{$cachedId}");
+            if ($shift) {
+                $cachedJadwalShifts[] = $shift;
+            }
+        }
+
+        // If avail_register is 'No', get shifts from kesediaan
+        if ($availRegister === 'No') {
+            $kesediaanShifts = Kesediaan::where('id_user', $userId)
+                                            ->whereHas('jadwalShift') // Ensure there's a relationship
+                                            ->get()->pluck('jadwalShift'); // Get related jadwalShift
+        } else {
+            $kesediaanShifts = collect(); // If not 'No', we don't need to retrieve this data
+        }
+
+        // Pass all data to the view, including the avail_register status
+        return view('staff.applyshift', [
+            'jadwal_shift' => $jadwal_shift,
+            'jamShift' => $jamShift,
+            'TipePekerjaan' => $TipePekerjaan,
+            'apiOutlet' => $apiOutlet,
+            'outletMapping' => $outletMapping,
+            'cachedJadwalShifts' => $cachedJadwalShifts,
+            'availRegister' => $availRegister,
+            'kesediaanShifts' => $kesediaanShifts // Pass the shifts from kesediaan
+        ]);
+    }
+
+    public function filterJadwalShift(Request $request)
+    {
+        // Get the selected outlet ID from the request
+        $idOutlet = $request->input('id_outlet');
+
+        // Retrieve the jadwal_shift data filtered by id_outlet
+        $jadwalShift = JadwalShift::when($idOutlet, function ($query, $idOutlet) {
+            return $query->where('id_outlet', $idOutlet);
+        })
+        ->where('status', 'Waiting')
+        ->get();
+
+        // Retrieve necessary data
+        $jamShift = JamShift::all();
+        $TipePekerjaan = TipePekerjaan::all();
+        $apiOutlet = $this->getOutletData();
+        $outletMapping = collect($apiOutlet)->pluck('outlet_name', 'id');
+
+        $userId = Auth::id(); // Get the ID of the logged-in user
+        $user = Auth::user(); // Retrieve the logged-in user instance
+        $availRegister = $user->avail_register;
 
         // Retrieve cached shift IDs for the logged-in user
         $cachedIds = Cache::get("jadwal_shift_ids_user_{$userId}", []);
@@ -56,7 +123,7 @@ class ApplyShiftController extends Controller
 
         // Pass all data to the view, including the avail_register status
         return view('staff.applyshift', [
-            'jadwal_shift' => $jadwal_shift,
+            'jadwal_shift' => $jadwalShift,
             'jamShift' => $jamShift,
             'TipePekerjaan' => $TipePekerjaan,
             'apiOutlet' => $apiOutlet,
@@ -93,7 +160,7 @@ class ApplyShiftController extends Controller
             $jadwal_shifts[] = Cache::get("jadwal_shift_{$userId}_{$cachedId}");
         }
 
-        return view('applyshift', ['jadwal_shifts' => $jadwal_shifts])->render();
+        return redirect()->route('applyshift')->with('success', 'Jadwal shift berhasil ditambahkan');
     }
 
     public function store(Request $request)
@@ -157,11 +224,11 @@ class ApplyShiftController extends Controller
                 $jadwal_shifts[] = Cache::get("jadwal_shift_{$userId}_{$cachedId}");
             }
 
-            return response()->json(['success' => true, 'jadwal_shifts' => $jadwal_shifts]);
+            return redirect()->route('applyshift')->with('success', 'Jadwal Shift berhasil dihapus');
 
         } catch (\Exception $e) {
             \Log::error('Error removing shift from cache: ' . $e->getMessage());
-            return response()->json(['success' => false, 'message' => 'Error removing shift from cache.'], 500);
+            return redirect()->route('applyshift')->with('error', 'Gagal menghapus shift.');
         }
     }
 
@@ -185,7 +252,7 @@ class ApplyShiftController extends Controller
 
         $shiftData = [
             'no' => $shift->id,
-            'jam_kerja' => $shift->jam_kerja,
+            'id_jam' => $shift->jamShift ? $shift->jamShift->jam_mulai . ' - ' . $shift->jamShift->jam_selesai : 'N/A',
             'pekerjaan' => $shift->tipePekerjaan ? $shift->tipePekerjaan->tipe_pekerjaan : 'N/A',
             'tanggal' => $shift->tanggal,
             'outletName' => $outletName,
@@ -193,60 +260,6 @@ class ApplyShiftController extends Controller
 
         // Return the selected shift data
         return response()->json(['jadwal_shifts' => [$shiftData]]);
-    }
-
-    public function filterJadwalShift(Request $request)
-    {
-        $userId = Auth::id(); // ID user yang sedang login
-
-        // Dapatkan data outlet dari API
-        $apiOutlet = $this->getOutletData();
-        
-        // Buat mapping antara ID outlet dan nama outlet
-        $outletMapping = collect($apiOutlet)->pluck('outlet_name', 'id');
-
-        // Dapatkan outlet_id dari request (jika ada)
-        $outletId = $request->input('outlet_id');
-
-        // Query untuk mendapatkan shift berdasarkan status dan filter outlet_id (opsional)
-        $filteredShiftsQuery = JadwalShift::where('status', 'Waiting');
-
-        // Filter berdasarkan outlet jika outlet_id diberikan
-        if ($outletId) {
-            $filteredShiftsQuery->where('id_outlet', $outletId);
-        }
-
-        // Dapatkan shift yang sudah difilter
-        $filteredShifts = $filteredShiftsQuery->get();
-
-        // Generate HTML untuk menampilkan shift yang sudah difilter
-        $html = '';
-
-        // Jika tidak ada shift ditemukan, tampilkan pesan
-        if ($filteredShifts->isEmpty()) {
-            $html .= '<tr>';
-            $html .= '<td colspan="6" class="text-center">Jadwal Shift Kosong.</td>';
-            $html .= '</tr>';
-        } else {
-            // Looping untuk menampilkan shift yang difilter
-            foreach ($filteredShifts as $index => $shift) {
-                // Dapatkan nama outlet menggunakan ID outlet (jika tersedia dalam mapping)
-                $outletName = $outletMapping[$shift->id_outlet] ?? 'Unknown';
-
-                // Generate baris tabel untuk setiap shift
-                $html .= '<tr>';
-                $html .= '<td>' . ($index + 1) . '</td>';
-                $html .= '<td>' . $shift->jam_kerja . '</td>';
-                $html .= '<td>' . ($shift->tipePekerjaan ? $shift->tipePekerjaan->tipe_pekerjaan : 'N/A') . '</td>';
-                $html .= '<td>' . $shift->tanggal . '</td>';
-                $html .= '<td>' . $outletName . '</td>';
-                $html .= '<td><button type="button" class="btn btn-outline-primary add-to-cache" data-id="' . $shift->id . '">+</button></td>';
-                $html .= '</tr>';
-            }
-        }
-
-        // Kembalikan HTML untuk disisipkan ke halaman
-        return response()->json($html);
     }
 
     public function getOutletData()
