@@ -42,7 +42,7 @@
                         @forelse ($jadwal_shift as $rs)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $rs->jam_kerja }}</td>
+                                <td>{{ $rs->jamShift ? $rs->jamShift->jam_mulai . ' - ' . $rs->jamShift->jam_selesai : 'N/A' }}</td>
                                 <td>{{ $rs->tanggal }}</td>
                                 <td>{{ $rs->tipePekerjaan ? $rs->tipePekerjaan->tipe_pekerjaan : 'N/A' }}</td>
                                 <td>
@@ -62,7 +62,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="text-center">Jadwal Belum Tersedia.</td>
+                                <td colspan="6" class="text-center">Jadwal belum tersedia.</td>
                             </tr>
                         @endforelse
                     </tbody>

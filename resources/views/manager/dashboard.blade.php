@@ -6,6 +6,26 @@
 </div>
 
 <div class="row">
+    <div class="col mb-2">
+        <i>Keterangan:</i>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-3">
+        <button class="btn text-white w-100" style="background-color:red;" disabled>Harmony Cafe</button>
+    </div>
+    <div class="col-md-3">
+        <button class="btn text-white w-100" style="background-color: #1cc88a;" disabled>Literasi Cafe</button>
+    </div>
+    <div class="col-md-3">
+        <button class="btn text-white w-100" style="background-color: #4e73df;" disabled>Lakeside</button>
+    </div>
+    <div class="col-md-3">
+        <button class="btn text-white w-100" style="background-color: #f6c23e;" disabled>Lakeside FIT+</button>
+    </div>
+</div>
+
+<div class="row">
     <div class="col-md-12 mt-3">
         <div id="calendar"></div>
     </div>
@@ -28,13 +48,14 @@
         events: [
             @foreach ($jadwal_shifts as $shift)
                 {
-                    title:'{{ $outletMapping[$shift->id_outlet] ?? 'Unknown Outlet' }}',
+                    title:'{{ $shift->user ? strtoupper($shift->user->name) : 'N/A' }}',
                     start: '{{ $shift->tanggal }}',
                     backgroundColor: getOutletColor('{{ $shift->id_outlet }}'),
                     extendedProps: {
                         outletName: '{{ $outletMapping[$shift->id_outlet] ?? 'Unknown Outlet' }}',
                         jamKerja: '{{ $shift->jamShift ? $shift->jamShift->jam_mulai . ' - ' . $shift->jamShift->jam_selesai : 'N/A' }}',
-                        idOutlet: '{{ $shift->id_outlet }}'
+                        idOutlet: '{{ $shift->id_outlet }}',
+                        userName: '{{ $shift->user ? $shift->user->name : 'N/A' }}'
                     }
                 },
             @endforeach
@@ -46,11 +67,12 @@
             var event = info.event;
             var outletName = event.extendedProps.outletName || 'Unknown Outlet';
             var jamKerja = event.extendedProps.jamKerja || 'N/A';
+            var userName = event.extendedProps.userName || 'N/A'; // Mendapatkan nama pengguna
 
             // Show Swal.fire with details
             Swal.fire({
                 title: `Detail Jadwal`,
-                html: `<strong>Outlet:</strong> ${outletName}<br><strong>Jam Kerja:</strong> ${jamKerja}`,
+                html: `<strong>Outlet:</strong> ${outletName}<br><strong>Jam Kerja:</strong> ${jamKerja}<br><strong>Pengguna:</strong> ${userName.toUpperCase()}`,
                 icon: 'info'
             });
         },
@@ -66,7 +88,7 @@
                 if (validEvents.length > 0) {
                     // Generate details for valid events
                     var eventDetails = validEvents.map(event => {
-                        return `<strong>${event.extendedProps.outletName}:</strong> ${event.extendedProps.jamKerja}`;
+                        return `<strong>${event.extendedProps.outletName}:</strong> ${event.extendedProps.jamKerja}<br><strong>Pengguna:</strong> ${event.extendedProps.userName.toUpperCase()}<br>`;
                     }).join('<br>');
 
                     // Show Swal.fire with event details

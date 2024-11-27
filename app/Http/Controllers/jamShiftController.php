@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use App\Models\JamShift;
 use Illuminate\Support\Facades\Auth;
@@ -41,8 +42,50 @@ class jamShiftController extends Controller
             return $shift;
         });
 
+        $apiOutlet = $this->getOutletData();
+
+        $outletMapping = [];
+        foreach ($apiOutlet as $outlet) {
+            $outletMapping[$outlet['id']] = $outlet['outlet_name'];
+        }
+        $outletMapping = collect($apiOutlet)->pluck('outlet_name', 'id');
+
         // Kirim data ke view
-        return view('manager.jamShift', compact('jamShift'));
+        return view('manager.jamShift', compact('jamShift', 'apiOutlet', 'outletMapping'));
+    }
+
+    public function getOutletData()
+    {
+        // Token API dan URL
+        $apiToken = '92|BN2EvdcWabONwrvbSIbFgSZyPoEoFwjsRwse7li6';
+        $apiUrl = 'https://pos.lakesidefnb.group/api/outlet'; // Menyesuaikan URL API
+
+        // GuzzleHttp client untuk membuat request
+        $client = new Client();
+
+        try {
+            // Mengirim request GET ke API
+            $response = $client->request('GET', $apiUrl, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $apiToken,
+                    'Content-Type' => 'application/json',
+                ],
+            ]);
+
+            // Mengambil body dari response dan mengubah menjadi array
+            $responseData = json_decode($response->getBody(), true);
+
+            // Mengembalikan data outlet jika tersedia, atau array kosong jika tidak
+            if (isset($responseData['data']) && is_array($responseData['data'])) {
+                return $responseData['data'];
+            } else {
+                return [];
+            }
+        } catch (\Exception $e) {
+            // Logging jika terjadi kesalahan
+            Log::error('API Request Error: ' . $e->getMessage());
+            return [];
+        }
     }
 
     public function store(Request $request)
@@ -61,6 +104,7 @@ class jamShiftController extends Controller
             JamShift::create([
                 'jam_mulai' => $request->jam_mulai,
                 'jam_selesai' => $request->jam_selesai,
+                'id_outlet' => $request->id_outlet,
             ]);
 
             // Mengembalikan respon sukses
@@ -74,7 +118,14 @@ class jamShiftController extends Controller
     public function editJamShift(Request $request)
     {
         $jamShift = JamShift::findOrFail($request->id);
-        return view('editJamShifts', compact('jamShift'));
+        $apiOutlet = $this->getOutletData();
+
+        $outletMapping = [];
+        foreach ($apiOutlet as $outlet) {
+            $outletMapping[$outlet['id']] = $outlet['outlet_name'];
+        }
+        $outletMapping = collect($apiOutlet)->pluck('outlet_name', 'id');
+        return view('editJamShifts', compact('jamShift', 'apiOutlet', 'outletMapping'));
     }
 
 
@@ -87,6 +138,7 @@ class jamShiftController extends Controller
             // Update kolom jam shift dengan nilai baru
             $jamShift->jam_mulai = $request->input('jam_mulai');
             $jamShift->jam_selesai = $request->input('jam_selesai');
+            $jamShift->id_outlet = $request->input('id_outlet');
 
             // Simpan perubahan
             $jamShift->save();

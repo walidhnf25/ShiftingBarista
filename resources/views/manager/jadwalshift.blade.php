@@ -30,11 +30,11 @@
                     <div class="form-row">
                         <!-- Jam Kerja -->
                         <div class="form-group col-md-6">
-                            <label for="jam_kerja">Jam Kerja</label>
-                            <select class="form-control" id="jam_kerja" name="jam_kerja">
+                            <label for="id_jam">Jam Kerja</label>
+                            <select class="form-control" id="id_jam" name="id_jam">
                                 <option value="" disabled selected>Pilih Jam Kerja</option>
                                 @foreach ($jamShift as $d)
-                                    <option value="{{ $d->jam_mulai }} - {{ $d->jam_selesai }}">{{ $d->jam_mulai }} -
+                                    <option value="{{ $d->id }}">{{ $d->jam_mulai }} -
                                         {{ $d->jam_selesai }}</option>
                                 @endforeach
                             </select>
@@ -91,7 +91,9 @@
                             <!-- Ensure you're using this variable for each loop iteration -->
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $shift->jam_kerja }}</td>
+                                <td>
+                                    {{ $shift->jamShift ? $shift->jamShift->jam_mulai . ' - ' . $shift->jamShift->jam_selesai : 'N/A' }}
+                                </td>
                                 <td>{{ $shift->tipePekerjaan ? $shift->tipePekerjaan->tipe_pekerjaan : 'N/A' }}</td>
                                 <td>{{ $outletMapping[$shift->id_outlet] }}</td>
                                 <td>{{ $shift->tanggal }}</td>
@@ -125,16 +127,12 @@
                                                             <!-- Jam Kerja -->
                                                             <div class="form-group col-md-6">
                                                                 <label for="jam_kerja">Jam Kerja</label>
-                                                                <select class="form-control" id="jam_kerja"
-                                                                    name="jam_kerja">
-                                                                    <option value="" disabled selected>Pilih Jam Kerja
-                                                                    </option>
+                                                                <select class="form-control" id="id_jam" name="id_jam">
+                                                                    <option value="" disabled selected>Pilih Jam Kerja</option>
                                                                     @foreach ($jamShift as $jam)
-                                                                        <option
-                                                                            value="{{ $jam->jam_mulai }} - {{ $jam->jam_selesai }}"
-                                                                            {{ $jam->jam_mulai . ' - ' . $jam->jam_selesai == $shift->jam_kerja ? 'selected' : '' }}>
-                                                                            {{ $jam->jam_mulai }} -
-                                                                            {{ $jam->jam_selesai }}
+                                                                        <option value="{{ $jam->id }}" 
+                                                                            {{ $jam->id == $shift->id_jam ? 'selected' : '' }}>
+                                                                            {{ $jam->jam_mulai }} - {{ $jam->jam_selesai }}
                                                                         </option>
                                                                     @endforeach
                                                                 </select>
@@ -159,7 +157,7 @@
                                                             <div class="form-group col-md-6">
                                                                 <label for="id_user">User</label>
                                                                 <select class="form-control" id="id_user" name="id_user" required>
-                                                                    <option value="" disabled selected>Pilih Tipe Pekerjaan</option>
+                                                                    <option value="" disabled selected>Pilih User</option>
                                                                     @foreach ($User as $type)
                                                                         <option value="{{ $type->id }}" {{ $type->id == $shift->id_user ? 'selected' : '' }}>
                                                                             {{ strtoupper($type->name) }}

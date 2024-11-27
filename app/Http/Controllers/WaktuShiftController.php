@@ -10,23 +10,23 @@ use GuzzleHttp\Client;
 class WaktuShiftController extends Controller
 {
     public function showCalendar()
-{
-    $userId = auth()->id(); // Get the logged-in user's ID
+    {
+        $userId = auth()->id(); // Get the logged-in user's ID
 
-    // Fetch the shifts for the logged-in user
-    $jadwal_shifts = JadwalShift::where('id_user', $userId)
-        ->get();
+        // Fetch the shifts for the logged-in user
+        $jadwal_shifts = JadwalShift::where('id_user', $userId)
+            ->get();
 
-    // Get outlet data from API
-    $apiOutlet = $this->getOutletData();
-    // Map the outlet data to create a lookup based on outlet ID
-    $outletMapping = collect($apiOutlet)->pluck('outlet_name', 'id');
+        // Get outlet data from API
+        $apiOutlet = $this->getOutletData();
+        // Map the outlet data to create a lookup based on outlet ID
+        $outletMapping = collect($apiOutlet)->pluck('outlet_name', 'id');
 
-    // Pass the shifts and outlet mapping to the view
-    return view('staff.waktushift', compact('jadwal_shifts', 'outletMapping'));
-}
+        // Pass the shifts and outlet mapping to the view
+        return view('staff.waktushift', compact('jadwal_shifts', 'outletMapping'));
+    }
 
-public function getOutletData()
+    public function getOutletData()
     {
         // Token API dan URL
         $apiToken = '92|BN2EvdcWabONwrvbSIbFgSZyPoEoFwjsRwse7li6';

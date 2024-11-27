@@ -47,6 +47,7 @@ class JadwalShiftController extends Controller
         $TipePekerjaan = TipePekerjaan::all();
         $jadwal_shift = JadwalShift::all();
         $apiOutlet = $this->getOutletData();
+        $apiOutlet = collect($apiOutlet);
 
         // Create a mapping of outlet IDs to outlet names
         $outletMapping = collect($apiOutlet)->pluck('outlet_name', 'id');
@@ -121,7 +122,7 @@ class JadwalShiftController extends Controller
         // Validasi input
 
         $request->validate([
-            'jam_kerja' => 'required|string',
+            'id_jam' => 'required|string',
             'id_tipe_pekerjaan' => 'required|string',
             'id_user' => 'required|string',
             'tanggal' => 'required|date',
@@ -136,7 +137,7 @@ class JadwalShiftController extends Controller
         }
 
         // Update data jadwal shift
-        $jadwal_shift->jam_kerja = $request->jam_kerja;
+        $jadwal_shift->id_jam = $request->id_jam;
         $jadwal_shift->id_tipe_pekerjaan = $request->id_tipe_pekerjaan;
         $jadwal_shift->id_user = $request->id_user;
         $jadwal_shift->tanggal = $request->tanggal;
@@ -184,7 +185,7 @@ class JadwalShiftController extends Controller
     {
         // Validate the form data
         $request->validate([
-            'jam_kerja' => 'required|string',
+            'id_jam' => 'required|string',
             'id_tipe_pekerjaan' => 'required|string', 
             'tanggal_mulai' => 'required|date',
             'tanggal_akhir' => 'required|date',
@@ -198,7 +199,7 @@ class JadwalShiftController extends Controller
         for ($date = $startDate; $date <= $endDate; $date->modify('+1 day')) {
             // Save new data with looping
             JadwalShift::create([
-                'jam_kerja' => $request->jam_kerja,
+                'id_jam' => $request->id_jam,
                 'id_tipe_pekerjaan' => $request->id_tipe_pekerjaan,
                 'tanggal' => $date->format('Y-m-d'), // Assign the current date in loop
                 'id_outlet' => $id,
@@ -225,6 +226,6 @@ class JadwalShiftController extends Controller
         $JadwalShift->delete();
 
         // Redirect kembali dengan pesan sukses
-        return redirect()->back()->with('success', 'Jadwal Shift berhasil ditambahkan.');
+        return redirect()->back()->with('success', 'Jadwal Shift berhasil dihapus.');
     }
 }
