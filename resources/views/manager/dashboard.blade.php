@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="d-sm-flex align-items-center justify-content-between">
-    <h1 class="h2 text-gray-800">Jadwal Shift Anda</h1>
+    <h1 class="h2 text-gray-800">Jadwal Shift Pegawai</h1>
 </div>
 
 <div class="row">
