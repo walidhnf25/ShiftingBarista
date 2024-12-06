@@ -13,25 +13,74 @@ class AuthController extends Controller
 {
     public function proseslogin(Request $request)
     {
-        // Cek kredensial login dengan guard 'user'
-        if (Auth::guard('user')->attempt(['username' => $request->username, 'password' => $request->password])) {
-            // Ambil pengguna yang sedang login
-            $user = Auth::guard('user')->user();
+        // Validasi input
+        $request->validate([
+            'username' => 'required',
+            'password' => 'required',
+        ]);
 
-            // Periksa role pengguna dan arahkan ke halaman yang sesuai
+        // Cek kredensial login menggunakan API eksternal
+        $response = Http::post('https://api-gateway.telkomuniversity.ac.id/issueauth', [
+            'username' => $request->username,
+            'password' => $request->password,
+        ]);
+
+        if ($response->failed()) {
+            // Jika API gagal atau kredensial salah
+            return back()->with(['warning' => 'Kredensial yang Anda masukkan salah']);
+        }
+
+        // Mendapatkan token dari API
+        $token = $response->json()['token'];
+
+        // Dapatkan profil pengguna dari API menggunakan token
+        $profileResponse = Http::withToken($token)->get('https://api-gateway.telkomuniversity.ac.id/issueprofile');
+
+        if ($profileResponse->failed()) {
+            // Jika gagal mengambil profil pengguna
+            return back()->with(['warning' => 'Gagal mengambil profil pengguna']);
+        }
+
+        // Mendapatkan data profil pengguna
+        $profile = $profileResponse->json();
+
+        // Cek apakah pengguna sudah ada di database berdasarkan email
+        $user = User::where('email', $profile['email'])->first();
+
+        // Jika pengguna belum ada, buat akun baru
+        if (!$user) {
+            $user = new User();
+            $user->username = $profile['user'];
+            $user->name = $profile['fullname'];
+            $user->email = $profile['email'];
+            $user->role = 'Staff';  // Atur role sesuai dengan API atau kebijakan aplikasi
+            $user->password = Hash::make($request->password); // Enkripsi password jika diperlukan
+            $user->save();
+
+            // Login pengguna setelah berhasil dibuat
+            Auth::guard('user')->login($user);
+
+            // Redirect berdasarkan role pengguna
             if ($user->role === 'Staff') {
-                return redirect('/staffdashboard');
+                return redirect('/staffdashboard')->with(['success' => 'Akun berhasil dibuat dan login otomatis.']);
             } elseif ($user->role === 'Manager') {
-                return redirect('/managerdashboard');
-            } else {
-                // Jika role tidak sesuai, logout dan beri peringatan
-                Auth::guard('user')->logout();
-                return redirect('/')->with(['warning' => 'Role tidak diizinkan.']);
+                return redirect('/managerdashboard')->with(['success' => 'Akun berhasil dibuat dan login otomatis.']);
             }
         } else {
-            // Jika login gagal
-            return redirect('/')->with(['warning' => 'Username atau Password salah']);
+            // Jika pengguna sudah ada, login pengguna
+            Auth::guard('user')->login($user);
+
+            // Redirect berdasarkan role pengguna
+            if ($user->role === 'Staff') {
+                return redirect('/staffdashboard')->with(['success' => 'Login berhasil.']);
+            } elseif ($user->role === 'Manager') {
+                return redirect('/managerdashboard')->with(['success' => 'Login berhasil.']);
+            }
         }
+
+        // Jika role pengguna tidak sesuai, logout dan beri peringatan
+        Auth::guard('user')->logout();
+        return redirect('/')->with(['warning' => 'Role tidak diizinkan.']);
     }
 
     public function authSSO(Request $request)
