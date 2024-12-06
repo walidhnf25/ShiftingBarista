@@ -25,19 +25,25 @@
 
 <body class="">
 
-    <div class="container min-vh-100 d-flex justify-content-center align-items-center">
+    <div class=" min-vh-100 d-flex justify-content-center align-items-center position-relative  ">
+        <div class="position-absolute w-100 h-50 bottom-0 " style="
+            background-image: url('/img/lakesidefnb.png'); 
+            background-size:contain; 
+            background-position: center;
+            background-repeat:no-repeat;
+            bottom:0;
+            ">a</div>
 
     <!-- Outer Row -->
-    <div class="col-md-9 col-lg-6">
+    <div class="col-lg-4">
 
         <div class="card o-hidden border-0 shadow shadow-red my-5">
 
             <!-- Nested Row within Card Body -->
-            <div class="col-lg-12 bg-gradient-primary">
+            <div class="col-lg-12 bg-gradient-danger">
                 <div class="py-5 px-4">
                     <div class="text-center">
-                        <h1 class="h4 text-white">Daftar Melalui SSO</h1>
-                        <p class="mb-3 text-white">Daftarkan diri anda menggunakan SSO Telkom University</p>
+                        <h1 class="h4 text-white mb-3">Login Melalui SSO</h1>
                     </div>
                     <div class="text-center text-white">
                         <i class="fas fa-mug-hot fa-3x rotate-n-15 mb-3"></i>
@@ -72,13 +78,15 @@
                                 </button>
                         </div>
 
-                        <button type="submit" class="btn btn-google btn-block">Daftar</button>
+                        <button type="submit" class="btn btn-google btn-block mb-3">Masuk Melalui SSO</button>
                     </form>
 
-                    <hr>
                     <div class="text-center">
-                        <span class="medium text-white" >Kembali halaman <a href="{{ route('login')}}" style="color: red;">Login</a> </span>
+                        <p class="mb-3 text-white">ATAU</p>
                     </div>
+                    <a href="{{ route('login')}}" class="btn bg-gradient-primary text-white btn-block">
+                        Masuk melalui No. Telepon
+                    </a>
                 </div>
             </div>
 

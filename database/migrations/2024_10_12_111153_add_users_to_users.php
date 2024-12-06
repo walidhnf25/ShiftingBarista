@@ -20,7 +20,9 @@ class AddUsersToUsers extends Migration
                 'role' => 'Manager',
                 'name' => 'Manager',
                 'username' => 'manager123',
+                'avail_register' => Null,
                 'email' => 'manager@gmail.com',
+                'no_telepon' => null,
                 'email_verified_at' => null,
                 'password' => Hash::make('123456'), // Hash the password
                 'remember_token' => null,
@@ -32,7 +34,9 @@ class AddUsersToUsers extends Migration
                 'name' => 'Staff',
                 'role' => 'Staff',
                 'username' => 'staff123',
+                'avail_register' => 'Yes',
                 'email' => 'staff@gmail.com',
+                'no_telepon' => null,
                 'email_verified_at' => null,
                 'password' => Hash::make('123456'), // Hash the password
                 'remember_token' => null,
