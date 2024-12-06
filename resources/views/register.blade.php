@@ -79,11 +79,11 @@
                                 </button>
                         </div>
 
-                        <button type="submit" class="btn bg-gradient-secondary text-white btn-block mb-3">Daftar Akun</button>
+                        <button type="submit" class="btn bg-gradient-secondary text-white btn-block mb-2">Daftar Akun</button>
                     </form>
 
                     <div class="text-center">
-                        <p class="mb-3" style="color: black;">SUDAH MEMILIKI AKUN?</p>
+                        <p class="mb-2" style="color: black;">SUDAH MEMILIKI AKUN?</p>
                     </div>
                     <a href="{{ route('login')}}" class="btn bg-gradient-primary text-white btn-block">
                         Masuk melalui No. Telepon

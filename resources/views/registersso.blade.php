@@ -45,9 +45,6 @@
                     <div class="text-center">
                         <h1 class="h4 text-white mb-3">Login Melalui SSO</h1>
                     </div>
-                    <div class="text-center text-white">
-                        <i class="fas fa-mug-hot fa-3x rotate-n-15 mb-3"></i>
-                    </div>
                     <div class="text-center">
                         @php
                             $messagewarning = Session::get('warning');
@@ -78,11 +75,11 @@
                                 </button>
                         </div>
 
-                        <button type="submit" class="btn btn-google btn-block mb-3">Masuk Melalui SSO</button>
+                        <button type="submit" class="btn btn-google btn-block mb-2">Masuk Melalui SSO</button>
                     </form>
 
                     <div class="text-center">
-                        <p class="mb-3 text-white">ATAU</p>
+                        <p class="mb-2 text-white">ATAU</p>
                     </div>
                     <a href="{{ route('login')}}" class="btn bg-gradient-primary text-white btn-block">
                         Masuk melalui No. Telepon
