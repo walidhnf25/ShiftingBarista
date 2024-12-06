@@ -55,6 +55,10 @@ Route::get('/registersso', function () {
     return view('registersso');
 })->name('registersso');
 
+Route::get('/register', function () {
+    return view('register');
+})->name('register');
+
 // Code Walid
 route::middleware(['guest:user'])->group(function () {
     Route::get('/', function () {
@@ -62,6 +66,7 @@ route::middleware(['guest:user'])->group(function () {
     })->name('login');
      Route::post('/proseslogin', [AuthController::class, 'proseslogin'])->name('proseslogin');
      Route::post('/authSSO' , [AuthController::class, 'authSSO'])->name('authSSO');
+     Route::post('/registerakun', [AuthController::class, 'registerakun'])->name('registerakun');
 });
 
 

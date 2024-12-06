@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Register</title>
+    <title>Shifting Barista</title>
 
     <!-- Custom fonts for this template-->
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -19,74 +19,86 @@
 
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
-
 </head>
 
-<body class="bg-gradient-primary">
 
-    <div class="container">
 
-        <div class="card o-hidden border-0 shadow-lg my-5">
-            <div class="card-body p-0">
-                <!-- Nested Row within Card Body -->
-                <div class="row">
-                    <div class="col-lg-5 d-none d-lg-block bg-register-image"></div>
-                    <div class="col-lg-7">
-                        <div class="p-5">
-                            <div class="text-center">
-                                <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
-                            </div>
-                            <form class="user">
-                                <div class="form-group row">
-                                    <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input type="text" class="form-control form-control-user" id="exampleFirstName"
-                                            placeholder="First Name">
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <input type="text" class="form-control form-control-user" id="exampleLastName"
-                                            placeholder="Last Name">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <input type="email" class="form-control form-control-user" id="exampleInputEmail"
-                                        placeholder="Email Address">
-                                </div>
-                                <div class="form-group row">
-                                    <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input type="password" class="form-control form-control-user"
-                                            id="exampleInputPassword" placeholder="Password">
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <input type="password" class="form-control form-control-user"
-                                            id="exampleRepeatPassword" placeholder="Repeat Password">
-                                    </div>
-                                </div>
-                                <a href="login.html" class="btn btn-primary btn-user btn-block">
-                                    Register Account
-                                </a>
-                                <hr>
-                                <a href="index.html" class="btn btn-google btn-user btn-block">
-                                    <i class="fab fa-google fa-fw"></i> Register with Google
-                                </a>
-                                <a href="index.html" class="btn btn-facebook btn-user btn-block">
-                                    <i class="fab fa-facebook-f fa-fw"></i> Register with Facebook
-                                </a>
-                            </form>
-                            <hr>
-                            <div class="text-center">
-                                <a class="small" href="forgot-password.html">Forgot Password?</a>
-                            </div>
-                            <div class="text-center">
-                                <a class="small" href="login.html">Already have an account? Login!</a>
-                            </div>
-                        </div>
+<body class="">
+
+    <div class=" min-vh-100 d-flex justify-content-center align-items-center position-relative  ">
+        <div class="position-absolute w-100 h-50 bottom-0 " style="
+            background-image: url('/img/lakesidefnb.png'); 
+            background-size:contain; 
+            background-position: center;
+            background-repeat:no-repeat;
+            bottom:0;
+            ">a</div>
+
+    <!-- Outer Row -->
+    <div class="col-lg-4">
+
+        <div class="card o-hidden border-0 shadow shadow-red my-5">
+
+            <!-- Nested Row within Card Body -->
+            <div class="col-lg-12">
+                <div class="py-5 px-4">
+                    <div class="text-center">
+                        <h1 class="h4 text-gradient-primary mb-3">Registrasi Akun</h1>
                     </div>
+                    <div class="text-center">
+                        @php
+                            $messagewarning = Session::get('warning');
+                        @endphp
+                        @if ($messagewarning)
+                            <div class="alert alert-warning">
+                                {{ $messagewarning }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        @endif
+                    </div>
+                    <form class="user" action="{{ route('registerakun') }}" method="POST">
+                        @csrf <!-- Token CSRF untuk keamanan -->
+                        <div class="form-group">
+                            <label for="name" class="text-black">Nama Lengkap</label>
+                            <input type="text" name="name" id="name" class="form-control"
+                                placeholder="Masukan Nama Anda" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="no_telepon" class="text-black">No. Telepon</label>
+                            <input type="text" name="no_telepon" id="no_telepon" class="form-control"
+                                placeholder="Masukan No. Telepon Anda" required>
+                        </div>
+                        <div class="form-group position-relative">
+                            <label for="password" class="text-black">Password</label>
+                            <input type="password" name="password" id="password" class="form-control"
+                                id="exampleInputPassword" placeholder="Password" required>
+                                <button type="button" onclick="togglePassword()" style="position: absolute; right: 10px; top: 75%; transform: translateY(-50%); border: none; background: none;">
+                                    <i id="toggleIcon" class="fas fa-eye"></i>
+                                </button>
+                        </div>
+
+                        <button type="submit" class="btn bg-gradient-secondary text-white btn-block mb-3">Daftar Akun</button>
+                    </form>
+
+                    <div class="text-center">
+                        <p class="mb-3" style="color: black;">SUDAH MEMILIKI AKUN?</p>
+                    </div>
+                    <a href="{{ route('login')}}" class="btn bg-gradient-primary text-white btn-block">
+                        Masuk melalui No. Telepon
+                    </a>
+                    <a href="{{ route('registersso')}}" class="btn btn-google btn-block ">
+                        Masuk  melalui SSO
+                    </a>
                 </div>
             </div>
+
         </div>
 
     </div>
 
+    </div>
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -96,6 +108,22 @@
 
     <!-- Custom scripts for all pages-->
     <script src="js/sb-admin-2.min.js"></script>
+
+    <script>
+        function togglePassword() {
+        const passwordInput = document.getElementById("password");
+        const toggleIcon = document.getElementById("toggleIcon");
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            toggleIcon.classList.remove("fa-eye");
+            toggleIcon.classList.add("fa-eye-slash");
+        } else {
+            passwordInput.type = "password";
+            toggleIcon.classList.remove("fa-eye-slash");
+            toggleIcon.classList.add("fa-eye");
+        }
+    }
+    </script>
 
 </body>
 

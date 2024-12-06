@@ -35,7 +35,7 @@
             ">a</div>
 
     <!-- Outer Row -->
-    <div class="col-lg-3">
+    <div class="col-lg-4">
 
         <div class="card o-hidden border-1 my-5">
 
@@ -89,7 +89,16 @@
                                     <i id="toggleIcon" class="fas fa-eye"></i>
                                 </button>
                         </div>
-                        <button type="submit" class="btn bg-gradient-danger text-white  btn-block mt-4">Masuk</button>
+                        <button type="submit" class="btn bg-gradient-primary text-white  btn-block mt-4">Masuk Melalui No. Telepon</button>
+                        <a href="{{ route('register')}}" class="btn bg-gradient-secondary text-white btn-block mb-3">
+                            Registrasi Akun
+                        </a>
+                        <div class="text-center">
+                            <p class="mb-3" style="color: black;">ATAU</p>
+                        </div>
+                        <a href="{{ route('registersso')}}" class="btn btn-google btn-block ">
+                            Masuk  melalui SSO
+                        </a>
                     </form>
 
                 </div>
