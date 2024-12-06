@@ -73,10 +73,9 @@
                     <form class="user" action="{{ route('proseslogin') }}" method="POST">
                         @csrf <!-- Token CSRF untuk keamanan -->
                         <div class="form-group">
-                            <label for="username" class="text-black">Username</label>
-                            <input type="username" name="username" id="username" class="form-control"
-                                id="exampleInputusername" aria-describedby="emailHelp"
-                                placeholder="Masukan Username" required>
+                            <label for="no_telepn" class="text-black">No. Telepon</label>
+                            <input type="text" name="no_telepon" id="no_telepon" class="form-control"
+                                placeholder="Masukan No. Telepon" required>
                         </div>
                         <div class="form-group position-relative">
                             <label for="password" class="text-black">Password</label>

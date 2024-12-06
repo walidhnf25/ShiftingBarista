@@ -14,7 +14,7 @@ class AuthController extends Controller
     public function proseslogin(Request $request)
     {
         // Cek kredensial login dengan guard 'user'
-        if (Auth::guard('user')->attempt(['username' => $request->username, 'password' => $request->password])) {
+        if (Auth::guard('user')->attempt(['no_telepon' => $request->no_telepon, 'password' => $request->password])) {
             // Ambil pengguna yang sedang login
             $user = Auth::guard('user')->user();
 

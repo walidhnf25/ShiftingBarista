@@ -22,7 +22,7 @@ class AddUsersToUsers extends Migration
                 'username' => 'manager123',
                 'avail_register' => Null,
                 'email' => 'manager@gmail.com',
-                'no_telepon' => null,
+                'no_telepon' => '0812345678910',
                 'email_verified_at' => null,
                 'password' => Hash::make('123456'), // Hash the password
                 'remember_token' => null,
@@ -36,7 +36,7 @@ class AddUsersToUsers extends Migration
                 'username' => 'staff123',
                 'avail_register' => 'Yes',
                 'email' => 'staff@gmail.com',
-                'no_telepon' => null,
+                'no_telepon' => '0812345678911',
                 'email_verified_at' => null,
                 'password' => Hash::make('123456'), // Hash the password
                 'remember_token' => null,
