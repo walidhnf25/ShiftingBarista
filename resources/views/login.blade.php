@@ -89,11 +89,7 @@
                                     <i id="toggleIcon" class="fas fa-eye"></i>
                                 </button>
                         </div>
-                        <button type="submit" class="btn bg-gradient-primary text-white  btn-block mt-4">Masuk</button>
-                        <hr>
-                        <a href="{{ route('registersso')}}" class="btn btn-google btn-block ">
-                            Daftar melalui SSO
-                        </a>
+                        <button type="submit" class="btn bg-gradient-danger text-white  btn-block mt-4">Masuk</button>
                     </form>
 
                 </div>
