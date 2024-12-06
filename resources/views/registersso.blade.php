@@ -32,7 +32,7 @@
             background-position: center;
             background-repeat:no-repeat;
             bottom:0;
-            ">a</div>
+            "></div>
 
     <!-- Outer Row -->
     <div class="col-lg-4">
