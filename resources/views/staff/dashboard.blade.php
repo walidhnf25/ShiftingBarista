@@ -136,17 +136,36 @@
 
     <!-- Jadwal Shift hari ini Section -->
     <div class="col-lg-6 d-flex">
-        <div class="card shadow mb-4 flex-fill">
-            <div class="card-body ">
-                <h4 class="card-title">Jadwal Shift Anda Hari ini</h4>
-                <div class="d-flex flex-column" style="gap:16px">
-                    @foreach ($allShiftsToday as $shift)
-                        <div class="mb-3 border rounded p-3">
-                            <p class="font-weight-bold">{{ $outletMapping[$shift->id_outlet] ?? 'Unknown Outlet' }}</p>
-                            
-                            <!-- Progress Bar -->
-                            <div class="progress" style="height: 10px;">
-                                @php
+    <div class="card shadow mb-4 flex-fill">
+        <div class="card-body">
+            <h4 class="card-title">Jadwal Shift Anda Hari ini</h4>
+            <div class="d-flex flex-column" style="gap:16px">
+                @foreach ($allShiftsToday as $shift)
+                    @php
+                        $currentTime = now('Asia/Jakarta');
+                        $startTime = $shift->jamShift ? \Carbon\Carbon::parse($shift->jamShift->jam_mulai, 'Asia/Jakarta') : null;
+                        $endTime = $shift->jamShift ? \Carbon\Carbon::parse($shift->jamShift->jam_selesai, 'Asia/Jakarta') : null;
+
+                        // Determine the status based on time
+                        $status = 'Sudah Berakhir';
+                        if ($startTime && $endTime) {
+                            if ($currentTime->between($startTime, $endTime)) {
+                                $status = 'Dalam Pengerjaan';
+                            } elseif ($currentTime < $startTime) {
+                                $status = 'Akan Segera Dimulai';
+                            }
+                        }
+
+                        // Define dynamic card classes
+                        $cardClass = $status === 'Sudah Berakhir' ? 'bg-secondary text-white' : 'bg-white text-dark';
+                    @endphp
+
+                    <div class="mb-3 border rounded p-3 {{ $cardClass }}">
+                        <p class="font-weight-bold">{{ $outletMapping[$shift->id_outlet] ?? 'Unknown Outlet' }}</p>
+                        
+                        <!-- Progress Bar -->
+                        <div class="progress" style="height: 10px;">
+                        @php
                                     $progress = 0; // Default progress
                                     if ($shift->jamShift) {
                                         $currentTime = now('Asia/Jakarta');
@@ -162,60 +181,39 @@
                                     }
                                 @endphp
 
-                                <!-- Progress Bar -->
-                                <div class="progress-bar bg-success" 
-                                    style="width: {{ $progress }}%;" 
-                                    aria-valuenow="{{ $progress }}" 
-                                    aria-valuemin="0" 
-                                    aria-valuemax="100">
-                                </div>
-                            </div>
-
-                            <!-- Shift Details -->
-                            <div class="d-flex flex-column lg:flex-row justify-content-between my-3">
-                                <!-- Status Pekerjaan -->
-                                @php
-                                    $currentTime = now('Asia/Jakarta');
-                                    $startTime = $shift->jamShift ? \Carbon\Carbon::parse($shift->jamShift->jam_mulai, 'Asia/Jakarta') : null;
-                                    $endTime = $shift->jamShift ? \Carbon\Carbon::parse($shift->jamShift->jam_selesai, 'Asia/Jakarta') : null;
-
-                                    // Determine the status based on time
-                                    $status = 'Sudah Berakhir';
-                                    if ($startTime && $endTime) {
-                                        if ($currentTime->between($startTime, $endTime)) {
-                                            $status = 'Dalam Pengerjaan';
-                                        } elseif ($currentTime < $startTime) {
-                                            $status = 'Akan Segera Dimulai';
-                                        }
-                                    }
-                                @endphp
-
-                                <span><strong>Status Pekerjaan:</strong> {{ $status }}</span>
-                                
-                                <!-- Jadwal -->
-                                <span><strong>Jadwal:</strong> 
-                                    {{ $shift->jamShift ? $shift->jamShift->jam_mulai . ' - ' . $shift->jamShift->jam_selesai : 'N/A' }}
-                                </span>
-                                
-                                <!-- Pekerjaan -->
-                                <span><strong>Pekerjaan:</strong> 
-                                    {{ $shift->tipePekerjaan ? $shift->tipePekerjaan->tipe_pekerjaan : 'N/A' }}
-                                </span>
+                            <div class="progress-bar bg-success" 
+                                style="width: {{ $progress }}%;" 
+                                aria-valuenow="{{ $progress }}" 
+                                aria-valuemin="0" 
+                                aria-valuemax="100">
                             </div>
                         </div>
-                    @endforeach
-                    @if ($allShiftsToday->isEmpty())
-                    <div class="d-flex flex-column align-items-center justify-content-center mb-3"> style="min-height: 300px;">
+
+                        <!-- Shift Details -->
+                        <div class="d-flex flex-column lg:flex-row justify-content-between my-3">
+                            <span><strong>Status Pekerjaan:</strong> {{ $status }}</span>
+                            <span><strong>Jadwal:</strong> 
+                                {{ $shift->jamShift ? $shift->jamShift->jam_mulai . ' - ' . $shift->jamShift->jam_selesai : 'N/A' }}
+                            </span>
+                            <span><strong>Pekerjaan:</strong> 
+                                {{ $shift->tipePekerjaan ? $shift->tipePekerjaan->tipe_pekerjaan : 'N/A' }}
+                            </span>
+                        </div>
+                    </div>
+                @endforeach
+                @if ($allShiftsToday->isEmpty())
+                    <div class="d-flex flex-column align-items-center justify-content-center mb-3" style="min-height: 300px;">
                         <p class="font-weight-bold"><lottie-player src="https://lottie.host/b131c2ac-8b3b-40d5-90a7-a4072bf7dd59/2lzD12702I.json" background="##fff" speed="1" style="width: 100px; height: 100px" loop autoplay direction="1" mode="normal"></lottie-player></p>
                         <p class="m-0 text-danger font-weight-bold" style="font-size: 18px">
                             Jadwal Shift hari ini tidak ada
                         </p>
                     </div>
-                    @endif
-                </div>
+                @endif
             </div>
         </div>
     </div>
+</div>
+
 </div>
 
 @endsection
