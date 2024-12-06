@@ -45,9 +45,6 @@
                     <div class="text-center">
                         <h1 class="h4 text-gradient-primary mb-3" id="typing-text"></h1>
                     </div>
-                    <div class="text-center text-gradient-primary">
-                        <i class="fas fa-mug-hot fa-3x rotate-n-15 mb-3"></i>
-                    </div>
                     <div class="text-center">
                         @php
                             $messagewarning = Session::get('warning');
@@ -90,11 +87,11 @@
                                 </button>
                         </div>
                         <button type="submit" class="btn bg-gradient-primary text-white  btn-block mt-4">Masuk Melalui No. Telepon</button>
-                        <a href="{{ route('register')}}" class="btn bg-gradient-secondary text-white btn-block mb-3">
+                        <a href="{{ route('register')}}" class="btn bg-gradient-secondary text-white btn-block mb-2">
                             Registrasi Akun
                         </a>
                         <div class="text-center">
-                            <p class="mb-3" style="color: black;">ATAU</p>
+                            <p class="mb-2" style="color: black;">ATAU</p>
                         </div>
                         <a href="{{ route('registersso')}}" class="btn btn-google btn-block ">
                             Masuk  melalui SSO
