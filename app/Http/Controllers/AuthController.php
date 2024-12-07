@@ -76,6 +76,7 @@ class AuthController extends Controller
             $user->username = $profile['user'];
             $user->name = $profile['fullname'];
             $user->email = $profile['email'];
+            $user->no_telepon = $profile['phone']; // Menyimpan nomor telepon
             $user->role = 'Staff';  // Atur role sesuai dengan API atau kebijakan aplikasi
             $user->avail_register = 'Yes';
             $user->password = Hash::make($request->password); // Enkripsi password jika diperlukan
