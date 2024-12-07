@@ -102,32 +102,33 @@ class AuthController extends Controller
         // Validasi data yang diterima dari form
         $request->validate([
             'name' => 'required|string|max:255',
-            'no_telepon' => 'required|unique:users,no_telepon|regex:/^\+?[0-9\s\-\(\)]*$/|max:15',
+            'no_telepon' => 'required|string|max:16',
             'password' => 'required|string', // Tanpa konfirmasi password
         ]);
-
+    
         // Cek apakah no_telepon sudah ada di database
         $existingUser = User::where('no_telepon', $request->no_telepon)->first();
-
+    
         if ($existingUser) {
-            // Jika nomor telepon sudah terdaftar
-            return back()->with(['warning' => 'Akun gagal dibuat']);
+            // Jika nomor telepon sudah terdaftar, kirimkan pesan warning dan kembali ke halaman register
+            return redirect('/register')->with(['warning' => 'Nomor Telephone yang Anda masukan sudah digunakan.']);
         }
-
-        // Simpan data ke dalam tabel users
+    
+        // Simpan data ke dalam tabel users jika nomor belum ada
         $user = new User();
         $user->name = $request->name;
-        $user->username = null;
+        $user->username = $request->name;
         $user->no_telepon = $request->no_telepon;
         $user->password = Hash::make($request->password); // Mengenkripsi password
         $user->role = 'Staff';
         $user->avail_register = 'Yes';
         $user->email = null;
         $user->save();
-
+    
         // Redirect setelah registrasi berhasil
         return redirect()->route('login')->with('success', 'Akun berhasil dibuat! Silakan login.');
     }
+    
 
     public function proseslogout()
     {
