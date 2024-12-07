@@ -101,7 +101,7 @@ class AuthController extends Controller
 
         // Jika role tidak sesuai, logout dan beri peringatan
         Auth::guard('user')->logout();
-        return redirect('/')->with(['warning' => 'Role tidak diizinkan.']);
+        return redirect('/registersso')->with(['warning' => 'Role tidak diizinkan.']);
     }
 
     public function registerakun(Request $request)
