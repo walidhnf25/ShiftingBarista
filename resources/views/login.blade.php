@@ -19,20 +19,34 @@
 
     <!-- Custom styles for this template-->
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
+
+    <style>
+        .image-login{
+            background-image: url('/img/lakesidefnb.png'); 
+            background-size:contain; 
+            background-position: center;
+            background-repeat:no-repeat;
+            bottom:0;
+        }
+
+        @media (max-width: 700px) {
+        .image-login {
+        position: absolute;
+        bottom:-117px;
+    }
+}
+    </style>
 </head>
 
 
 
 <body class="">
 
-    <div class=" min-vh-100 d-flex justify-content-center align-items-center position-relative  ">
-        <div class="position-absolute w-100 h-50 bottom-0 " style="
-            background-image: url('/img/lakesidefnb.png'); 
-            background-size:contain; 
-            background-position: center;
-            background-repeat:no-repeat;
-            bottom:0;
-            "></div>
+    <div class=" min-vh-100 d-flex justify-content-center align-items-center position-relative  overflow-hidden ">
+        <div class="position-absolute w-100 h-50  image-login d-flex align-items-end">
+        
+
+        </div>
 
     <!-- Outer Row -->
     <div class="col-lg-4">
