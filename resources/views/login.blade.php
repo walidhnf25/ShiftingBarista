@@ -85,14 +85,14 @@
                                     <i id="toggleIcon" class="fas fa-eye"></i>
                                 </button>
                         </div>
-                        <button type="submit" class="btn bg-gradient-primary text-white  btn-block mt-4">Masuk Melalui No. Telepon</button>
+                        <button type="submit" class="btn bg-gradient-success text-white  btn-block mt-4">Masuk Melalui No. Telepon</button>
                         <a href="{{ route('register')}}" class="btn bg-gradient-secondary text-white btn-block mb-2">
                             Registrasi Akun
                         </a>
                         <div class="text-center">
                             <p class="mb-2" style="color: black;">ATAU</p>
                         </div>
-                        <a href="{{ route('registersso')}}" class="btn btn-google btn-block ">
+                        <a href="{{ route('registersso')}}" class="btn bg-gradient-danger text-white btn-block ">
                             Masuk  melalui SSO
                         </a>
                     </form>

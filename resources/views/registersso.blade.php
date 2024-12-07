@@ -75,13 +75,13 @@
                                 </button>
                         </div>
 
-                        <button type="submit" class="btn btn-google btn-block mb-2">Masuk Melalui SSO</button>
+                        <button type="submit" class="btn bg-gradient-danger text-white btn-block mb-2">Masuk Melalui SSO</button>
                     </form>
 
                     <div class="text-center">
                         <p class="mb-2 text-white">ATAU</p>
                     </div>
-                    <a href="{{ route('login')}}" class="btn bg-gradient-primary text-white btn-block">
+                    <a href="{{ route('login')}}" class="btn bg-gradient-success text-white btn-block">
                         Masuk melalui No. Telepon
                     </a>
                 </div>

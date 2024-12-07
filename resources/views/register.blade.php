@@ -85,10 +85,10 @@
                     <div class="text-center">
                         <p class="mb-2" style="color: black;">SUDAH MEMILIKI AKUN?</p>
                     </div>
-                    <a href="{{ route('login')}}" class="btn bg-gradient-primary text-white btn-block">
+                    <a href="{{ route('login')}}" class="btn bg-gradient-success text-white btn-block">
                         Masuk melalui No. Telepon
                     </a>
-                    <a href="{{ route('registersso')}}" class="btn btn-google btn-block ">
+                    <a href="{{ route('registersso')}}" class="btn bg-gradient-danger text-white btn-block ">
                         Masuk  melalui SSO
                     </a>
                 </div>
