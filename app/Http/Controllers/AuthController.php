@@ -48,8 +48,8 @@ class AuthController extends Controller
             'password' => $request->password,
         ]);
 
+        // Jika API gagal atau kredensial salah
         if ($response->failed()) {
-            // Jika API gagal atau kredensial salah
             return back()->with(['warning' => 'Kredensial yang Anda masukkan salah']);
         }
 
@@ -59,8 +59,8 @@ class AuthController extends Controller
         // Dapatkan profil pengguna dari API menggunakan token
         $profileResponse = Http::withToken($token)->get('https://api-gateway.telkomuniversity.ac.id/issueprofile');
 
+        // Jika gagal mengambil profil pengguna
         if ($profileResponse->failed()) {
-            // Jika gagal mengambil profil pengguna
             return back()->with(['warning' => 'Gagal mengambil profil pengguna']);
         }
 
@@ -85,15 +85,21 @@ class AuthController extends Controller
             // Login pengguna setelah berhasil dibuat
             Auth::guard('user')->login($user);
 
-            return redirect('/staffdashboard')->with(['success' => 'Login Berhasil.']);
-        } else {
-            // Jika pengguna sudah ada, login pengguna
-            Auth::guard('user')->login($user);
-
-            return redirect('/staffdashboard')->with(['success' => 'Login berhasil.']);
+            // Redirect berdasarkan role
+            return redirect()->route('staffdashboard')->with(['success' => 'Login Berhasil.']);
         }
 
-        // Jika role pengguna tidak sesuai, logout dan beri peringatan
+        // Jika pengguna sudah ada, login pengguna
+        Auth::guard('user')->login($user);
+
+        // Pengecekan role pengguna dan redirect sesuai role
+        if ($user->role === 'Staff') {
+            return redirect()->route('staffdashboard')->with(['success' => 'Login Berhasil.']);
+        } elseif ($user->role === 'Manager') {
+            return redirect()->route('managerdashboard')->with(['success' => 'Login Berhasil.']);
+        }
+
+        // Jika role tidak sesuai, logout dan beri peringatan
         Auth::guard('user')->logout();
         return redirect('/')->with(['warning' => 'Role tidak diizinkan.']);
     }
