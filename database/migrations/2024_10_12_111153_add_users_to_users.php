@@ -20,7 +20,7 @@ class AddUsersToUsers extends Migration
                 'role' => 'Manager',
                 'name' => 'Manager',
                 'username' => 'manager123',
-                'avail_register' => Null,
+                'avail_register' => 'Yes',
                 'email' => 'manager@gmail.com',
                 'no_telepon' => '0812345678910',
                 'email_verified_at' => null,
