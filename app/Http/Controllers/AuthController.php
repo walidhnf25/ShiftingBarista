@@ -103,7 +103,7 @@ class AuthController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'no_telepon' => 'required|unique:users,no_telepon|regex:/^\+?[0-9\s\-\(\)]*$/|max:15',
-            'password' => 'required|string|min:5', // Tanpa konfirmasi password
+            'password' => 'required|string', // Tanpa konfirmasi password
         ]);
 
         // Cek apakah no_telepon sudah ada di database
