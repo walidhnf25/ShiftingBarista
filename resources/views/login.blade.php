@@ -144,6 +144,10 @@
             toggleIcon.classList.add("fa-eye");
         }
     }
+    // Menghilangkan alert setelah beberapa detik
+    setTimeout(function() {
+        $('.alert').fadeOut('slow');
+    }, 2000);
     </script>
 
 </body>

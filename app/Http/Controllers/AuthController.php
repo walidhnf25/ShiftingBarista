@@ -99,12 +99,20 @@ class AuthController extends Controller
 
     public function registerakun(Request $request)
     {
-        // Validasi data yang diterima dari form tanpa konfirmasi password
+        // Validasi data yang diterima dari form
         $request->validate([
             'name' => 'required|string|max:255',
             'no_telepon' => 'required|unique:users,no_telepon|regex:/^\+?[0-9\s\-\(\)]*$/|max:15',
-            'password' => 'required|string|min:8', // Tanpa konfirmasi password
+            'password' => 'required|string|min:5', // Tanpa konfirmasi password
         ]);
+
+        // Cek apakah no_telepon sudah ada di database
+        $existingUser = User::where('no_telepon', $request->no_telepon)->first();
+
+        if ($existingUser) {
+            // Jika nomor telepon sudah terdaftar
+            return back()->with(['warning' => 'Akun gagal dibuat']);
+        }
 
         // Simpan data ke dalam tabel users
         $user = new User();
