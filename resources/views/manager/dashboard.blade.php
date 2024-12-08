@@ -12,16 +12,16 @@
 </div>
 <div class="row">
     <div class="col-md-3">
-        <button class="btn text-white w-100" style="background-color:red;" disabled>Harmony Cafe</button>
+        <div class="text-white text-center w-100 py-2" style="background-color:red;">Harmony Cafe</div>
     </div>
     <div class="col-md-3">
-        <button class="btn text-white w-100" style="background-color: #1cc88a;" disabled>Literasi Cafe</button>
+        <div class="text-white text-center w-100 py-2" style="background-color: #1cc88a;">Literasi Cafe</div>
     </div>
     <div class="col-md-3">
-        <button class="btn text-white w-100" style="background-color: #4e73df;" disabled>Lakeside</button>
+        <div class="text-white text-center w-100 py-2" style="background-color: #4e73df;">Lakeside</div>
     </div>
     <div class="col-md-3">
-        <button class="btn text-white w-100" style="background-color: #f6c23e;" disabled>Lakeside FIT+</button>
+        <div class="text-white text-center w-100 py-2" style="background-color: #f6c23e;">Lakeside FIT+</div>
     </div>
 </div>
 
