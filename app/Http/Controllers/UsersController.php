@@ -104,10 +104,10 @@ class UsersController extends Controller
         $request->validate([
             'id' => 'nullable|integer|min:1',
             'name' => 'nullable|max:50',
-            'username' => 'required|max:50|unique:users,username,' . $id, // Validasi unique username, kecuali untuk pengguna ini
-            'email' => 'required|email|unique:users,email,' . $id, // Validasi unik email kecuali untuk pengguna ini
+            'username' => 'nullable|max:50|unique:users,username,' . $id, // Validasi unique username, kecuali untuk pengguna ini
+            'email' => 'nullable|email|unique:users,email,' . $id, // Validasi unik email kecuali untuk pengguna ini
             'password' => 'nullable|min:6', // Password tidak wajib, tetapi minimal 6 karakter
-            'role' => 'required|max:255',
+            'role' => 'nullable|max:255',
         ]);
 
         // Cari user berdasarkan ID
