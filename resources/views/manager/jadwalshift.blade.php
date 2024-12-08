@@ -96,7 +96,7 @@
                                 </td>
                                 <td>{{ $shift->tipePekerjaan ? $shift->tipePekerjaan->tipe_pekerjaan : 'N/A' }}</td>
                                 <td>{{ $outletMapping[$shift->id_outlet] }}</td>
-                                <td>{{ $shift->tanggal }}</td>
+                                <td>{{ \Carbon\Carbon::parse($shift->tanggal)->locale('id')->isoFormat('dddd') }}, {{ $shift->tanggal }}</td>
                                 <td>{{ $shift->user ? strtoupper($shift->user->name) : '-' }}</td>
                                 <td>
                                     <!-- Edit Button -->

@@ -69,7 +69,7 @@
                                 </td>
                                 <td>{{ $shift->tipePekerjaan ? $shift->tipePekerjaan->tipe_pekerjaan : 'N/A' }}</td>
                                 <td>{{ $outletMapping[$shift->id_outlet] }}</td>
-                                <td>{{ $shift->tanggal }}</td>
+                                <td>{{ \Carbon\Carbon::parse($shift->tanggal)->locale('id')->isoFormat('dddd') }}, {{ $shift->tanggal }}</td>
                                 <td>
                                     <select class="form-control select-user" data-shift-id="{{ $shift->id }}" required>
                                         <option value="" disabled selected>Pilih User</option>

@@ -43,7 +43,7 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $rs->jamShift ? $rs->jamShift->jam_mulai . ' - ' . $rs->jamShift->jam_selesai : 'N/A' }}</td>
-                                <td>{{ $rs->tanggal }}</td>
+                                <td>{{ \Carbon\Carbon::parse($rs->tanggal)->locale('id')->isoFormat('dddd') }}, {{ $rs->tanggal }}</td>
                                 <td>{{ $rs->tipePekerjaan ? $rs->tipePekerjaan->tipe_pekerjaan : 'N/A' }}</td>
                                 <td>
                                     <select name="selected_user[{{ $rs->id }}]" class="form-control" style="width: 250px;">
