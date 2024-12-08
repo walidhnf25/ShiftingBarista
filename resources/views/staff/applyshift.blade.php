@@ -76,7 +76,7 @@
                                         {{ $shift->jamShift ? $shift->jamShift->jam_mulai . ' - ' . $shift->jamShift->jam_selesai : 'N/A' }}
                                     </td>
                                     <td>{{ $shift->tipePekerjaan ? $shift->tipePekerjaan->tipe_pekerjaan : 'N/A' }}</td>
-                                    <td>{{ $shift->tanggal }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($shift->tanggal)->locale('id')->isoFormat('dddd') }}, {{ $shift->tanggal }}</td>
                                     <td>{{ $outletMapping[$shift->id_outlet] ?? 'Outlet Not Found' }}</td>
                                     <td>
                                         <a href="{{ route('getJadwalShift', $shift->id) }}" class="btn btn-outline-primary">+</a>
@@ -116,7 +116,7 @@
                                     {{ $shift->jamShift ? $shift->jamShift->jam_mulai . ' - ' . $shift->jamShift->jam_selesai : 'N/A' }}
                                 </td>
                                 <td>{{ $shift->tipePekerjaan ? $shift->tipePekerjaan->tipe_pekerjaan : 'N/A' }}</td>
-                                <td>{{ $shift->tanggal }}</td>
+                                <td>{{ \Carbon\Carbon::parse($shift->tanggal)->locale('id')->isoFormat('dddd') }}, {{ $shift->tanggal }}</td>
                                 <td>{{ $outletMapping[$shift->id_outlet] ?? 'Outlet Not Found' }}</td>
                                 <td>
                                     <button type="button" class="btn btn-outline-danger remove-from-cache" data-id="{{ $shift->id }}" disabled>-</button>
@@ -131,7 +131,7 @@
                                     {{ $shift->jamShift ? $shift->jamShift->jam_mulai . ' - ' . $shift->jamShift->jam_selesai : 'N/A' }}
                                 </td>
                                 <td>{{ $shift->tipePekerjaan ? $shift->tipePekerjaan->tipe_pekerjaan : 'N/A' }}</td>
-                                <td>{{ $shift->tanggal }}</td>
+                                <td>{{ \Carbon\Carbon::parse($shift->tanggal)->locale('id')->isoFormat('dddd') }}, {{ $shift->tanggal }}</td>
                                 <td>{{ $outletMapping[$shift->id_outlet] ?? 'Outlet Not Found' }}</td>
                                 <td>
                                     <form action="{{ route('removeFromCache', $shift->id) }}" method="POST" style="display: inline;">
