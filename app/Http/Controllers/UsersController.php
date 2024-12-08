@@ -143,10 +143,10 @@ class UsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($email)
+    public function destroy($id)
     {
         // Cari user berdasarkan ID
-        $user = User::where('email', $email);
+        $user = User::where('id', $id);
 
         // Jika user tidak ditemukan, berikan response gagal
         if (!$user) {

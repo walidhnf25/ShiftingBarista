@@ -130,7 +130,7 @@ Route::middleware(['auth:user', 'checkRole:Manager'])->group(function () {
     // add pegawai
     Route::get('/addpegawai', [UsersController::class,'index'])->name('addpegawai');
     Route::post('/addpegawai', [UsersController::class,'store'])->name('addpegawai.store');
-    Route::delete('/addpegawai/email/{email}', [UsersController::class, 'destroy'])->name('addpegawai.destroy');
+    Route::delete('/addpegawai/{id}', [UsersController::class, 'destroy'])->name('addpegawai.destroy');
     Route::put('/addpegawai/{id}', [UsersController::class, 'update'])->name('addpegawai.update');
 
     //jadwal shift
