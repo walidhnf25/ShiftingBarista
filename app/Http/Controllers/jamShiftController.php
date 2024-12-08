@@ -95,11 +95,6 @@ class jamShiftController extends Controller
             $existingJamShift = JamShift::where('jam_mulai', $request->jam_mulai)->first();
             $existingJamShift = JamShift::where('jam_selesai', $request->jam_selesai)->first();
 
-            if ($existingJamShift) {
-                // Jika sudah ada munculkan pesan ini
-                return redirect()->back()->with('error', 'Jam Shift sudah ada!');
-            }
-
             // Buat instance baru dari model dan simpan ke database
             JamShift::create([
                 'jam_mulai' => $request->jam_mulai,
