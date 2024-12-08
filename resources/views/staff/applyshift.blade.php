@@ -156,7 +156,7 @@
         <div class="d-flex justify-content-end mt-3">
             <form id="registrationForm" action="{{ route('kesediaan.store') }}" method="POST">
                 @csrf
-                <button type="button" class="btn btn-primary" id="registerButton" @if($availRegister === 'No') disabled @endif>Registrasi</button>
+                <button type="button" class="btn btn-primary" id="registerButtons" @if($availRegister === 'No') disabled @endif>Registrasi</button>
             </form>
         </div>
     </div>
@@ -167,7 +167,7 @@
 <script>
 $(document).ready(function () {
     // Konfirmasi sebelum melakukan registrasi
-    document.getElementById("registerButton").addEventListener("click", function () {
+    document.getElementById("registerButtons").addEventListener("click", function () {
         Swal.fire({
             title: 'Apakah kamu yakin?',
             text: "Data yang telah diregistrasikan tidak dapat direset!",
