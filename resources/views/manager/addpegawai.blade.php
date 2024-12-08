@@ -97,6 +97,7 @@
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">Nama</th>
+                <th scope="col">Username</th>
                 <th scope="col">Email</th>
                 <th scope="col">Role</th>
                 <th scope="col">Aksi</th>
@@ -106,15 +107,11 @@
             @foreach ($users as $user)
                 <tr>
                     <th scope="row">{{ $loop->iteration }}</th>
-                    <td>{{ $user->name }}</td>
-                    <td>{{ $user->email }}</td>
-                    <td>{{ $user->role }}</td>
+                    <td>{{ strtoupper($user->name ?? '-') }}</td>
+                    <td>{{ $user->username ?? '-' }}</td>
+                    <td>{{ $user->email ?? '-' }}</td>
+                    <td>{{ strtoupper($user->role ?? '-') }}</td>
                     <td>
-                        <!-- Tombol untuk Read, Update, Delete -->
-                        <button type="button" class="btn btn-info btn-sm" data-toggle="modal"
-                            data-target="#ReadModal{{ $user->id }}">
-                            Read
-                        </button>
                         <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
                             data-target="#EditModal{{ $user->id }}">
                             Edit
@@ -193,28 +190,6 @@
             @endforeach
         </tbody>
     </table>
-
-    <!-- Read Modal -->
-    <div class="modal fade" id="ReadModal{{ $user->id }}" tabindex="-1" aria-labelledby="ReadModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Detail Pegawai <strong>{{ $user->name }}</strong></h5>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-                <div class="modal-body">
-                    <p><strong>Nama :</strong> {{ $user->name }} </p>
-                    <p><strong>Email :</strong> {{ $user->email }} </p>
-                    <p><strong>username :</strong> {{ $user->username }} </p>
-                    <p><strong>Role :</strong> {{ $user->role }} </p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Edit Modal -->
     <div class="modal fade" id="EditModal{{ $user->id }}" tabindex="-1" aria-labelledby="EditModal"
