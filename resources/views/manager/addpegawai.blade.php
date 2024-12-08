@@ -182,7 +182,7 @@
                                 </div>
                             </div>
                         </div>
-                        <form action="{{ route('addpegawai.destroy', $user->email) }}" method="POST" class="d-inline">
+                        <form action="{{ route('addpegawai.destroy', ['email' => $user->email]) }}" method="POST" class="d-inline">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger btn-sm delete-confirm"
