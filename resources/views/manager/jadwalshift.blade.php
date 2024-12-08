@@ -74,7 +74,7 @@
         <div class="row mt-5">
             <div class="col-lg-12">
                 <h2 class="h4 mb-4">Data Jadwal Shift</h2>
-                <table class="table table-bordered table-striped">
+                <table class="table table-bordered table-striped" id="shiftTable">
                     <thead>
                         <tr>
                             <th>#</th>

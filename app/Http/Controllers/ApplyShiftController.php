@@ -254,9 +254,11 @@ class ApplyShiftController extends Controller
             'no' => $shift->id,
             'id_jam' => $shift->jamShift ? $shift->jamShift->jam_mulai . ' - ' . $shift->jamShift->jam_selesai : 'N/A',
             'pekerjaan' => $shift->tipePekerjaan ? $shift->tipePekerjaan->tipe_pekerjaan : 'N/A',
+            'hari' => \Carbon\Carbon::parse($shift->tanggal)->locale('id')->isoFormat('dddd'), // Day of the week
             'tanggal' => $shift->tanggal,
             'outletName' => $outletName,
-        ];
+            'aksi' => '' // Placeholder for action column, adjust as needed
+        ];        
 
         // Return the selected shift data
         return response()->json(['jadwal_shifts' => [$shiftData]]);
