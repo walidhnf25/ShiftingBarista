@@ -91,9 +91,22 @@ class jamShiftController extends Controller
     public function store(Request $request)
     {
         try {
-            // Mengecek apakah data sudah ada di database
-            $existingJamShift = JamShift::where('jam_mulai', $request->jam_mulai)->first();
-            $existingJamShift = JamShift::where('jam_selesai', $request->jam_selesai)->first();
+            // Validasi input
+            $request->validate([
+                'jam_mulai' => 'required',
+                'jam_selesai' => 'required',
+                'id_outlet' => 'required',
+            ]);
+
+            // Mengecek apakah data dengan kombinasi yang sama sudah ada
+            $existingJamShift = JamShift::where('jam_mulai', $request->jam_mulai)
+                ->where('jam_selesai', $request->jam_selesai)
+                ->where('id_outlet', $request->id_outlet)
+                ->first();
+
+            if ($existingJamShift) {
+                return redirect()->back()->with('error', 'Jam Shift sudah ada!');
+            }
 
             // Buat instance baru dari model dan simpan ke database
             JamShift::create([
@@ -127,8 +140,26 @@ class jamShiftController extends Controller
     public function update(Request $request, $id)
     {
         try {
+            // Validasi input
+            $request->validate([
+                'jam_mulai' => 'required',
+                'jam_selesai' => 'required',
+                'id_outlet' => 'required',
+            ]);
+
             // Mencari jam shift berdasarkan id
             $jamShift = JamShift::findOrFail($id);
+
+            // Mengecek apakah data dengan kombinasi yang sama sudah ada
+            $existingJamShift = JamShift::where('jam_mulai', $request->jam_mulai)
+                ->where('jam_selesai', $request->jam_selesai)
+                ->where('id_outlet', $request->id_outlet)
+                ->where('id', '!=', $id) // Menghindari pencarian pada data yang sedang diperbarui
+                ->first();
+
+            if ($existingJamShift) {
+                return redirect()->back()->with('error', 'Jam Shift dengan data yang sama sudah ada!');
+            }
 
             // Update kolom jam shift dengan nilai baru
             $jamShift->jam_mulai = $request->input('jam_mulai');
