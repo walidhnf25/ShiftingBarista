@@ -98,7 +98,7 @@
                 <th scope="col">#</th>
                 <th scope="col">Nama</th>
                 <th scope="col">Username</th>
-                <th scope="col">Email</th>
+                <th scope="col" style="width: 200px;">Email</th>
                 <th scope="col">Role</th>
                 <th scope="col">Aksi</th>
             </tr>
