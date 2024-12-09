@@ -61,14 +61,10 @@
                 </thead>
                 <tbody id="shiftData">
                     @if ($jadwal_shift->isEmpty())
-                        <tr>
-                            <td colspan="7" class="text-center">Jadwal Shift Kosong.</td>
-                        </tr>
+                        
                     @else
                         @if ($availRegister === 'No')
-                            <tr>
-                                <td colspan="7" class="text-center">Anda sudah memilih jadwal shift.</td>
-                            </tr>
+                            
                         @else
                             @foreach ($jadwal_shift as $shift)
                                 <tr>
@@ -147,7 +143,7 @@
                         @endforeach
                     @else
                         <tr class="placeholder-row">
-                            <td colspan="7" class="text-center">Belum ada shift yang dipilih.</td>
+                            
                         </tr>
                     @endif
                 </tbody>
@@ -156,7 +152,7 @@
         <div class="d-flex justify-content-end mt-3">
             <form id="registrationForm" action="{{ route('kesediaan.store') }}" method="POST">
                 @csrf
-                <button type="button" class="btn btn-primary" id="registerButtons" @if($availRegister === 'No') disabled @endif>Registrasi</button>
+                <button type="button" class="btn btn-primary" id="registerButton" @if($availRegister === 'No') disabled @endif>Registrasi</button>
             </form>
         </div>
     </div>
@@ -167,7 +163,7 @@
 <script>
 $(document).ready(function () {
     // Konfirmasi sebelum melakukan registrasi
-    document.getElementById("registerButtons").addEventListener("click", function () {
+    document.getElementById("registerButton").addEventListener("click", function () {
         Swal.fire({
             title: 'Apakah kamu yakin?',
             text: "Data yang telah diregistrasikan tidak dapat direset!",

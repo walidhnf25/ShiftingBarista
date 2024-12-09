@@ -27,11 +27,12 @@
         @csrf
         <div class="row">
             <div class="col-lg-12">
-                <table class="table table-bordered table-striped">
+                <table class="table table-bordered table-striped" id="shiftTable">
                     <thead>
                         <tr>
                             <th>#</th>
                             <th>Jam Kerja</th>
+                            <th>Hari</th>
                             <th>Tanggal</th>
                             <th>Tipe Pekerjaan</th>
                             <th>Staff</th>
@@ -43,7 +44,8 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $rs->jamShift ? $rs->jamShift->jam_mulai . ' - ' . $rs->jamShift->jam_selesai : 'N/A' }}</td>
-                                <td>{{ \Carbon\Carbon::parse($rs->tanggal)->locale('id')->isoFormat('dddd') }}, {{ $rs->tanggal }}</td>
+                                <td>{{ \Carbon\Carbon::parse($rs->tanggal)->locale('id')->isoFormat('dddd') }}</td>
+                                <td>{{ $rs->tanggal }}</td>
                                 <td>{{ $rs->tipePekerjaan ? $rs->tipePekerjaan->tipe_pekerjaan : 'N/A' }}</td>
                                 <td>
                                     <select name="selected_user[{{ $rs->id }}]" class="form-control" style="width: 250px;">
@@ -61,9 +63,6 @@
                                 </td>
                             </tr>
                         @empty
-                            <tr>
-                                <td colspan="6" class="text-center">Jadwal belum tersedia.</td>
-                            </tr>
                         @endforelse
                     </tbody>
                 </table>
@@ -143,6 +142,55 @@
             }
         });
     });
+
+    // Inisialisasi DataTable dengan pengaturan tertentu
+    $('#shiftTable').DataTable({
+                paging: false,        // Nonaktifkan pagination
+                searching: false,     // Nonaktifkan pencarian
+                order: [[0, 'asc']],  // Default sorting pada kolom pertama (No)
+                columnDefs: [
+                    { targets: [6], orderable: false }, // Nonaktifkan sorting untuk kolom Jam Kerja, Hari, Outlet, Aksi
+                    { targets: '_all', orderable: true }          // Aktifkan sorting untuk kolom lainnya
+                ]
+            });
+
+            
+            // Fungsi untuk menyortir kolom secara manual
+            document.addEventListener('DOMContentLoaded', function () {
+                const table = document.getElementById('shiftTable');
+                const headers = table.querySelectorAll('th');
+                const tbody = table.querySelector('tbody');
+
+                headers.forEach((header, index) => {
+                    header.addEventListener('click', () => {
+                        const rows = Array.from(tbody.querySelectorAll('tr'));
+                        const isAscending = header.classList.contains('ascending');
+                        const direction = isAscending ? -1 : 1;
+
+                        // Sort rows
+                        rows.sort((a, b) => {
+                            let aText = a.cells[index].textContent.trim();
+                            let bText = b.cells[index].textContent.trim();
+
+                            // Jika kolom adalah tanggal, ubah menjadi objek Date
+                            if (index === 3) { // Kolom tanggal (0-indexed)
+                                aText = new Date(aText); // Konversi ke Date
+                                bText = new Date(bText);
+                            }
+
+                            return aText > bText ? (1 * direction) : (-1 * direction);
+                        });
+
+                        // Toggle sorting class
+                        headers.forEach(h => h.classList.remove('ascending', 'descending'));
+                        header.classList.toggle('ascending', !isAscending);
+                        header.classList.toggle('descending', isAscending);
+
+                        // Append sorted rows
+                        rows.forEach(row => tbody.appendChild(row));
+                    });
+                });
+            });
 
     // Fade out alert messages
     setTimeout(function() {
