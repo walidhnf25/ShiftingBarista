@@ -19,7 +19,7 @@ class TukarShiftController extends Controller
         // Retrieve all necessary data
         $jamShift = JamShift::all();
         $TipePekerjaan = TipePekerjaan::all();
-        $User = User::where('role', 'Staff')->get();
+        $User = User::whereIn('role', ['Staff', 'Manager'])->get();
 
         // Filter jadwal_shift yang memiliki id_user
         $jadwal_shift = JadwalShift::whereNotNull('id_user')->get();
@@ -49,7 +49,7 @@ class TukarShiftController extends Controller
         // Data tambahan untuk tampilan
         $jamShift = JamShift::all();
         $TipePekerjaan = TipePekerjaan::all();
-        $User = User::where('role', 'Staff')->get();
+        $User = User::whereIn('role', ['Staff', 'Manager'])->get();
         $apiOutlet = $this->getOutletData();
         $outletMapping = collect($apiOutlet)->pluck('outlet_name', 'id');
 
