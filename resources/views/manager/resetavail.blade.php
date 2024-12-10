@@ -17,7 +17,9 @@
                         <option value="" disabled selected>Pilih User</option>
                         @foreach ($users as $user)
                             @if ($user->avail_register === 'No')
-                                <option value="{{ $user->id }}">{{ $user->name }}</option>
+                            <option value="{{ $user->id }}">
+                                {{ strtoupper($user->name) }}{{ $user->role === 'Manager' ? ' (MANAGER)' : '' }}
+                            </option>
                             @endif
                         @endforeach
                     </select>
@@ -44,7 +46,9 @@
                     @foreach ($usersForTable as $user)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
-                            <td>{{ strtoupper($user->name) }}</td>
+                            <td>
+                                {{ strtoupper($user->name) }}{{ $user->role === 'Manager' ? ' (MANAGER)' : '' }}
+                            </td>
                             <td>{{ $user->avail_register }}</td>
                         </tr>
                     @endforeach

@@ -52,7 +52,7 @@
                                         <option value="" disabled selected>Pilih User</option>
                                         @foreach ($rs->kesediaan as $kesediaan)
                                             <option value="{{ $kesediaan->user->id }}">
-                                                {{ $kesediaan->user->name }}
+                                                {{ strtoupper($kesediaan->user->name) }}{{ $kesediaan->user->role === 'Manager' ? ' (MANAGER)' : '' }}
                                             </option>
                                         @endforeach
                                     </select>

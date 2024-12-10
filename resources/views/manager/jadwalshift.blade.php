@@ -99,7 +99,9 @@
                                 <td>{{ $outletMapping[$shift->id_outlet] }}</td>
                                 <td>{{ \Carbon\Carbon::parse($shift->tanggal)->locale('id')->isoFormat('dddd') }}</td>
                                 <td>{{ $shift->tanggal }}</td>
-                                <td>{{ $shift->user ? strtoupper($shift->user->name) : '-' }}</td>
+                                <td>
+                                    {{ $shift->user ? strtoupper($shift->user->name) . ($shift->user->role === 'Manager' ? ' (MANAGER)' : '') : '-' }}
+                                </td>
                                 <td>
                                     <!-- Edit Button -->
                                     <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
