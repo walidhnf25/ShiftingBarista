@@ -48,14 +48,14 @@
         events: [
             @foreach ($jadwal_shifts as $shift)
                 {
-                    title:'{{ $shift->user ? strtoupper($shift->user->name) : 'N/A' }}',
+                    title: '{{ $shift->user ? strtoupper($shift->user->name) . ($shift->user->role === 'Manager' ? ' (MANAGER)' : '') : 'N/A' }}',
                     start: '{{ $shift->tanggal }}',
                     backgroundColor: getOutletColor('{{ $shift->id_outlet }}'),
                     extendedProps: {
                         outletName: '{{ $outletMapping[$shift->id_outlet] ?? 'Unknown Outlet' }}',
                         jamKerja: '{{ $shift->jamShift ? $shift->jamShift->jam_mulai . ' - ' . $shift->jamShift->jam_selesai : 'N/A' }}',
                         idOutlet: '{{ $shift->id_outlet }}',
-                        userName: '{{ $shift->user ? $shift->user->name : 'N/A' }}'
+                        userName: '{{ $shift->user ? $shift->user->name . ($shift->user->role === 'Manager' ? ' (MANAGER)' : '') : 'N/A' }}'
                     }
                 },
             @endforeach
