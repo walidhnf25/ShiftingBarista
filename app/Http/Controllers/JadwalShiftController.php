@@ -61,7 +61,7 @@ class JadwalShiftController extends Controller
         // Retrieve all necessary data
         $jamShift = JamShift::all();
         $TipePekerjaan = TipePekerjaan::all();
-        $User = User::where('role', 'Staff')->get();
+        $User = User::whereIn('role', ['Staff', 'Manager'])->get();
         $jadwal_shift = JadwalShift::all();
         $apiOutlet = $this->getOutletData();
 
