@@ -72,9 +72,9 @@
                                     <select class="form-control select-user" data-shift-id="{{ $shift->id }}" required>
                                         <option value="" disabled selected>Pilih User</option>
                                         @foreach ($User as $type)
-                                            <option value="{{ $type->id }}" {{ $type->id == $shift->id_user ? 'selected' : '' }}>
-                                                {{ strtoupper($type->name) }}
-                                            </option>
+                                        <option value="{{ $type->id }}" {{ $type->id == $shift->id_user ? 'selected' : '' }}>
+                                            {{ strtoupper($type->name) }}{{ $type->role === 'Manager' ? ' (MANAGER)' : '' }}
+                                        </option>
                                         @endforeach
                                     </select>
                                 </td>
