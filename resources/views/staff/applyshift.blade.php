@@ -143,7 +143,7 @@
                         @endforeach
                     @else
                         <tr class="placeholder-row">
-                            
+                            <td colspan="7" class="text-center">Belum ada jadwal shift dipilih</td>
                         </tr>
                     @endif
                 </tbody>
