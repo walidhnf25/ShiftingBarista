@@ -166,7 +166,7 @@
     <li class="nav-item {{ Request::is('staffdashboard') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('staffdashboard') }}">
             <i class="fas fa-fw fa-tachometer-alt"></i>
-            <span>Dashboard Staf</span>
+            <span>Dashboard Staff</span>
         </a>
     </li>
     @endif
