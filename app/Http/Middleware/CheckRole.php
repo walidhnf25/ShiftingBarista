@@ -14,11 +14,12 @@ class CheckRole
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function handle($request, Closure $next, $role)
+    public function handle($request, Closure $next, ...$roles)
     {
-        if (Auth::check() && Auth::user()->role !== $role) {
-            // Jika pengguna tidak memiliki peran yang benar, redirect atau berikan response yang sesuai
-            return redirect('/home')->with('error', 'Anda tidak memiliki akses ke halaman ini.');
+        $user = Auth::user();
+        // Periksa apakah user login dan memiliki salah satu role yang diizinkan
+        if (!$user || !in_array($user->role, $roles)) {
+            return redirect()->route('unauthorized'); // Sesuaikan dengan route unauthorized Anda
         }
 
         return $next($request);

@@ -69,9 +69,7 @@ route::middleware(['guest:user'])->group(function () {
      Route::post('/registerakun', [AuthController::class, 'registerakun'])->name('registerakun');
 });
 
-
-
-Route::middleware(['auth:user', 'checkRole:Staff'])->group(function () {
+Route::middleware(['auth:user', 'checkRole:Manager,Staff'])->group(function () {
     Route::get('/waktushift', [WaktuShiftController::class, 'showCalendar'])->name('waktushift');
     Route::get('/user-shift', [DashboardController::class, 'getUserShiftDetails'])->name('userShiftDetails');
     Route::get('/staffdashboard', [DashboardController::class, 'staffdashboard'])->name('staffdashboard');
