@@ -34,7 +34,8 @@
                     extendedProps: {
                         outletName: '{{ $outletMapping[$shift->id_outlet] ?? 'Unknown Outlet' }}',
                         jamKerja: '{{ $shift->jamShift ? $shift->jamShift->jam_mulai . ' - ' . $shift->jamShift->jam_selesai : 'N/A' }}',
-                        idOutlet: '{{ $shift->id_outlet }}'
+                        idOutlet: '{{ $shift->id_outlet }}',
+                        tipePekerjaan: '{{ $shift->tipePekerjaan ? $shift->tipePekerjaan->tipe_pekerjaan : 'N/A' }}'
                     }
                 },
             @endforeach
@@ -46,11 +47,12 @@
             var event = info.event;
             var outletName = event.extendedProps.outletName || 'Unknown Outlet';
             var jamKerja = event.extendedProps.jamKerja || 'N/A';
+            var tipePekerjaan = event.extendedProps.tipePekerjaan || 'N/A';
 
             // Show Swal.fire with details
             Swal.fire({
                 title: `Detail Jadwal`,
-                html: `<strong>Outlet:</strong> ${outletName}<br><strong>Jam Kerja:</strong> ${jamKerja}`,
+                html: `<strong>Outlet:</strong> ${outletName}<br><strong>Jam Kerja:</strong> ${jamKerja}<br><strong>Pekerjaan:</strong> ${tipePekerjaan}`,
                 icon: 'info'
             });
         },
@@ -66,7 +68,7 @@
                 if (validEvents.length > 0) {
                     // Generate details for valid events
                     var eventDetails = validEvents.map(event => {
-                        return `<strong>${event.extendedProps.outletName}:</strong> ${event.extendedProps.jamKerja}`;
+                        return `<strong>${event.extendedProps.outletName}:</strong> ${event.extendedProps.jamKerja}<br><strong>Pekerjaan:</strong> ${event.extendedProps.tipePekerjaan}`;
                     }).join('<br>');
 
                     // Show Swal.fire with event details
