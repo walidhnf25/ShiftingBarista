@@ -90,7 +90,7 @@
                 if (validEvents.length > 0) {
                     // Generate details for valid events
                     var eventDetails = validEvents.map(event => {
-                        return `<strong>${event.extendedProps.outletName}:</strong> ${event.extendedProps.jamKerja}<br><strong>Pengguna:</strong> ${event.extendedProps.userName.toUpperCase()}<br><strong>Pengguna:</strong> ${event.extendedProps.tipePekerjaan.toUpperCase()}<br>`;
+                        return `<strong>${event.extendedProps.outletName}:</strong> ${event.extendedProps.jamKerja}<br><strong>Pengguna:</strong> ${event.extendedProps.userName.toUpperCase()}<br><strong>Pekerjaan:</strong> ${event.extendedProps.tipePekerjaan.toUpperCase()}<br>`;
                     }).join('<br>');
 
                     // Show Swal.fire with event details
