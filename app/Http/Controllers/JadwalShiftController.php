@@ -70,7 +70,7 @@ class JadwalShiftController extends Controller
 
         // Check if the outlet exists
         if (!$selectedOutlet) {
-            return response()->json(['message' => 'Outlet not found'], 404);
+            abort(404, 'Outlet not found');
         }
 
         $jamShift = JamShift::where('id_outlet', $id)->get();
@@ -79,16 +79,8 @@ class JadwalShiftController extends Controller
         // Create a mapping of outlet IDs to outlet names
         $outletMapping = collect($apiOutlet)->pluck('outlet_name', 'id');
 
-        // Return data as JSON
-        return response()->json([
-            'jadwal_shift' => $jadwal_shift,
-            'jamShift' => $jamShift,
-            'TipePekerjaan' => $TipePekerjaan,
-            'User' => $User,
-            'selectedOutlet' => $selectedOutlet,
-            'outletMapping' => $outletMapping,
-            'apiOutlet' => $apiOutlet
-        ]);
+        // Pass all data to the view, including apiOutlet
+        return view('manager.jadwalshift', compact('jadwal_shift', 'jamShift', 'TipePekerjaan', 'User', 'selectedOutlet', 'outletMapping', 'apiOutlet'));
     }
 
     public function getOutletData()
