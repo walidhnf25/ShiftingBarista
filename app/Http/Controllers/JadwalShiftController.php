@@ -83,6 +83,17 @@ class JadwalShiftController extends Controller
         return view('manager.jadwalshift', compact('jadwal_shift', 'jamShift', 'TipePekerjaan', 'User', 'selectedOutlet', 'outletMapping', 'apiOutlet'));
     }
 
+    public function getJadwalShiftData()
+    {
+        // Mengambil semua data outlet dari database
+        $jadwal_shift = JadwalShift::all();
+
+        // Mengembalikan data dalam format JSON
+        return response()->json([
+            'jadwal_shift' => $jadwal_shift,
+        ]);
+    }
+
     public function getOutletData()
     {
         // Token API dan URL
