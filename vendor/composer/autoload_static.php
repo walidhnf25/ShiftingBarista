@@ -511,6 +511,7 @@ class ComposerStaticInitaa1bea3ae66d5975143955f40f647259
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
         'App\\Http\\Controllers\\ApplyShiftController' => __DIR__ . '/../..' . '/app/Http/Controllers/ApplyShiftController.php',
         'App\\Http\\Controllers\\AuthController' => __DIR__ . '/../..' . '/app/Http/Controllers/AuthController.php',
+        'App\\Http\\Controllers\\CekGajiController' => __DIR__ . '/../..' . '/app/Http/Controllers/CekGajiController.php',
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
         'App\\Http\\Controllers\\DashboardController' => __DIR__ . '/../..' . '/app/Http/Controllers/DashboardController.php',
         'App\\Http\\Controllers\\JadwalShiftController' => __DIR__ . '/../..' . '/app/Http/Controllers/JadwalShiftController.php',
