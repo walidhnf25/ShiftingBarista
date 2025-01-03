@@ -1,0 +1,5 @@
+.dashboard-card-shadow {
+    box-shadow: rgba(43, 42, 42, 0.16) 0 0 2px;
+    background-color: red;
+    border-radius: 4px;
+}

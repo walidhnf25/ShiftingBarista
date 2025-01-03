@@ -76,7 +76,7 @@ class AuthController extends Controller
             $user->username = $profile['user'];
             $user->name = $profile['fullname'];
             $user->email = $profile['email'];
-            $user->no_telepon = $profile['phone']; // Menyimpan nomor telepon
+            $user->no_telepon = $profile['phone'];
             $user->role = 'Staff';  // Atur role sesuai dengan API atau kebijakan aplikasi
             $user->avail_register = 'Yes';
             $user->password = Hash::make($request->password); // Enkripsi password jika diperlukan
@@ -109,7 +109,7 @@ class AuthController extends Controller
         // Validasi data yang diterima dari form
         $request->validate([
             'name' => 'required|string|max:255',
-            'no_telepon' => 'required|string|max:16',
+            'no_telepon' => 'required|string|max:15',
             'password' => 'required|string', // Tanpa konfirmasi password
         ]);
     
@@ -118,7 +118,7 @@ class AuthController extends Controller
     
         if ($existingUser) {
             // Jika nomor telepon sudah terdaftar, kirimkan pesan warning dan kembali ke halaman register
-            return redirect('/register')->with(['warning' => 'Nomor Telephone yang Anda masukan sudah digunakan.']);
+            return redirect('/register')->with(['warning' => 'Akun sudah ada']);
         }
     
         // Simpan data ke dalam tabel users jika nomor belum ada
