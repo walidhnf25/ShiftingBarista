@@ -189,20 +189,41 @@
                             </div>
                         </div>
 
-                        <!-- Shift Details -->
-                        <div class="d-flex flex-column lg:flex-row justify-content-between my-3">
-                            <span><strong>Status Pekerjaan:</strong> {{ $status }}</span>
-                            <span><strong>Jadwal:</strong> 
-                                {{ $shift->jamShift ? $shift->jamShift->jam_mulai . ' - ' . $shift->jamShift->jam_selesai : 'N/A' }}
-                            </span>
-                            <span><strong>Pekerjaan:</strong> 
-                                {{ $shift->tipePekerjaan ? $shift->tipePekerjaan->tipe_pekerjaan : 'N/A' }}
-                            </span>
+                            <!-- Shift Details -->
+                            <div class="d-flex flex-column lg:flex-row justify-content-between my-3">
+                                <!-- Status Pekerjaan -->
+                                @php
+                                    $currentTime = now('Asia/Jakarta');
+                                    $startTime = $shift->jamShift ? \Carbon\Carbon::parse($shift->jamShift->jam_mulai, 'Asia/Jakarta') : null;
+                                    $endTime = $shift->jamShift ? \Carbon\Carbon::parse($shift->jamShift->jam_selesai, 'Asia/Jakarta') : null;
+
+                                    // Determine the status based on time
+                                    $status = 'Sudah Berakhir';
+                                    if ($startTime && $endTime) {
+                                        if ($currentTime->between($startTime, $endTime)) {
+                                            $status = 'Dalam Pengerjaan';
+                                        } elseif ($currentTime < $startTime) {
+                                            $status = 'Akan Segera Dimulai';
+                                        }
+                                    }
+                                @endphp
+
+                                <span><strong>Status Pekerjaan:</strong> {{ $status }}</span>
+                                
+                                <!-- Jadwal -->
+                                <span><strong>Jadwal:</strong> 
+                                    {{ $shift->jamShift ? $shift->jamShift->jam_mulai . ' - ' . $shift->jamShift->jam_selesai : 'N/A' }}
+                                </span>
+                                
+                                <!-- Pekerjaan -->
+                                <span><strong>Pekerjaan:</strong> 
+                                    {{ $shift->tipePekerjaan ? $shift->tipePekerjaan->tipe_pekerjaan : 'N/A' }}
+                                </span>
+                            </div>
                         </div>
-                    </div>
-                @endforeach
-                @if ($allShiftsToday->isEmpty())
-                    <div class="d-flex flex-column align-items-center justify-content-center mb-3" style="min-height: 300px;">
+                    @endforeach
+                    @if ($allShiftsToday->isEmpty())
+                    <div class="d-flex flex-column align-items-center justify-content-center mb-3" style="min-height: 300px;"> 
                         <p class="font-weight-bold"><lottie-player src="https://lottie.host/b131c2ac-8b3b-40d5-90a7-a4072bf7dd59/2lzD12702I.json" background="##fff" speed="1" style="width: 100px; height: 100px" loop autoplay direction="1" mode="normal"></lottie-player></p>
                         <p class="m-0 text-danger font-weight-bold" style="font-size: 18px">
                             Jadwal Shift hari ini tidak ada

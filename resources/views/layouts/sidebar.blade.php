@@ -10,6 +10,7 @@
         <div class="sidebar-brand-text mx-3">Shifting Barista</div>
     </a>
     @endif
+    
 
     <!-- Divider -->
     <hr class="sidebar-divider my-0">
@@ -33,6 +34,7 @@
         <div class="sidebar-brand-text mx-3">Shifting Barista</div>
     </a>
     @endif
+
 
     @if (auth()->check() && auth()->user()->role === 'Manager')
 
@@ -153,6 +155,17 @@
     @if (auth()->check() && auth()->user()->role === 'Manager')
     <hr class="sidebar-divider my-0">
 
+    <li class="nav-item {{ Request::is('cekgajioutlet') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('cekgajioutlet') }}">
+            <i class="fas fa-fw fa fa-university"></i>
+            <span>Cek Gaji Karyawan</span>
+        </a>
+    </li>
+    @endif
+
+    @if (auth()->check() && auth()->user()->role === 'Manager')
+    <hr class="sidebar-divider my-0">
+
     <li class="sidebar-divider large text-center text-white mt-3 mb-3">
         <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-letter-s-small"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 15a1 1 0 0 0 1 1h2a1 1 0 0 0 1 -1v-2a1 1 0 0 0 -1 -1h-2a1 1 0 0 1 -1 -1v-2a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1" /></svg>
         <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-letter-t-small"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 8h4" /><path d="M12 8v8" /></svg>
@@ -200,6 +213,17 @@
         <a class="nav-link" href="{{ route('waktushift') }}">
             <i class="fas fa-fw fa fa-clock"></i>
             <span>Jadwal Shift</span>
+        </a>
+    </li>
+    @endif
+
+    
+    @if (auth()->check() && auth()->user()->role === 'Staff')
+    <!-- Nav Item - Dashboard -->
+    <li class="nav-item {{ Request::is('staffcekgaji') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('staffcekgaji') }}">
+            <i class="fas fa-fw fa fa-university" aria-hidden="true"></i>
+            <span>Cek Gaji</span>
         </a>
     </li>
     @endif
