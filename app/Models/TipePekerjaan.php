@@ -11,6 +11,7 @@ class TipePekerjaan extends Model
     protected $table = 'tipe_pekerjaan';
     protected $fillable = [
         'tipe_pekerjaan', // Ensure this is here
+        'fee',
     ];
 
     public function jadwalShifts()
