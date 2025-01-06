@@ -222,7 +222,7 @@
     <!-- Nav Item - Dashboard -->
     <li class="nav-item {{ Request::is('staffcekgaji') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('staffcekgaji') }}">
-            <i class="fas fa-fw fa fa-university" aria-hidden="true"></i>
+            <i class="fas fa-fw fa fa-university" ></i>
             <span>Cek Gaji</span>
         </a>
     </li>
