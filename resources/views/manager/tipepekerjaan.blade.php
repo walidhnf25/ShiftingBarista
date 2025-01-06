@@ -40,6 +40,7 @@
                     <tr>
                         <th>ID</th>
                         <th>Nama Tipe Pekerjaan</th>
+                        <th>Fee</th>
                         <th>Control</th>
                     </tr>
                 </thead>
@@ -48,6 +49,7 @@
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $d->tipe_pekerjaan }}</td>
+                            <td>{{ $d->fee }}</td>
                             <td>
                                 <a href="#" class="edit btn btn-info btn-sm btn-circle" id="{{ $d->id }}">
                                     <i class="fa fa-edit"></i>
@@ -88,7 +90,14 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group mb-3"> <!-- Corrected class name -->
+                                    <label for="tipe_pekerjaan">Tipe Pekerjaan</label>
                                     <input type="text" class="form-control" id="tipe_pekerjaan" name="tipe_pekerjaan" placeholder="Tipe Pekerjaan">
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-group mb-3"> <!-- Corrected class name -->
+                                    <label for="fee">Fee Pekerjaan</label>
+                                    <input type="number" class="form-control" id="fee" name="fee" placeholder="Fee Pekerjaan">
                                 </div>
                             </div>
                         </div>

@@ -24,6 +24,7 @@ class TipePekerjaanController extends Controller
         // Melakukan validasi
         $request->validate([
             'tipe_pekerjaan' => 'required|string|max:50',
+            'fee' => 'required|numeric',    
         ]);
 
         try {
@@ -36,9 +37,12 @@ class TipePekerjaanController extends Controller
             }
 
             // Buat instance baru dari model dan simpan ke database
-            TipePekerjaan::create([
+           $newData = TipePekerjaan::create([
                 'tipe_pekerjaan' => $request->tipe_pekerjaan,
+                'fee' => $request->fee,
             ]);
+
+         
 
             // Mengembalikan respon sukses
             return redirect()->back()->with('success', 'Tipe Pekerjaan berhasil ditambahkan!');
@@ -59,6 +63,7 @@ class TipePekerjaanController extends Controller
         // Melakukan validasi
         $request->validate([
             'tipe_pekerjaan' => 'required|string|max:255',
+            'fee' => 'required|numeric',    
         ]);
 
         try {
@@ -75,6 +80,7 @@ class TipePekerjaanController extends Controller
 
             // Update kolom tipe pekerjaan dengan nilai baru
             $tipe_pekerjaan->tipe_pekerjaan = $request->input('tipe_pekerjaan');
+            $tipe_pekerjaan->fee = $request->input('fee');
 
             // Simpan perubahan
             $tipe_pekerjaan->save();
