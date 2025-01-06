@@ -82,9 +82,9 @@ Route::middleware(['auth:user', 'checkRole:Manager,Staff'])->group(function () {
     Route::post('/removeFromCache/{id}', [ApplyShiftController::class, 'removeFromCache'])->name('removeFromCache');
 
     // Cek Gaji
-    Route::get('/cekgaji', function () {
-        return view('staff.cekgaji');
-    })->name('staffcekgaji');
+    Route::get('/cekgaji', [CekGajiController::class, 'IndexStaff'])->name('staffcekgaji');
+    Route::get('cekgaji/filter-byDate', [CekGajiController::class, 'filterByDateStaff'])->name('staff.cekgaji.filter');
+  
 
     Route::get('/index', function(){
         $jadwal_shift = JadwalShift::get();
@@ -153,7 +153,13 @@ Route::middleware(['auth:user', 'checkRole:Manager'])->group(function () {
         return view('manager.cekgaji');
     })->name('managercekgaji');
     Route::get('/cekgajioutlet', [CekGajiController::class, 'listOutlets'])->name('cekgajioutlet');
-    Route::get('/cekgajioutlet/cekgaji/{id}', [CekGajiController::class, 'showOutlet'])->name('manager.cekgaji');
+    Route::get('/cekgajioutlet/cekgaji/{id}', [CekGajiController::class, 'IndexManager'])->name('manager.cekgaji');
+    // Filter Cek Gaji
+    Route::get('/cekgajioutlet/filter-byDate/{id}', [CekGajiController::class, 'filterByDateManager'])->name('manager.cekgaji.filter');
+    // Search Query By Name
+    Route::get('cekgajioutlet/search/{id}', [CekGajiController::class, 'searchByNameManager'])->name('manager.cekgaji.search');
+    Route::get('/cekgajioutlet/cetak/{id}', [CekGajiController::class, 'cetakPDF'])->name('manager.cekgaji.cetakpdf');
+
 
     // jam shift
     Route::get('/jamshift', [jamShiftController::class, 'index'])->name('jamshift');
