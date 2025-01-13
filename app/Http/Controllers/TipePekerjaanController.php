@@ -24,7 +24,11 @@ class TipePekerjaanController extends Controller
         // Melakukan validasi
         $request->validate([
             'tipe_pekerjaan' => 'required|string|max:50',
-            'fee' => 'required|numeric',    
+            'min_fee' => 'required|numeric',    
+            'avg_fee' => 'required|numeric',    
+            'max_fee' => 'required|numeric',    
+            'pendapatan_batas_atas' => 'required|numeric',    
+            'pendapatan_batas_bawah' => 'required|numeric',    
         ]);
 
         try {
@@ -37,12 +41,8 @@ class TipePekerjaanController extends Controller
             }
 
             // Buat instance baru dari model dan simpan ke database
-           $newData = TipePekerjaan::create([
-                'tipe_pekerjaan' => $request->tipe_pekerjaan,
-                'fee' => $request->fee,
-            ]);
-
-         
+           $newData = $request->all();
+           TipePekerjaan::create($newData);
 
             // Mengembalikan respon sukses
             return redirect()->back()->with('success', 'Tipe Pekerjaan berhasil ditambahkan!');
@@ -63,24 +63,34 @@ class TipePekerjaanController extends Controller
         // Melakukan validasi
         $request->validate([
             'tipe_pekerjaan' => 'required|string|max:255',
-            'fee' => 'required|numeric',    
+            'min_fee' => 'required|numeric',    
+            'avg_fee' => 'required|numeric',    
+            'max_fee' => 'required|numeric',    
+            'pendapatan_batas_atas' => 'required|numeric',    
+            'pendapatan_batas_bawah' => 'required|numeric',   
         ]);
 
         try {
             // Mencari tipe pekerjaan berdasarkan id
             $tipe_pekerjaan = TipePekerjaan::findOrFail($id);
 
-            // Mengecek apakah data sudah ada di database
-            $existingTipePekerjaan = TipePekerjaan::where('tipe_pekerjaan', $request->tipe_pekerjaan)->first();
+            // Mengecek duplikat dengan mengecualikan record yang sedang diupdate
+            $existingTipePekerjaan = TipePekerjaan::where('tipe_pekerjaan', $request->tipe_pekerjaan)
+                ->where('id', '!=', $id)  // Tambahan ini untuk mengecualikan record yang sedang diupdate
+                ->first();
 
             if ($existingTipePekerjaan) {
-                // Jika sudah ada munculkan pesan ini
+                // Jika nama tipe pekerjaan sudah ada di record lain
                 return redirect()->back()->with('error', 'Tipe Pekerjaan sudah ada!');
             }
 
             // Update kolom tipe pekerjaan dengan nilai baru
             $tipe_pekerjaan->tipe_pekerjaan = $request->input('tipe_pekerjaan');
-            $tipe_pekerjaan->fee = $request->input('fee');
+            $tipe_pekerjaan->min_fee = $request->input('min_fee');
+            $tipe_pekerjaan->avg_fee = $request->input('avg_fee');
+            $tipe_pekerjaan->max_fee = $request->input('max_fee');
+            $tipe_pekerjaan->pendapatan_batas_atas = $request->input('pendapatan_batas_atas');
+            $tipe_pekerjaan->pendapatan_batas_bawah = $request->input('pendapatan_batas_bawah');
 
             // Simpan perubahan
             $tipe_pekerjaan->save();
