@@ -30,23 +30,26 @@
 
     <div class="card shadow mb-4">
         <div class="card-body">
-            <!-- Filter Tanggal -->
+
+            <!-- Filter Periode -->
             <div class="mb-4">
                 <form action="{{ route('staff.cekgaji.filter') }}" method="GET">
-                    <div class="form-row align-items-center">
-                        <div class="col-md-4">
-                            <label for="start_date">Tanggal Mulai:</label>
-                            <input type="date" id="start_date" name="start_date" class="form-control"
-                                value="{{ $startDate }}" required>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="end_date">Tanggal Selesai:</label>
-                            <input type="date" id="end_date" name="end_date" class="form-control"
-                                value="{{ $endDate }}" required>
-                        </div>
-                        <div class="col-md-4 align-self-end">
-                            <button type="submit" class="btn btn-primary btn-block mt-2">Filter</button>
-                        </div>
+                    <div class="btn-group">
+                        <select name="id_periode" class="form-control" onchange="this.form.submit()">
+                            <option value="">Pilih Periode</option>
+                            @foreach ($periode_gaji as $periode)
+                                <option value="{{ $periode->id }}" 
+                                    @if (isset($id_periode) && $id_periode == $periode->id) 
+                                        selected 
+                                    @elseif (!isset($id_periode) && $currentPeriod && $currentPeriod->id == $periode->id) 
+                                        selected 
+                                    @endif>
+                                    {{ $periode->nama_periode_gaji }} |
+                                    {{ \Carbon\Carbon::parse($periode->tgl_mulai)->format('d/m/Y') }} -
+                                    {{ \Carbon\Carbon::parse($periode->tgl_akhir)->format('d/m/Y') }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
                 </form>
             </div>
@@ -108,6 +111,14 @@
                             </tr>
                         @endforelse
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3" class="text-center font-weight-bold">Total Keseluruhan Gaji</td>
+                            <td class="font-weight-bold text-danger">
+                                Rp {{ number_format($dataGaji->sum('total_gaji'), 0, ',', '.') }}
+                            </td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>
