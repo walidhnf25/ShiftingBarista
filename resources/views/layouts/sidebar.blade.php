@@ -100,6 +100,17 @@
     @if (auth()->check() && auth()->user()->role === 'Manager')
     <hr class="sidebar-divider my-0">
 
+    <li class="nav-item {{ Request::is('periodegaji.index') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('periodegaji.index') }}">
+            <i class="fas fa-fw fa-calendar"></i>
+            <span>Periode Gaji</span>
+        </a>
+    </li>
+    @endif
+
+    @if (auth()->check() && auth()->user()->role === 'Manager')
+    <hr class="sidebar-divider my-0">
+
     <li class="nav-item {{ Request::is('outlet') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('outlet') }}">
             <i class="fas fa-fw fa fa-calendar"></i>

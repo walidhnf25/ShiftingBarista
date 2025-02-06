@@ -14,6 +14,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CekGajiController;
 use App\Http\Controllers\ResetAvailController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PeriodeGajiController;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Cache;
@@ -160,7 +161,6 @@ Route::middleware(['auth:user', 'checkRole:Manager'])->group(function () {
     Route::get('cekgajioutlet/search/{id}', [CekGajiController::class, 'searchByNameManager'])->name('manager.cekgaji.search');
     Route::get('/cekgajioutlet/cetak/{id}', [CekGajiController::class, 'cetakPDF'])->name('manager.cekgaji.cetakpdf');
 
-
     // jam shift
     Route::get('/jamshift', [jamShiftController::class, 'index'])->name('jamshift');
     Route::post('/jamshift', [jamShiftController::class, 'store'])->name('jam_shift.store');
@@ -182,6 +182,14 @@ Route::middleware(['auth:user', 'checkRole:Manager'])->group(function () {
     })->name('managerdashboard');
 
     Route::get('/managerdashboard', [DashboardController::class, 'showCalendar'])->name('managerdashboard');
+
+    // Periode Gaji
+    Route::get('/periodegaji', [PeriodeGajiController::class, 'index'])->name('periodegaji.index');
+    Route::post('/periodegaji', [PeriodeGajiController::class, 'store'])->name('periodegaji.store');
+    Route::get('/editPeriodeGaji', [PeriodeGajiController::class, 'editPeriodeGaji']);
+    Route::post('/periodegaji/update/{id}', [PeriodeGajiController::class, 'update'])->name('periodegaji.update');
+    Route::post('/periodegaji/delete/{id}', [PeriodeGajiController::class, 'delete'])->name('periodegaji.delete');
+    
 });
 
 Route::middleware(['auth:user'])->group(function () {

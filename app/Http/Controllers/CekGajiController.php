@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\JadwalShift;                                                             
 use App\Models\TipePekerjaan;
 use Illuminate\Support\Facades\Auth;
+use App\Models\PeriodeGaji;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 class CekGajiController extends Controller
@@ -97,7 +98,7 @@ class CekGajiController extends Controller
     
     // Calculate fee
     private function calculateFee($revenue, $tipePekerjaan)
-    {
+    {   
         // Jika tidak ada tipe pekerjaan, kembalikan 0 atau nilai default
         if (!$tipePekerjaan) {
             return 0; // Atau nilai default yang sesuai
@@ -140,104 +141,61 @@ class CekGajiController extends Controller
         $Users = User::all();
         $apiOutlet = $this->getOutletData();
         $selectedOutlet = collect($apiOutlet)->firstWhere('id', $id);
+        $periode_gaji = PeriodeGaji::all();
 
         if (!$selectedOutlet) {
             abort(404, 'Outlet tidak ditemukan');
         }
 
-        $startDate = $request->start_date ?? now()->subDays(30)->format('Y-m-d');
-        $endDate = $request->end_date ?? now()->format('Y-m-d');
+        $id_periode = $request->id_periode;
 
-        // Get revenue data for the date range
-        $revenueAPI = $this->getRevenue($startDate, $endDate, $id);
-        if (!isset($revenueAPI['data']) || empty($revenueAPI['data'])) {
-            return redirect()->back()->with('warning', 'Data pendapatan tidak ditemukan untuk outlet ini.');
+        if (!$id_periode) {
+            return view('manager.cekgaji', [
+                'Users' => $Users,
+                'periode_gaji' => $periode_gaji,
+                'selectedOutlet' => $selectedOutlet,
+                'dataGaji' => collect(), //Data Kosong
+            ]);
         }
 
-        // Index revenue data by date
-        $revenueData = collect($revenueAPI['data'])->keyBy('order_date');
+        $periode = PeriodeGaji::find($id_periode);
+        $startDate = $periode->tgl_mulai;
+        $endDate = $periode->tgl_akhir;
 
-        // Get basic shift data grouped by user and job type
+        $revenueAPI = $this->getRevenue($startDate, $endDate, $id);
+        $revenueData = collect($revenueAPI['data'] ?? [])->keyBy('order_date');
+
         $baseDataGaji = JadwalShift::with(['tipePekerjaan', 'user'])
             ->select('id_user', 'id_tipe_pekerjaan')
             ->where('id_outlet', $id)
             ->groupBy('id_user', 'id_tipe_pekerjaan')
             ->get();
 
-        // Transform the data with per-day calculations
-        $dataGaji = $baseDataGaji->map(function ($item) use ($id, $revenueData, $selectedOutlet) {
-            if (!$item->id_user) {
-                return null;
-            }
-            
-            $user = User::find($item->id_user);
-            $item->nama_pegawai = $user ? $user->name : 'Unknown';
-            
-            $tipePekerjaan = $item->tipePekerjaan;
-            $item->nama_pekerjaan = $tipePekerjaan->tipe_pekerjaan ?? 'Unknown';
 
-            // Get all shifts for this user and job type
-            $shifts = JadwalShift::where('id_user', $item->id_user)
-                ->where('id_tipe_pekerjaan', $item->id_tipe_pekerjaan)
-                ->where('id_outlet', $id)
-                ->get();
-
-            $totalGaji = 0;
-            $shiftsWithRevenue = collect();
-            
-            foreach ($shifts as $shift) {
-                $shiftDate = \Carbon\Carbon::parse($shift->tanggal)->format('d-m-Y');
-                $dailyRevenue = 0;
-                
-                if ($revenueData->has($shiftDate)) {
-                    $dailyRevenue = $revenueData[$shiftDate][$selectedOutlet['outlet_name']]['Total'] ?? 0;
-                }
-                
-                $dailyFee = $this->calculateFee($dailyRevenue, $tipePekerjaan);
-                $totalGaji += $dailyFee;
-                
-                // Create a new shift object with the additional data
-                $shiftWithRevenue = new \stdClass();
-                $shiftWithRevenue->tanggal = $shift->tanggal;
-                $shiftWithRevenue->revenue = $dailyRevenue;
-                $shiftWithRevenue->fee = $dailyFee;
-                
-                $shiftsWithRevenue->push($shiftWithRevenue);
-            }
-
-            $item->jumlah_shift = $shifts->count();
-            $item->detail_shifts = $shiftsWithRevenue;
-            $item->total_gaji = $totalGaji;
-            $item->gaji_per_shift = $item->jumlah_shift > 0 ? ($totalGaji / $item->jumlah_shift) : 0;
-            $item->tanggal_shift = $shifts->pluck('tanggal')->implode(', ');
-            $item->outlet_revenue = $shiftsWithRevenue->sum('revenue');
-
-            return $item;
-        })->filter();
-        // dd($revenueData);
-
-        $outletMapping = collect($apiOutlet)->pluck('outlet_name', 'id');
-
-        return view('manager.cekgaji', compact(
-            'Users',
-            'selectedOutlet',
-            'outletMapping',
-            'dataGaji',
-            'startDate',
-            'endDate',
-            'revenueData'
-        ));
+            return view('manager.cekgaji', compact(
+                'Users',
+                'selectedOutlet',
+                'periode_gaji', // Tambahkan ini
+                'dataGaji',
+                'startDate',
+                'endDate'
+            ));
     }
+
 
     public function filterByDateManager(Request $request, $id)
     {
-        $startDate = $request->start_date;
-        $endDate = $request->end_date ?? now()->format('Y-m-d');
-        $searchQuery = $request->search_query;
-
-        if (!$startDate || !$endDate) {
-            return redirect()->back()->with('error', 'Tanggal Mulai dan Tanggal Selesai harus diisi.');
+        $id_periode = $request->id_periode;
+        if (!$id_periode) {
+            return redirect()->back()->with('error', 'Pilih periode terlebih dahulu');
         }
+
+        $periode = PeriodeGaji::findOrFail($id_periode);
+        $startDate = $periode->tgl_mulai;
+        $endDate = $periode->tgl_akhir;
+        
+        $searchQuery = $request->search_query;
+        $periode_gaji = PeriodeGaji::all(); 
 
         $apiOutlet = $this->getOutletData();
         $selectedOutlet = collect($apiOutlet)->firstWhere('id', $id);
@@ -313,6 +271,7 @@ class CekGajiController extends Controller
         return view('manager.cekgaji', compact(
             'dataGaji',
             'selectedOutlet',
+            'periode_gaji',
             'startDate',
             'endDate',
             'searchQuery',
@@ -325,6 +284,7 @@ class CekGajiController extends Controller
         $searchQuery = $request->search_query;
         $startDate = $request->start_date ?? null;
         $endDate = $request->end_date ?? now()->format('Y-m-d');
+        $periode_gaji = PeriodeGaji::all();
         $idOutlet = $id;
 
         $apiOutlet = $this->getOutletData();
@@ -411,6 +371,7 @@ class CekGajiController extends Controller
         return view('manager.cekgaji', compact(
             'dataGaji',
             'selectedOutlet',
+            'periode_gaji',
             'startDate',
             'endDate',
             'searchQuery',
@@ -420,9 +381,15 @@ class CekGajiController extends Controller
 
     public function cetakPDF(Request $request, $id)
     {
+        $id_periode = $request->id_periode;
+        if (!$id_periode) {
+            return redirect()->back()->with('error', 'Pilih periode terlebih dahulu');
+        }
+
         // Ambil tanggal mulai dan selesai dari request
-        $startDate = $request->start_date ?? now()->subDays(30)->format('Y-m-d');
-        $endDate = $request->end_date ?? now()->format('Y-m-d');
+        $periode = PeriodeGaji::findOrFail($id_periode);
+        $startDate = $periode->tgl_mulai;
+        $endDate = $periode->tgl_akhir;
 
         // Ambil data outlet
         $apiOutlet = $this->getOutletData();
@@ -515,8 +482,21 @@ class CekGajiController extends Controller
         $userId = Auth::id();
         $apiOutlet = $this->getOutletData();
         $outletMapping = collect($apiOutlet)->pluck('outlet_name', 'id');
-        $startDate = $request->start_date ?? now()->subDays(30)->format('Y-m-d');
-        $endDate = $request->end_date ?? now()->format('Y-m-d');
+        
+        // Get all salary periods
+        $periode_gaji = PeriodeGaji::all();
+        
+        // Get the current date
+        $currentDate = now()->format('Y-m-d');
+
+        // Find the period that includes the current date
+        $currentPeriod = PeriodeGaji::where('tgl_mulai', '<=', $currentDate)
+            ->where('tgl_akhir', '>=', $currentDate)
+            ->first();    
+
+        $startDate = $currentPeriod->tgl_mulai;
+        $endDate = $currentPeriod->tgl_akhir;
+
 
         // Get revenue data for all outlets since we're looking at a specific user
         $revenueAPI = $this->getRevenue($startDate, $endDate);
@@ -535,7 +515,7 @@ class CekGajiController extends Controller
             ->groupBy('id_user', 'id_tipe_pekerjaan', 'id_outlet')
             ->get();
 
-        // Transform the data
+        // Transform data
         $dataGaji = $baseDataGaji->map(function ($item) use ($userId, $revenueData, $outletMapping, $startDate, $endDate) {
             $outletName = $outletMapping[$item->id_outlet] ?? 'Unknown Outlet';
             $item->nama_outlet = $outletName;
@@ -557,11 +537,11 @@ class CekGajiController extends Controller
 
             foreach ($shifts as $shift) {
                 $shiftDate = \Carbon\Carbon::parse($shift->tanggal)->format('d-m-Y');
-                // Get revenue for the specific outlet on this date
+                
                 $dailyRevenue = $revenueData[$shiftDate][$outletName]['Total'] ?? 0;
                 $totalRevenue += $dailyRevenue;
                 
-                // Calculate fee based on revenue and job type
+                // Calculate fee based on revenue and tipe pekerjaan
                 $dailyFee = $this->calculateFee($dailyRevenue, $tipePekerjaan);
                 $totalGaji += $dailyFee;
 
@@ -581,17 +561,36 @@ class CekGajiController extends Controller
             return $item;
         });
 
-        return view('staff.cekgaji', compact('dataGaji', 'apiOutlet', 'outletMapping', 'startDate', 'endDate'));
+        return view('staff.cekgaji', compact(
+                    'periode_gaji',
+                    'dataGaji', 
+                    'apiOutlet', 
+                    'outletMapping', 
+                    'startDate', 
+                    'endDate',
+                    'currentPeriod')
+                );
     }
 
     public function filterByDateStaff(Request $request)
     {
         $userId = Auth::id();
-        $startDate = $request->start_date;
-        $endDate = $request->end_date ?? now()->format('Y-m-d');
+
+        $id_periode = $request->id_periode;
+        
+        if (!$id_periode) {
+            return redirect()->back()->with('error', 'Pilih periode terlebih dahulu');
+        }
+
+        $periode = PeriodeGaji::findOrFail($id_periode);
+        $startDate = $periode->tgl_mulai;
+        $endDate = $periode->tgl_akhir;
+        // dd($startDate, $endDate);
+        
+        $periode_gaji = PeriodeGaji::all(); 
 
         if (!$startDate || !$endDate) {
-            return redirect()->back()->with('error', 'Tanggal Mulai dan Tanggal Selesai harus diisi.');
+            return redirect()->back()->with('error', 'Pilih Periode Dahulu !');
         }
 
         $apiOutlet = $this->getOutletData();
@@ -599,10 +598,7 @@ class CekGajiController extends Controller
 
         // Get revenue data for the date range
         $revenueAPI = $this->getRevenue($startDate, $endDate);
-        if (!isset($revenueAPI['data']) || empty($revenueAPI['data'])) {
-            return redirect()->back()->with('warning', 'Data pendapatan tidak ditemukan.');
-        }
-
+      
         // Index revenue data by date
         $revenueData = collect($revenueAPI['data'])->keyBy('order_date');
 
@@ -653,7 +649,16 @@ class CekGajiController extends Controller
             return $item;
         });
 
-        return view('staff.cekgaji', compact('dataGaji', 'apiOutlet', 'startDate', 'endDate', 'outletMapping'));
+        return view('staff.cekgaji', compact(
+                    'dataGaji', 
+                    'apiOutlet', 
+                    'startDate', 
+                    'endDate', 
+                    'outletMapping',
+                    'periode_gaji',
+                    'id_periode'
+                )
+            );
     }
 
 
