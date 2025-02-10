@@ -472,7 +472,11 @@ class CekGajiController extends Controller
         $dompdf->render();
 
         // Output PDF ke browser
-        return $dompdf->stream('data_gaji.pdf', ['Attachment' => 0]);
+        return $dompdf->stream('data_gaji.pdf', [
+            'Attachment' => 0,
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="data_gaji.pdf"'
+        ]);
     }
 
 
@@ -585,7 +589,6 @@ class CekGajiController extends Controller
         $periode = PeriodeGaji::findOrFail($id_periode);
         $startDate = $periode->tgl_mulai;
         $endDate = $periode->tgl_akhir;
-        // dd($startDate, $endDate);
         
         $periode_gaji = PeriodeGaji::all(); 
 
