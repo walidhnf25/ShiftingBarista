@@ -475,7 +475,6 @@ class CekGajiController extends Controller
         return $dompdf->stream('data_gaji.pdf', ['Attachment' => 0]);
     }
 
-
     // Staff Function
     public function IndexStaff(Request $request)
     {
