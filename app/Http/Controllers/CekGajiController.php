@@ -479,7 +479,6 @@ class CekGajiController extends Controller
         ]);
     }
 
-
     // Staff Function
     public function IndexStaff(Request $request)
     {
