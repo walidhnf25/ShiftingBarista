@@ -472,8 +472,16 @@ class CekGajiController extends Controller
         // Render PDF
         $dompdf->render();
 
-        // Output PDF ke browser
-        return $dompdf->stream('data_gaji.pdf');
+        // Tentukan mode: pratinjau (stream) atau unduh (download)
+        $mode = $request->get('mode', 'preview'); // Default ke 'preview'
+        if ($mode === 'download') {
+            return $dompdf->stream('data_gaji.pdf', ['Attachment' => true]); // Unduh PDF
+        }
+
+        return response($dompdf->output(), 200)
+        ->header('Content-Type', 'application/pdf')
+        ->header('Content-Disposition', $mode === 'download' ? 'attachment; filename="data_gaji.pdf"' : 'inline; filename="data_gaji.pdf"');
+
     }
 
     // Staff Function
