@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\PeriodeGaji;
 use Dompdf\Dompdf;
 use Dompdf\Options;
+
 class CekGajiController extends Controller
 {
     // get data
