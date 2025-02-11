@@ -472,11 +472,7 @@ class CekGajiController extends Controller
         $dompdf->render();
 
         // Output PDF ke browser
-        return $dompdf->stream('data_gaji.pdf', [
-            'Attachment' => 0,
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="data_gaji.pdf"'
-        ]);
+        return $dompdf->stream('data_gaji.pdf');
     }
 
     // Staff Function
