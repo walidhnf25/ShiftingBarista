@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\PeriodeGaji;
 use Dompdf\Dompdf;
 use Dompdf\Options;
+
 class CekGajiController extends Controller
 {
     // get data
@@ -471,8 +472,13 @@ class CekGajiController extends Controller
         // Render PDF
         $dompdf->render();
 
-        // Output PDF ke browser
-        return $dompdf->stream('data_gaji.pdf');
+        // Tentukan mode: pratinjau (stream) atau unduh (download)
+        $mode = $request->get('mode', 'preview'); // Default ke 'preview'
+        if ($mode === 'download') {
+            return $dompdf->stream('data_gaji.pdf', ['Attachment' => true]); // Unduh PDF
+        }
+
+        return $dompdf->stream('data_gaji.pdf', ['Attachment' => false]); // Tampilkan PDF di browser
     }
 
     // Staff Function
