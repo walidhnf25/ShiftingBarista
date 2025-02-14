@@ -104,10 +104,10 @@
                                 </td>
                                 <td>
                                     <!-- Edit Button -->
-                                    <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
+                                    <!-- <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
                                         data-target="#EditModal{{ $shift->id }}">
                                         Edit
-                                    </button>
+                                    </button> -->
 
                                     <!-- Edit Modal -->
                                     <div class="modal fade" id="EditModal{{ $shift->id }}" tabindex="-1" role="dialog"
