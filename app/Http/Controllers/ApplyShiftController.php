@@ -9,6 +9,7 @@ use App\Models\JadwalShift;
 use App\Models\JamShift;
 use App\Models\TipePekerjaan;
 use App\Models\Kesediaan;
+use App\Models\PeriodeGaji;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Crypt;
@@ -29,24 +30,33 @@ class ApplyShiftController extends Controller
         // Retrieve all necessary data
         $jamShift = JamShift::all();
         $TipePekerjaan = TipePekerjaan::all();
-        
-        // Base query for jadwal_shift
-        $jadwal_shift = JadwalShift::where('status', 'Waiting');
-
-        // Filter by outlet if id_outlet is provided in the request
-        if ($request->has('id_outlet') && $request->input('id_outlet') !== '') {
-            $jadwal_shift = $jadwal_shift->where('id_outlet', $request->input('id_outlet'));
-        }
-
-        // Execute the query to get the filtered shifts
-        $jadwal_shift = $jadwal_shift->get();
-
         $apiOutlet = $this->getOutletData();
         $outletMapping = collect($apiOutlet)->pluck('outlet_name', 'id');
 
+        // Ambil `tgl_mulai` dari ID terakhir di tabel periode_gaji
+        $lastPeriode = PeriodeGaji::latest('id')->first(); // Mengambil record dengan ID terbesar
+        $tglMulai = $lastPeriode ? $lastPeriode->tgl_mulai : null;
+
+        // Pastikan ada `tgl_mulai`, jika tidak ada tampilkan semua jadwal
+        if ($tglMulai) {
+            // Base query untuk jadwal_shift, hanya menampilkan data setelah atau sama dengan `tgl_mulai`
+            $jadwal_shift = JadwalShift::where('status', 'Waiting')
+                            ->where('tanggal', '>=', $tglMulai);
+        } else {
+            $jadwal_shift = JadwalShift::where('status', 'Waiting');
+        }
+
+        // Filter berdasarkan outlet jika dipilih
+        if ($request->has('id_outlet') && $request->input('id_outlet') !== '') {
+            $jadwal_shift->where('id_outlet', $request->input('id_outlet'));
+        }
+
+        // Ambil hasil query setelah difilter
+        $jadwal_shift = $jadwal_shift->get();
+
         // Retrieve cached shift IDs for the logged-in user
         $cachedIds = Cache::get("jadwal_shift_ids_user_{$userId}", []);
-        
+
         // Retrieve all cached shift schedules for this user
         $cachedJadwalShifts = [];
         foreach ($cachedIds as $cachedId) {
@@ -56,16 +66,20 @@ class ApplyShiftController extends Controller
             }
         }
 
-        // If avail_register is 'No', get shifts from kesediaan
-        if ($availRegister === 'No') {
+        // Jika avail_register adalah 'No', ambil shift dari kesediaan hanya jika tanggal setelah `tgl_mulai`
+        if ($availRegister === 'No' && $tglMulai) {
             $kesediaanShifts = Kesediaan::where('id_user', $userId)
-                                            ->whereHas('jadwalShift') // Ensure there's a relationship
-                                            ->get()->pluck('jadwalShift'); // Get related jadwalShift
+                                        ->whereHas('jadwalShift', function ($query) use ($tglMulai) {
+                                            $query->where('tanggal', '>=', $tglMulai);
+                                        })
+                                        ->with('jadwalShift')
+                                        ->get()
+                                        ->pluck('jadwalShift');
         } else {
-            $kesediaanShifts = collect(); // If not 'No', we don't need to retrieve this data
+            $kesediaanShifts = collect();
         }
 
-        // Pass all data to the view, including the avail_register status
+        // Pass all data to the view
         return view('staff.applyshift', [
             'jadwal_shift' => $jadwal_shift,
             'jamShift' => $jamShift,
@@ -74,7 +88,7 @@ class ApplyShiftController extends Controller
             'outletMapping' => $outletMapping,
             'cachedJadwalShifts' => $cachedJadwalShifts,
             'availRegister' => $availRegister,
-            'kesediaanShifts' => $kesediaanShifts // Pass the shifts from kesediaan
+            'kesediaanShifts' => $kesediaanShifts // Pass the filtered shifts from kesediaan
         ]);
     }
 
