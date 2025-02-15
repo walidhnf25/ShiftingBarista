@@ -28,7 +28,7 @@
     <div class="col-md-6">
         <form action="{{ route('filterJadwalShift') }}" method="GET" id="filterForm" class="d-flex gap-3">
             <!-- Filter Outlet -->
-            <select name="id_outlet" id="id_outlet" class="form-control">
+            <select name="id_outlet" id="id_outlet" class="form-control" @if($availRegister === 'No') disabled @endif>
                 <option value="">ALL OUTLET</option>
                 @foreach ($outletMapping as $id => $outletName)
                     <option value="{{ $id }}" {{ request('id_outlet') == $id ? 'selected' : '' }}>
@@ -38,7 +38,8 @@
             </select>
 
             <!-- Filter Tipe Pekerjaan -->
-            <select name="id_tipe_pekerjaan" id="id_tipe_pekerjaan" class="form-control mx-3">
+            <select name="id_tipe_pekerjaan" id="id_tipe_pekerjaan" class="form-control mx-3" 
+                @if($availRegister === 'No') disabled @endif>
                 <option value="">ALL TIPE PEKERJAAN</option>
                 @foreach ($TipePekerjaan as $tipe)
                     <option value="{{ $tipe->id }}" {{ request('id_tipe_pekerjaan') == $tipe->id ? 'selected' : '' }}>
