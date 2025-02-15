@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\JadwalShift;
 use App\Models\JamShift;
 use App\Models\TipePekerjaan;
+use App\Models\PeriodeGaji;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Crypt;
@@ -58,29 +59,52 @@ class JadwalShiftController extends Controller
 
     public function showOutlet(Request $request, $id)
     {
-        // Retrieve all necessary data
-        $jamShift = JamShift::all();
+        // Jika ID outlet tidak ditemukan, lempar error 404
+        if (!$id) {
+            abort(404, 'Outlet ID is required.');
+        }
+
+        // Ambil semua data yang diperlukan
+        $jamShift = JamShift::where('id_outlet', $id)->get();
         $TipePekerjaan = TipePekerjaan::all();
         $User = User::whereIn('role', ['Staff', 'Manager'])->get();
-        $jadwal_shift = JadwalShift::all();
         $apiOutlet = $this->getOutletData();
+        $periode_gaji = PeriodeGaji::all();
 
-        // Find the specific outlet by ID
+        // Cari outlet berdasarkan ID
         $selectedOutlet = collect($apiOutlet)->firstWhere('id', $id);
 
-        // Check if the outlet exists
+        // Jika outlet tidak ditemukan, lempar error 404
         if (!$selectedOutlet) {
             abort(404, 'Outlet not found');
         }
 
-        $jamShift = JamShift::where('id_outlet', $id)->get();
-        $jadwal_shift = JadwalShift::with('tipePekerjaan')->where('id_outlet', $id)->get();
+        // Ambil ID periode dari request
+        $id_periode = $request->id_periode;
 
-        // Create a mapping of outlet IDs to outlet names
+        // Default: Ambil semua shift jika tidak ada periode dipilih
+        $jadwal_shift = JadwalShift::with('tipePekerjaan', 'jamShift', 'user')
+            ->where('id_outlet', $id);
+
+        // Jika ada periode yang dipilih, filter berdasarkan `tgl_mulai` dan `tgl_akhir`
+        if ($id_periode) {
+            $periode = PeriodeGaji::find($id_periode);
+            if ($periode) {
+                $jadwal_shift = $jadwal_shift->whereBetween('tanggal', [$periode->tgl_mulai, $periode->tgl_akhir]);
+            }
+        }
+
+        // Ambil daftar jadwal shift yang sudah difilter
+        $jadwal_shift = $jadwal_shift->get();
+
+        // Mapping outlet ID ke nama outlet
         $outletMapping = collect($apiOutlet)->pluck('outlet_name', 'id');
 
-        // Pass all data to the view, including apiOutlet
-        return view('manager.jadwalshift', compact('jadwal_shift', 'jamShift', 'TipePekerjaan', 'User', 'selectedOutlet', 'outletMapping', 'apiOutlet'));
+        // Kirim data ke view
+        return view('manager.jadwalshift', compact(
+            'jadwal_shift', 'jamShift', 'TipePekerjaan', 'User',
+            'selectedOutlet', 'outletMapping', 'apiOutlet', 'periode_gaji', 'id_periode'
+        ));
     }
 
     public function getJadwalShiftData()

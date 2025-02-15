@@ -69,11 +69,28 @@
             </div>
         </div>
 
-
         <!-- Table Data Jadwal Shift -->
         <div class="row mt-5">
             <div class="col-lg-12">
-                <h2 class="h4 mb-4">Data Jadwal Shift</h2>
+                <h2 class="h4 mb-3">Data Jadwal Shift</h2>
+                <div class="row mb-3">
+                    <div class="col-lg-12">
+                        <form action="{{ route('outlet.jadwalshift', ['id' => $selectedOutlet['id'] ?? 0]) }}" method="GET">
+                            <div class="btn-group">
+                                <select name="id_periode" class="form-control" onchange="this.form.submit()">
+                                    <option value="">Pilih Periode</option>
+                                    @foreach ($periode_gaji as $periode)
+                                        <option value="{{ $periode->id }}" {{ request('id_periode') == $periode->id ? 'selected' : '' }}>
+                                            {{ $periode->nama_periode_gaji }} |
+                                            {{ \Carbon\Carbon::parse($periode->tgl_mulai)->format('d/m/Y') }} -
+                                            {{ \Carbon\Carbon::parse($periode->tgl_akhir)->format('d/m/Y') }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                </div>
                 <table class="table table-bordered table-striped" id="shiftTable">
                     <thead>
                         <tr>
@@ -309,5 +326,17 @@
             setTimeout(function() {
                 $('.alert').fadeOut('slow');
             }, 2000);
+
+            function resetSearch() {
+                const url = new URL(window.location.href);
+                const id_periode = url.searchParams.get('id_periode');
+                // Buat URL baru tanpa parameter search_query
+                const newUrl = `${url.origin}${url.pathname}?id_periode=${id_periode}`;
+                window.location.href = newUrl;
+            }
+
+            $(document).ready(function() {
+                $('[data-toggle="tooltip"]').tooltip(); // Inisialisasi tooltip
+            });
         </script>
     @endpush

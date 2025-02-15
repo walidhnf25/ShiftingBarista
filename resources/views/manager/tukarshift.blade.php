@@ -22,20 +22,31 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="col mb-3">
-                <form action="{{ route('filterJadwalShifts') }}" method="GET">
-                    @csrf
-                    <div class="btn-group">
-                        <select name="id_outlet" class="form-control" onchange="this.form.submit()">
-                            <option value="">ALL OUTLET</option>
-                            @foreach ($outletMapping as $id => $outletName)
-                                <option value="{{ $id }}" @if(request('id_outlet') == $id) selected @endif>
-                                    {{ $outletName }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
+        <div class="row mb-3">
+            <div class="col-md-6 d-flex align-items-center">
+                <!-- Form untuk Outlet & Periode Gaji -->
+                <form action="{{ route('tukarshift') }}" method="GET" class="d-flex gap-3">
+                    <!-- Dropdown Outlet -->
+                    <select name="id_outlet" class="form-control" onchange="this.form.submit()">
+                        <option value="">ALL OUTLET</option>
+                        @foreach ($outletMapping as $id => $outletName)
+                            <option value="{{ $id }}" {{ request('id_outlet') == $id ? 'selected' : '' }}>
+                                {{ $outletName }}
+                            </option>
+                        @endforeach
+                    </select>
+
+                    <!-- Dropdown Periode Gaji -->
+                    <select name="id_periode" class="form-control mx-3" onchange="this.form.submit()">
+                        <option value="">Pilih Periode</option>
+                        @foreach ($periode_gaji as $periode)
+                            <option value="{{ $periode->id }}" {{ request('id_periode') == $periode->id ? 'selected' : '' }}>
+                                {{ $periode->nama_periode_gaji }} |
+                                {{ \Carbon\Carbon::parse($periode->tgl_mulai)->format('d/m/Y') }} -
+                                {{ \Carbon\Carbon::parse($periode->tgl_akhir)->format('d/m/Y') }}
+                            </option>
+                        @endforeach
+                    </select>
                 </form>
             </div>
         </div>
@@ -209,6 +220,18 @@
                                 });
                             });
                         });
-            });
+                    });
+
+                    function resetSearch() {
+                        const url = new URL(window.location.href);
+                        const id_periode = url.searchParams.get('id_periode');
+                        // Buat URL baru tanpa parameter search_query
+                        const newUrl = `${url.origin}${url.pathname}?id_periode=${id_periode}`;
+                        window.location.href = newUrl;
+                    }
+
+                    $(document).ready(function() {
+                        $('[data-toggle="tooltip"]').tooltip(); // Inisialisasi tooltip
+                    });
         </script>
     @endpush
