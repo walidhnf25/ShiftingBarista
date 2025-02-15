@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\JadwalShift;
 use App\Models\JamShift;
 use App\Models\TipePekerjaan;
+use App\Models\PeriodeGaji;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Crypt;
@@ -16,27 +17,46 @@ class TukarShiftController extends Controller
 {
     public function showOutlet(Request $request)
     {
-        // Retrieve all necessary data
+        // Ambil semua data yang diperlukan
         $jamShift = JamShift::all();
         $TipePekerjaan = TipePekerjaan::all();
+        $periode_gaji = PeriodeGaji::all();
         $User = User::whereIn('role', ['Staff', 'Manager'])->get();
-
-        // Filter jadwal_shift yang memiliki id_user
-        $jadwal_shift = JadwalShift::whereNotNull('id_user')->get();
-
         $apiOutlet = $this->getOutletData();
-
-        // Create a mapping of outlet IDs to outlet names
         $outletMapping = collect($apiOutlet)->pluck('outlet_name', 'id');
 
-        // Pass all data to the view, including apiOutlet
-        return view('manager.tukarshift', compact('jadwal_shift', 'jamShift', 'TipePekerjaan', 'User', 'outletMapping', 'apiOutlet'));
+        // Ambil ID filter dari request
+        $id_periode = $request->id_periode;
+        $id_outlet = $request->id_outlet;
+
+        // Default: Ambil semua shift jika tidak ada filter
+        $jadwal_shift = JadwalShift::with('tipePekerjaan', 'jamShift', 'user')->whereNotNull('id_user');
+
+        // Filter berdasarkan periode gaji jika dipilih
+        if ($id_periode) {
+            $periode = PeriodeGaji::find($id_periode);
+            if ($periode) {
+                $jadwal_shift->whereBetween('tanggal', [$periode->tgl_mulai, $periode->tgl_akhir]);
+            }
+        }
+
+        // Filter berdasarkan outlet jika dipilih
+        if ($id_outlet) {
+            $jadwal_shift->where('id_outlet', $id_outlet);
+        }
+
+        // Ambil daftar jadwal shift yang sudah difilter
+        $jadwal_shift = $jadwal_shift->get();
+
+        // Kirim data ke view
+        return view('manager.tukarshift', compact('jadwal_shift', 'jamShift', 'TipePekerjaan', 'User', 'outletMapping', 'apiOutlet', 'periode_gaji', 'id_periode', 'id_outlet'));
     }
 
     public function filter(Request $request)
     {
         // Ambil parameter filter dari request
         $id_outlet = $request->id_outlet;
+        $periode_gaji = PeriodeGaji::all();
 
         // Filter jadwal shift berdasarkan id_user yang tidak null dan id_outlet (jika dipilih)
         $jadwal_shift = JadwalShift::whereNotNull('id_user') // Filter untuk id_user yang tidak null
@@ -54,7 +74,7 @@ class TukarShiftController extends Controller
         $outletMapping = collect($apiOutlet)->pluck('outlet_name', 'id');
 
         // Kembalikan ke view dengan data yang sudah difilter
-        return view('manager.tukarshift', compact('jadwal_shift', 'jamShift', 'TipePekerjaan', 'User', 'outletMapping'));
+        return view('manager.tukarshift', compact('jadwal_shift', 'jamShift', 'TipePekerjaan', 'User', 'outletMapping', 'periode_gaji'));
     }
 
     public function update(Request $request)

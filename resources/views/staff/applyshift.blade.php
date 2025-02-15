@@ -24,24 +24,31 @@
     </div>
 </div>
 
-<div class="row"> 
-    <div class="col mb-3">
-        <form action="{{ route('filterJadwalShift') }}" method="GET"> <!-- Ganti ke GET jika filter di URL -->
-            @csrf
-            <div class="btn-group">
-                <select name="id_outlet" class="form-control" onchange="this.form.submit()" @if($availRegister === 'No') disabled @endif>
-                    <option value="">ALL OUTLET</option>
-                    @foreach ($outletMapping as $id => $outletName)
-                        <option value="{{ $id }}" @if(request('id_outlet') == $id) selected @endif>
-                            {{ $outletName }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
+<div class="row mb-3">
+    <div class="col-md-6">
+        <form action="{{ route('filterJadwalShift') }}" method="GET" id="filterForm" class="d-flex gap-3">
+            <!-- Filter Outlet -->
+            <select name="id_outlet" id="id_outlet" class="form-control">
+                <option value="">ALL OUTLET</option>
+                @foreach ($outletMapping as $id => $outletName)
+                    <option value="{{ $id }}" {{ request('id_outlet') == $id ? 'selected' : '' }}>
+                        {{ $outletName }}
+                    </option>
+                @endforeach
+            </select>
+
+            <!-- Filter Tipe Pekerjaan -->
+            <select name="id_tipe_pekerjaan" id="id_tipe_pekerjaan" class="form-control mx-3">
+                <option value="">ALL TIPE PEKERJAAN</option>
+                @foreach ($TipePekerjaan as $tipe)
+                    <option value="{{ $tipe->id }}" {{ request('id_tipe_pekerjaan') == $tipe->id ? 'selected' : '' }}>
+                        {{ $tipe->tipe_pekerjaan }}
+                    </option>
+                @endforeach
+            </select>
         </form>
     </div>
 </div>
-
 
 <div class="row">
     <div class="col-md-12 col-lg-12">
@@ -228,6 +235,19 @@ $(document).ready(function () {
                 rows.forEach(row => tbody.appendChild(row));
             });
         });
+    });
+
+    document.getElementById("id_outlet").addEventListener("change", function () {
+        // Reset filter tipe pekerjaan saat outlet berubah
+        document.getElementById("id_tipe_pekerjaan").selectedIndex = 0;
+
+        // Submit form
+        document.getElementById("filterForm").submit();
+    });
+
+    document.getElementById("id_tipe_pekerjaan").addEventListener("change", function () {
+        // Submit form saat tipe pekerjaan dipilih
+        document.getElementById("filterForm").submit();
     });
 
     // Sembunyikan alert setelah beberapa detik
