@@ -33,25 +33,19 @@ class ApplyShiftController extends Controller
         $apiOutlet = $this->getOutletData();
         $outletMapping = collect($apiOutlet)->pluck('outlet_name', 'id');
 
-        // Ambil `tgl_mulai` dari ID terakhir di tabel periode_gaji
-        $lastPeriode = PeriodeGaji::latest('id')->first(); // Mengambil record dengan ID terbesar
-        $tglMulai = $lastPeriode ? $lastPeriode->tgl_mulai : null;
+        // Ambil hari ini (today) sebagai batas minimal
+        $today = now()->toDateString(); // Menghasilkan '2025-04-27' misalnya
 
-        // Pastikan ada `tgl_mulai`, jika tidak ada tampilkan semua jadwal
-        if ($tglMulai) {
-            // Base query untuk jadwal_shift, hanya menampilkan data setelah atau sama dengan `tgl_mulai`
-            $jadwal_shift = JadwalShift::where('status', 'Waiting')
-                            ->where('tanggal', '>=', $tglMulai);
-        } else {
-            $jadwal_shift = JadwalShift::where('status', 'Waiting');
-        }
+        // Base query: hanya jadwal dari hari ini ke depan
+        $jadwal_shift = JadwalShift::where('status', 'Waiting')
+                        ->where('tanggal', '>=', $today);
 
         // Filter berdasarkan outlet jika dipilih
         if ($request->has('id_outlet') && $request->input('id_outlet') !== '') {
             $jadwal_shift->where('id_outlet', $request->input('id_outlet'));
         }
 
-        // Ambil hasil query setelah difilter
+        // Ambil hasil query
         $jadwal_shift = $jadwal_shift->get();
 
         // Retrieve cached shift IDs for the logged-in user
@@ -66,11 +60,11 @@ class ApplyShiftController extends Controller
             }
         }
 
-        // Jika avail_register adalah 'No', ambil shift dari kesediaan hanya jika tanggal setelah `tgl_mulai`
-        if ($availRegister === 'No' && $tglMulai) {
+        // Jika avail_register = 'No', ambil kesediaan shifts dari hari ini ke depan
+        if ($availRegister === 'No') {
             $kesediaanShifts = Kesediaan::where('id_user', $userId)
-                                        ->whereHas('jadwalShift', function ($query) use ($tglMulai) {
-                                            $query->where('tanggal', '>=', $tglMulai);
+                                        ->whereHas('jadwalShift', function ($query) use ($today) {
+                                            $query->where('tanggal', '>=', $today);
                                         })
                                         ->with('jadwalShift')
                                         ->get()
@@ -79,7 +73,7 @@ class ApplyShiftController extends Controller
             $kesediaanShifts = collect();
         }
 
-        // Pass all data to the view
+        // Return ke view
         return view('staff.applyshift', [
             'jadwal_shift' => $jadwal_shift,
             'jamShift' => $jamShift,
@@ -88,7 +82,7 @@ class ApplyShiftController extends Controller
             'outletMapping' => $outletMapping,
             'cachedJadwalShifts' => $cachedJadwalShifts,
             'availRegister' => $availRegister,
-            'kesediaanShifts' => $kesediaanShifts // Pass the filtered shifts from kesediaan
+            'kesediaanShifts' => $kesediaanShifts
         ]);
     }
 

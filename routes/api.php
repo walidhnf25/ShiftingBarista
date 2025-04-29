@@ -23,3 +23,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::get('/jadwalshift', [JadwalShiftController::class, 'getJadwalShiftData']);
+Route::get('/users', [JadwalShiftController::class, 'getUserData']);
+Route::get('/jamShift', [JadwalShiftController::class, 'getJamShiftData']);
+Route::get('/TipePekerjaan', [JadwalShiftController::class, 'getTipePekerjaanData']);

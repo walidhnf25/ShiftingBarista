@@ -120,11 +120,22 @@
                                     {{ $shift->user ? strtoupper($shift->user->name) . ($shift->user->role === 'Manager' ? ' (MANAGER)' : '') : '-' }}
                                 </td>
                                 <td>
-                                    <!-- Edit Button -->
-                                    <!-- <button type="button" class="btn btn-warning btn-sm" data-toggle="modal"
-                                        data-target="#EditModal{{ $shift->id }}">
-                                        Edit
-                                    </button> -->
+                                    <div class="btn-group" role="group" aria-label="Action Buttons">
+                                        <!-- Edit Button -->
+                                        <button type="button" class="btn btn-warning btn-sm mx-2" data-toggle="modal"
+                                            data-target="#EditModal{{ $shift->id }}">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+
+                                        <!-- Delete Form -->
+                                        <form action="{{ route('jadwal_shift.destroy', $shift->id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm delete-confirm" id="btnDelete">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
+                                        </form>
+                                    </div>
 
                                     <!-- Edit Modal -->
                                     <div class="modal fade" id="EditModal{{ $shift->id }}" tabindex="-1" role="dialog"
@@ -207,15 +218,6 @@
                                             </div>
                                         </div>
                                     </div>
-
-                                    <!-- Delete Form -->
-                                    <form action="{{ route('jadwal_shift.destroy', $shift->id) }}" method="POST"
-                                        class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm delete-confirm"
-                                            id="btnDelete">Delete</button>
-                                    </form>
                                 </td>
                             </tr>
                         @endforeach
