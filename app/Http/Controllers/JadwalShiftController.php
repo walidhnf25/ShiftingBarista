@@ -118,6 +118,39 @@ class JadwalShiftController extends Controller
         ]);
     }
 
+    public function getUserData()
+    {
+        // Mengambil semua data outlet dari database
+        $users = User::all();
+
+        // Mengembalikan data dalam format JSON
+        return response()->json([
+            'users' => $users,
+        ]);
+    }
+
+    public function getJamShiftData()
+    {
+        // Mengambil semua data outlet dari database
+        $jamShift = JamShift::all();
+
+        // Mengembalikan data dalam format JSON
+        return response()->json([
+            'jamShift' => $jamShift,
+        ]);
+    }
+
+    public function getTipePekerjaanData()
+    {
+        // Mengambil semua data outlet dari database
+        $TipePekerjaan = TipePekerjaan::all();
+
+        // Mengembalikan data dalam format JSON
+        return response()->json([
+            'TipePekerjaan' => $TipePekerjaan,
+        ]);
+    }
+
     public function getOutletData()
     {
         // Token API dan URL
@@ -176,6 +209,7 @@ class JadwalShiftController extends Controller
         $jadwal_shift->id_tipe_pekerjaan = $request->id_tipe_pekerjaan;
         $jadwal_shift->id_user = $request->id_user;
         $jadwal_shift->tanggal = $request->tanggal;
+        $jadwal_shift->status = 'Approve';
 
         // Simpan perubahan
         $jadwal_shift->save();
