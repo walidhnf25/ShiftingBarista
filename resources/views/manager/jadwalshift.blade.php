@@ -188,7 +188,7 @@
 
                                                             <div class="form-group col-md-6">
                                                                 <label for="id_user">User</label>
-                                                                <select class="form-control" id="id_user" name="id_user" required>
+                                                                <select class="form-control" id="id_user" name="id_user">
                                                                     <option value="" disabled selected>Pilih User</option>
                                                                     @foreach ($User as $type)
                                                                         <option value="{{ $type->id }}" {{ $type->id == $shift->id_user ? 'selected' : '' }}>

@@ -107,50 +107,6 @@ class JadwalShiftController extends Controller
         ));
     }
 
-    public function getJadwalShiftData()
-    {
-        // Mengambil semua data outlet dari database
-        $jadwal_shift = JadwalShift::all();
-
-        // Mengembalikan data dalam format JSON
-        return response()->json([
-            'jadwal_shift' => $jadwal_shift,
-        ]);
-    }
-
-    public function getUserData()
-    {
-        // Mengambil semua data outlet dari database
-        $users = User::all();
-
-        // Mengembalikan data dalam format JSON
-        return response()->json([
-            'users' => $users,
-        ]);
-    }
-
-    public function getJamShiftData()
-    {
-        // Mengambil semua data outlet dari database
-        $jamShift = JamShift::all();
-
-        // Mengembalikan data dalam format JSON
-        return response()->json([
-            'jamShift' => $jamShift,
-        ]);
-    }
-
-    public function getTipePekerjaanData()
-    {
-        // Mengambil semua data outlet dari database
-        $TipePekerjaan = TipePekerjaan::all();
-
-        // Mengembalikan data dalam format JSON
-        return response()->json([
-            'TipePekerjaan' => $TipePekerjaan,
-        ]);
-    }
-
     public function getOutletData()
     {
         // Token API dan URL
@@ -188,11 +144,10 @@ class JadwalShiftController extends Controller
     public function update(Request $request, $id)
     {
         // Validasi input
-
         $request->validate([
             'id_jam' => 'required|string',
             'id_tipe_pekerjaan' => 'required|string',
-            'id_user' => 'required|string',
+            'id_user' => 'nullable|string',
             'tanggal' => 'required|date',
         ]);
 
@@ -204,18 +159,91 @@ class JadwalShiftController extends Controller
             return redirect()->route('manager.jadwalshift')->with('error', 'Jadwal Shift tidak ditemukan');
         }
 
+        // Cek apakah id_user berubah
+        if ($jadwal_shift->id_user !== $request->id_user) {
+            $jadwal_shift->status = 'Approve';
+        }
+
         // Update data jadwal shift
         $jadwal_shift->id_jam = $request->id_jam;
         $jadwal_shift->id_tipe_pekerjaan = $request->id_tipe_pekerjaan;
         $jadwal_shift->id_user = $request->id_user;
         $jadwal_shift->tanggal = $request->tanggal;
-        $jadwal_shift->status = 'Approve';
 
         // Simpan perubahan
         $jadwal_shift->save();
 
         // Redirect kembali dengan pesan sukses
         return redirect()->back()->with('success', 'Jadwal Shift berhasil diupdate');
+    }
+
+    public function getJadwalShiftData(Request $request, $id = null)
+    {
+        if ($id) {
+            // Jika ada ID, ambil data berdasarkan ID
+            $jadwal_shift = JadwalShift::find($id);
+            
+            // Jika data ditemukan, kembalikan response JSON
+            if ($jadwal_shift) {
+                return response()->json(['JadwalShift' => $jadwal_shift]);
+            } else {
+                // Jika data tidak ditemukan, kembalikan response 404
+                return response()->json(['message' => 'Data tidak ditemukan'], 404);
+            }
+        } else {
+            // Jika tidak ada ID, ambil semua data JadwalShift
+            $jadwal_shift = JadwalShift::all();
+            
+            // Pastikan nama variabel konsisten, dan kembalikan response JSON
+            return response()->json(['jadwal_shift' => $jadwal_shift]);
+        }
+    }
+
+    public function updateJadwalShift(Request $request, $id)
+    {
+        // Validasi input
+        $request->validate([
+            'id_jam' => 'required|string',
+            'id_tipe_pekerjaan' => 'required|string',
+            'id_user' => 'nullable|string',  // id_user bisa null
+            'tanggal' => 'required|date',
+            'check_in_time' => 'nullable|date_format:H:i',  // validasi waktu check-in
+            'check_out_time' => 'nullable|date_format:H:i', // validasi waktu check-out
+        ]);
+
+        // Cari jadwal shift berdasarkan ID
+        $jadwal_shift = JadwalShift::find($id);
+
+        // Jika jadwal shift tidak ditemukan, berikan response gagal
+        if (!$jadwal_shift) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Jadwal Shift tidak ditemukan'
+            ], 404);
+        }
+
+        // Cek apakah id_user berubah, jika iya, set status menjadi 'Approve'
+        if ($jadwal_shift->id_user !== $request->id_user) {
+            $jadwal_shift->status = 'Approve';
+        }
+
+        // Update data jadwal shift
+        $jadwal_shift->id_jam = $request->id_jam;
+        $jadwal_shift->id_tipe_pekerjaan = $request->id_tipe_pekerjaan;
+        $jadwal_shift->id_user = $request->id_user;
+        $jadwal_shift->tanggal = $request->tanggal;
+        $jadwal_shift->check_in_time = $request->check_in_time;   // Update waktu check-in
+        $jadwal_shift->check_out_time = $request->check_out_time; // Update waktu check-out
+
+        // Simpan perubahan
+        $jadwal_shift->save();
+
+        // Mengembalikan response sukses
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Jadwal Shift berhasil diupdate',
+            'data' => $jadwal_shift
+        ], 200);
     }
 
     /**
