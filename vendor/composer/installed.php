@@ -434,6 +434,8 @@
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
             'reference' => 'd296c215fcdc5450dac8f24a4e2cb6da7b17927f',
+            'reference' => '7fd094287ca13f2a899702cf8262fdee546270ff',
+            'reference' => 'daec54f776f307c686febb2036a507620a2893f8',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -799,8 +801,8 @@
         'psr/log-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0.0 || 2.0.0 || 3.0.0',
-                1 => '1.0|2.0',
+                0 => '1.0|2.0',
+                1 => '1.0.0 || 2.0.0 || 3.0.0',
             ),
         ),
         'psr/simple-cache' => array(
