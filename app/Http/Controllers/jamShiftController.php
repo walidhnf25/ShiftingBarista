@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\JamShift;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use Log;
 
 class jamShiftController extends Controller
 {
@@ -191,5 +192,96 @@ class jamShiftController extends Controller
             // Mengendalikan kesalahan
             return redirect()->back()->with('error', 'Gagal menghapus data: ' . $e->getMessage());
         }
+    }
+
+    public function getJamShift($id = null)
+    {
+        if ($id) {
+            // Ambil data berdasarkan ID
+            $jamShift = JamShift::find($id);
+            if ($jamShift) {
+                return response()->json(['JamShift' => $jamShift]);
+            } else {
+                return response()->json(['message' => 'Data tidak ditemukan'], 404);
+            }
+        } else {
+            // Ambil semua data JamShift
+            $jamShift = JamShift::all();
+            return response()->json(['JamShift' => $jamShift]);
+        }
+    }
+
+    // Fungsi untuk membuat data JamShift baru
+    public function createJamShift(Request $request)
+    {
+        // Validasi input
+        $validatedData = $request->validate([
+            'jam_mulai' => 'required',
+            'jam_selesai' => 'required',
+            'id_outlet' => 'required',
+        ]);
+
+        // Mengecek apakah data dengan kombinasi yang sama sudah ada
+        $existingJamShift = JamShift::where('jam_mulai', $request->jam_mulai)
+            ->where('jam_selesai', $request->jam_selesai)
+            ->where('id_outlet', $request->id_outlet)
+            ->first();
+
+        if ($existingJamShift) {
+            return response()->json(['message' => 'Jam Shift sudah ada!'], 400);
+        }
+
+        // Membuat data JamShift baru
+        $jamShift = JamShift::create($validatedData);
+
+        return response()->json(['message' => 'Jam Shift created successfully', 'JamShift' => $jamShift], 201);
+    }
+
+    // Fungsi untuk memperbarui data JamShift berdasarkan ID
+    public function updateJamShift(Request $request, $id)
+    {
+        // Validasi input
+        $validatedData = $request->validate([
+            'jam_mulai' => 'required',
+            'jam_selesai' => 'required',
+            'id_outlet' => 'required',
+        ]);
+
+        // Mencari data berdasarkan ID
+        $jamShift = JamShift::find($id);
+        if (!$jamShift) {
+            return response()->json(['message' => 'Data tidak ditemukan'], 404);
+        }
+
+        // Mengecek apakah data dengan kombinasi yang sama sudah ada
+        $existingJamShift = JamShift::where('jam_mulai', $request->jam_mulai)
+            ->where('jam_selesai', $request->jam_selesai)
+            ->where('id_outlet', $request->id_outlet)
+            ->where('id', '!=', $id)
+            ->first();
+
+        if ($existingJamShift) {
+            return response()->json(['message' => 'Jam Shift dengan data yang sama sudah ada!'], 400);
+        }
+
+        // Memperbarui data JamShift
+        $jamShift->update($validatedData);
+
+        return response()->json(['message' => 'Jam Shift updated successfully', 'JamShift' => $jamShift]);
+    }
+
+    // Fungsi untuk menghapus data JamShift berdasarkan ID
+    public function deleteJamShiftAPI($id)
+    {
+        // Mencari data berdasarkan ID
+        $jamShift = JamShift::find($id);
+        if (!$jamShift) {
+            return response()->json(['message' => 'Data tidak ditemukan'], 404);
+        }
+
+        // Menghapus data JamShift
+        $jamShift->delete();
+
+        return response()->json(['message' => 'Jam Shift deleted successfully']);
     }
 }

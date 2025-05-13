@@ -117,4 +117,87 @@ class TipePekerjaanController extends Controller
             return redirect()->back()->with('error', 'Gagal menghapus data: ' . $e->getMessage());
         }
     }
+
+    //API Tipe Pekerjaan
+    // Fungsi untuk mengambil data TipePekerjaan
+    public function getTipePekerjaanData(Request $request, $id = null)
+    {
+        if ($id) {
+            // Jika ada ID, ambil data berdasarkan ID
+            $tipePekerjaan = TipePekerjaan::find($id);
+            if ($tipePekerjaan) {
+                return response()->json(['TipePekerjaan' => $tipePekerjaan]);
+            } else {
+                return response()->json(['message' => 'Data tidak ditemukan'], 404);
+            }
+        } else {
+            // Jika tidak ada ID, ambil semua data TipePekerjaan
+            $tipePekerjaan = TipePekerjaan::all();
+            return response()->json(['TipePekerjaan' => $tipePekerjaan]);
+        }
+    }
+
+    // Fungsi untuk membuat data TipePekerjaan baru
+    public function createTipePekerjaan(Request $request)
+    {
+        // Validasi data yang diterima
+        $validatedData = $request->validate([
+            'tipe_pekerjaan' => 'required|string|max:50',
+            'min_fee' => 'required|numeric',    
+            'avg_fee' => 'required|numeric',    
+            'max_fee' => 'required|numeric',    
+            'pendapatan_batas_atas' => 'required|numeric',    
+            'pendapatan_batas_bawah' => 'required|numeric',
+        ]);
+
+        // Membuat TipePekerjaan baru
+        $tipePekerjaan = TipePekerjaan::create($validatedData);
+
+        // Mengembalikan respons dengan status 201
+        return response()->json(['message' => 'TipePekerjaan created successfully', 'TipePekerjaan' => $tipePekerjaan], 201);
+    }
+
+    // Fungsi untuk memperbarui data TipePekerjaan berdasarkan ID
+    public function updateTipePekerjaan(Request $request, $id)
+    {
+        $tipePekerjaan = TipePekerjaan::find($id);
+
+        // Cek apakah data ditemukan
+        if (!$tipePekerjaan) {
+            return response()->json(['message' => 'Data tidak ditemukan'], 404);
+        }
+
+        // Validasi data yang diterima
+        $validatedData = $request->validate([
+            'tipe_pekerjaan' => 'required|string|max:50',
+            'min_fee' => 'required|numeric',    
+            'avg_fee' => 'required|numeric',    
+            'max_fee' => 'required|numeric',    
+            'pendapatan_batas_atas' => 'required|numeric',    
+            'pendapatan_batas_bawah' => 'required|numeric',
+        ]);
+
+        // Update data TipePekerjaan
+        $tipePekerjaan->update($validatedData);
+
+        // Mengembalikan respons sukses
+        return response()->json(['message' => 'TipePekerjaan updated successfully', 'TipePekerjaan' => $tipePekerjaan]);
+    }
+
+    // Fungsi untuk menghapus data TipePekerjaan berdasarkan ID
+    public function deleteTipePekerjaanAPI($id)
+    {
+        $tipePekerjaan = TipePekerjaan::find($id);
+
+        // Cek apakah data ditemukan
+        if (!$tipePekerjaan) {
+            return response()->json(['message' => 'Data tidak ditemukan'], 404);
+        }
+
+        // Hapus data TipePekerjaan
+        $tipePekerjaan->delete();
+
+        // Mengembalikan respons sukses
+        return response()->json(['message' => 'TipePekerjaan deleted successfully']);
+    }
 }
