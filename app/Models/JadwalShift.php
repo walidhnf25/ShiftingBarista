@@ -16,6 +16,7 @@ class JadwalShift extends Model
         'tanggal',
         'status',
         'id_user',
+        'task',
     ];
 
     public function tipePekerjaan()

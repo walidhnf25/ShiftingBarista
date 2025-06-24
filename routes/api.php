@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TipePekerjaanController;
 use App\Http\Controllers\jamShiftController;
+use App\Http\Controllers\CekGajiController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -41,3 +42,5 @@ Route::put('jadwal-shift/{id}', [JadwalShiftController::class, 'updateJadwalShif
 Route::get('users', [AuthController::class, 'getUsers']);
 Route::post('auth/LoginWithNumber', [AuthController::class, 'LoginWithNumber']);
 Route::post('auth/LoginWithUsername', [AuthController::class, 'LoginWithUsername']);
+
+Route::get('periode-gaji/{id?}', [CekGajiController::class, 'getPeriodeGajiData']);

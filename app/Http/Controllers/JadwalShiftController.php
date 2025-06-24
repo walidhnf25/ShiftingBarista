@@ -203,12 +203,14 @@ class JadwalShiftController extends Controller
     {
         // Validasi input
         $request->validate([
-            'id_jam' => 'required|string',
-            'id_tipe_pekerjaan' => 'required|string',
-            'id_user' => 'nullable|string',  // id_user bisa null
-            'tanggal' => 'required|date',
-            'check_in_time' => 'nullable|date_format:H:i',  // validasi waktu check-in
-            'check_out_time' => 'nullable|date_format:H:i', // validasi waktu check-out
+            'id_jam' => 'nullable|string',
+            'id_tipe_pekerjaan' => 'nullable|string',
+            'id_user' => 'nullable|string',
+            'tanggal' => 'nullable|date',
+            'check_in_time' => 'nullable|date_format:H:i:s',
+            'check_out_time' => 'nullable|date_format:H:i:s',
+            'task' => 'nullable|string',
+            'task_status' => 'nullable|string',
         ]);
 
         // Cari jadwal shift berdasarkan ID
@@ -234,6 +236,8 @@ class JadwalShiftController extends Controller
         $jadwal_shift->tanggal = $request->tanggal;
         $jadwal_shift->check_in_time = $request->check_in_time;   // Update waktu check-in
         $jadwal_shift->check_out_time = $request->check_out_time; // Update waktu check-out
+        $jadwal_shift->task = $request->task;
+        $jadwal_shift->task_status = $request->task_status;
 
         // Simpan perubahan
         $jadwal_shift->save();
