@@ -668,8 +668,25 @@ class CekGajiController extends Controller
             );
     }
 
-
-    
-    
-    
+    public function getPeriodeGajiData(Request $request, $id = null)
+    {
+        if ($id) {
+            // Jika ada ID, ambil data berdasarkan ID
+            $periode = PeriodeGaji::find($id);
+            
+            // Jika data ditemukan, kembalikan response JSON
+            if ($periode) {
+                return response()->json(['PeriodeGaji' => $periode]);
+            } else {
+                // Jika data tidak ditemukan, kembalikan response 404
+                return response()->json(['message' => 'Data tidak ditemukan'], 404);
+            }
+        } else {
+            // Jika tidak ada ID, ambil semua data JadwalShift
+            $periode = PeriodeGaji::all();
+            
+            // Pastikan nama variabel konsisten, dan kembalikan response JSON
+            return response()->json(['periode' => $periode]);
+        }
+    }
 }
