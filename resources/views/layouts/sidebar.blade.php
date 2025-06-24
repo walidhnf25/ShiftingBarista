@@ -232,7 +232,6 @@
     @if (auth()->check() && auth()->user()->role === 'Staff')
     <hr class="sidebar-divider my-0">
     
-    <!-- Nav Item - Dashboard -->
     <li class="nav-item {{ Request::is('staffcekgaji') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('staffcekgaji') }}">
             <i class="fas fa-fw fa fa-university" ></i>

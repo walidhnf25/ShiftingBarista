@@ -487,97 +487,96 @@ class CekGajiController extends Controller
     // Staff Function
     public function IndexStaff(Request $request)
     {
-        $userId = Auth::id();
+        $userId = Auth::guard('user')->id(); 
         $apiOutlet = $this->getOutletData();
         $outletMapping = collect($apiOutlet)->pluck('outlet_name', 'id');
-        
-        // Get all salary periods
         $periode_gaji = PeriodeGaji::all();
-        
-        // Get the current date
+
+        // Default value kalau tidak ada periode aktif
+        $dataGaji = collect();
+        $startDate = null;
+        $endDate = null;
+        $currentPeriod = null;
+
+        // Ambil tanggal sekarang
         $currentDate = now()->format('Y-m-d');
 
-        // Find the period that includes the current date
+        // Cari periode aktif (kalau ada)
         $currentPeriod = PeriodeGaji::where('tgl_mulai', '<=', $currentDate)
             ->where('tgl_akhir', '>=', $currentDate)
-            ->first();    
+            ->first();
 
-        $startDate = $currentPeriod->tgl_mulai;
-        $endDate = $currentPeriod->tgl_akhir;
+        if ($currentPeriod) {
+            $startDate = $currentPeriod->tgl_mulai;
+            $endDate = $currentPeriod->tgl_akhir;
 
+            // Ambil data revenue
+            $revenueAPI = $this->getRevenue($startDate, $endDate);
 
-        // Get revenue data for all outlets since we're looking at a specific user
-        $revenueAPI = $this->getRevenue($startDate, $endDate);
-        if (!isset($revenueAPI['data']) || empty($revenueAPI['data'])) {
-            return redirect()->back()->with('warning', 'Data pendapatan tidak ditemukan.');
+            if (isset($revenueAPI['data']) && !empty($revenueAPI['data'])) {
+                $revenueData = collect($revenueAPI['data'])->keyBy('order_date');
+
+                $baseDataGaji = JadwalShift::with(['tipePekerjaan'])
+                    ->select('id_user', 'id_tipe_pekerjaan', 'id_outlet')
+                    ->where('id_user', $userId)
+                    ->whereBetween('tanggal', [$startDate, $endDate])
+                    ->groupBy('id_user', 'id_tipe_pekerjaan', 'id_outlet')
+                    ->get();
+
+                $dataGaji = $baseDataGaji->map(function ($item) use ($userId, $revenueData, $outletMapping, $startDate, $endDate) {
+                    $outletName = $outletMapping[$item->id_outlet] ?? 'Unknown Outlet';
+                    $item->nama_outlet = $outletName;
+
+                    $tipePekerjaan = $item->tipePekerjaan;
+                    $item->nama_pekerjaan = $tipePekerjaan->tipe_pekerjaan ?? 'Unknown';
+
+                    $shifts = JadwalShift::where('id_user', $userId)
+                        ->where('id_tipe_pekerjaan', $item->id_tipe_pekerjaan)
+                        ->where('id_outlet', $item->id_outlet)
+                        ->whereBetween('tanggal', [$startDate, $endDate])
+                        ->orderBy('tanggal', 'asc')
+                        ->get();
+
+                    $totalGaji = 0;
+                    $totalRevenue = 0;
+                    $shiftsWithRevenue = collect();
+
+                    foreach ($shifts as $shift) {
+                        $shiftDate = \Carbon\Carbon::parse($shift->tanggal)->format('d-m-Y');
+
+                        $dailyRevenue = $revenueData[$shiftDate][$outletName]['Total'] ?? 0;
+                        $totalRevenue += $dailyRevenue;
+
+                        $dailyFee = $this->calculateFee($dailyRevenue, $tipePekerjaan);
+                        $totalGaji += $dailyFee;
+
+                        $shiftWithRevenue = new \stdClass();
+                        $shiftWithRevenue->tanggal = $shift->tanggal;
+                        $shiftWithRevenue->revenue = $dailyRevenue;
+                        $shiftWithRevenue->fee = $dailyFee;
+
+                        $shiftsWithRevenue->push($shiftWithRevenue);
+                    }
+
+                    $item->jumlah_shift = $shifts->count();
+                    $item->detail_shifts = $shiftsWithRevenue;
+                    $item->total_gaji = $totalGaji;
+                    $item->outlet_revenue = $totalRevenue;
+
+                    return $item;
+                });
+            }
         }
 
-        // Index revenue data by date
-        $revenueData = collect($revenueAPI['data'])->keyBy('order_date');
-
-        // Get base shift data for the user
-        $baseDataGaji = JadwalShift::with(['tipePekerjaan'])
-            ->select('id_user', 'id_tipe_pekerjaan', 'id_outlet')
-            ->where('id_user', $userId)
-            ->whereBetween('tanggal', [$startDate, $endDate])
-            ->groupBy('id_user', 'id_tipe_pekerjaan', 'id_outlet')
-            ->get();
-
-        // Transform data
-        $dataGaji = $baseDataGaji->map(function ($item) use ($userId, $revenueData, $outletMapping, $startDate, $endDate) {
-            $outletName = $outletMapping[$item->id_outlet] ?? 'Unknown Outlet';
-            $item->nama_outlet = $outletName;
-
-            $tipePekerjaan = $item->tipePekerjaan;
-            $item->nama_pekerjaan = $tipePekerjaan->tipe_pekerjaan ?? 'Unknown';
-
-            // Get all shifts for this user, job type, and outlet
-            $shifts = JadwalShift::where('id_user', $userId)
-                ->where('id_tipe_pekerjaan', $item->id_tipe_pekerjaan)
-                ->where('id_outlet', $item->id_outlet)
-                ->whereBetween('tanggal', [$startDate, $endDate])
-                ->orderBy('tanggal', 'asc')
-                ->get();
-
-            $totalGaji = 0;
-            $totalRevenue = 0;
-            $shiftsWithRevenue = collect();
-
-            foreach ($shifts as $shift) {
-                $shiftDate = \Carbon\Carbon::parse($shift->tanggal)->format('d-m-Y');
-                
-                $dailyRevenue = $revenueData[$shiftDate][$outletName]['Total'] ?? 0;
-                $totalRevenue += $dailyRevenue;
-                
-                // Calculate fee based on revenue and tipe pekerjaan
-                $dailyFee = $this->calculateFee($dailyRevenue, $tipePekerjaan);
-                $totalGaji += $dailyFee;
-
-                $shiftWithRevenue = new \stdClass();
-                $shiftWithRevenue->tanggal = $shift->tanggal;
-                $shiftWithRevenue->revenue = $dailyRevenue;
-                $shiftWithRevenue->fee = $dailyFee;
-
-                $shiftsWithRevenue->push($shiftWithRevenue);
-            }
-
-            $item->jumlah_shift = $shifts->count();
-            $item->detail_shifts = $shiftsWithRevenue;
-            $item->total_gaji = $totalGaji;
-            $item->outlet_revenue = $totalRevenue;
-
-            return $item;
-        });
-
         return view('staff.cekgaji', compact(
-                    'periode_gaji',
-                    'dataGaji', 
-                    'apiOutlet', 
-                    'outletMapping', 
-                    'startDate', 
-                    'endDate',
-                    'currentPeriod')
-                );
+            'periode_gaji',
+            'dataGaji', 
+            'apiOutlet', 
+            'outletMapping', 
+            'startDate', 
+            'endDate',
+            'currentPeriod'
+        ));
     }
 
     public function filterByDateStaff(Request $request)
